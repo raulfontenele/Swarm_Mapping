@@ -13,12 +13,14 @@ class Map:
         self.visitedList = []
         self.noneVisitedList = []
         self.radius = radius
+        self.matrixMap = []
     
     #def addNode(self,parent):
         #parent.
         
     def addVisitedNode(self,coord):
         self.visitedList.append(coord)
+        self.matrixMap.append([self.currentNode.coord,coord])
         
     def addNoneVisitedNode(self,listCoord):
         for coord in listCoord:
@@ -47,3 +49,7 @@ class Map:
             if math.sqrt(diff2) <= self.radius:
                 return True
         return False
+    
+            
+        
+        
