@@ -1,12 +1,12 @@
 import sim
 import time
 from Robot import Robot
-from Accelerometer import Accelerometer
-from Gyroscope import Gyroscope
 from Lidar import Lidar
 from Node import Node
 from Map import Map
 from AuxiliarFunctions import AuxiliarFunctions
+from Save import saveCoord,saveEdge
+
 print ('Program started')
 
 #Variáveis do projeto
@@ -18,25 +18,20 @@ robotBody = 'K3_bodyPart1'
 motorsObject = []
 wallReference = 'ConcretBlock'
 
-velocity = 0.5
-radius = 0.3
+velocity = 0.6
+radius = 0.25
 
 sim.simxFinish(-1) # just in case, close all opened connections
 clientID=sim.simxStart('127.0.0.1',19999,True,True,5000,5) # Connect to CoppeliaSim
 
 if clientID!=-1:
     print ('Connected to remote API server')
+    
     #Pegar o objeto de Pioneer
     returnCode,khepera=sim.simxGetObjectHandle(clientID,robotBody,sim.simx_opmode_blocking)
-        
-    #Pegar o objeto da parede de referência
-    #returnCode,wallRef=sim.simxGetObjectHandle(clientID,wallReference,sim.simx_opmode_blocking)
-    
-    
+
    #Criar objetos do acelerômetro, Lidar e giroscópio
-    #accelerometer = Accelerometer("Accelerometer", clientID)
-    #gyroscope = Gyroscope("GyroSensor", clientID)
-    lidar = Lidar("LaserScannerLaser_2D", clientID)
+    lidar = Lidar("LaserScannerLaser_2D", clientID,28,2)
     
     #Pegar objeto dos motores manipuláveis
     for i in range(2):
@@ -50,40 +45,6 @@ if clientID!=-1:
     time.sleep(0.1)
     
     
-    #robot.moveFoward(2, 0.02,1)
-
-    #robot.moveFoward(2, 0.02,1)
-    '''
-    for i in range(15):
-        robot.turnRobot()
-        time.sleep(1)
-        robot.stopRotation()
-        time.sleep(0.1)
-    '''
-
-    '''  
-    #Mover para frente e rotacionar um ângulo no sentido horário e no sentido anti-horario
-    
-    time.sleep(0.5)
-    robot.rotate(-90,0.6)
-    time.sleep(0.5)
-    robot.rotate(90,0.6)
-    '''
-
-    '''
-    print(lidar.getBruteDate())
-    print(lidar.getBruteDate()[0])
-    print(lidar.getBruteDate()[-1])
-    '''
-
-
-    #Teste funcionalidade de scanner de arredor
-    #scan = robot.scanAround(60)
-    #print(scan)
-
-    #lidar.getBruteDate()
-    
-    
     '''
     Pegar a posição inicial, verificar os ângulos que podem ser visitados (e adicionalos a lista de
     nós não visitados) e criar o nó inicial.
@@ -93,10 +54,12 @@ if clientID!=-1:
     initPose = robot.getAbsolutePosition(False)
     neighborhood,angles = robot.scanAround(60)
     
-    initNode = Node(initPose,neighborhood,angles)
+    initNode = Node(initPose)
+    initNode.addNeighborhood(neighborhood, angles)
+    
     mapping = Map(initNode,radius)
-    mapping.addVisitedNode([initPose[0],initPose[1]])
     mapping.currentNode = mapping.initNode
+    mapping.addVisitedNode(initPose)
     mapping.addNoneVisitedNode(neighborhood)
 
     '''
@@ -107,6 +70,8 @@ if clientID!=-1:
         
         Questão, como fazer para ele caminhar entre os nós??
         Como escolher o mais perto?
+        Como fazer ele evitar o caminho mais longo, quando possível?
+        A cada passo, na hora de voltar, verificar se pode pular por visinhos?
         
     '''
     while mapping.noneVisitedList != None :
@@ -115,42 +80,39 @@ if clientID!=-1:
             visitar ele.
         '''
         
-        if len(mapping.currentNode.neighborhoodCoord) > 0:
-            if mapping.checkVisited(mapping.currentNode.neighborhoodCoord[0]) == False:
+        if mapping.currentNode.checkNeighborhood() == True:
+            neighborCoord,neighborAngle = mapping.currentNode.getNeighbor()
+            if mapping.checkVisited(neighborCoord) == False:
+                
+
                 print("Nó não visitado")
-                print("Coordenadas destino: " + str(mapping.currentNode.neighborhoodCoord[0]) )
-                robot.rotateTo(mapping.currentNode.neighborhoodAngle[0][2], 1.5*velocity)
-                robot.moveFoward(2*radius, 0, velocity*3)
+                print("Coordenadas destino: " + str(neighborCoord) )
+                robot.rotateTo(neighborAngle[2], velocity)
+                distParent,flag = robot.moveFoward(2*radius, 0, velocity*3)
+                print("Distancia deslocada: " + str(distParent) )
                 
-                mapping.visitedNode(mapping.currentNode.neighborhoodCoord[0])
-                
-                '''
-                Uma vez que se chegou no nó não visitado, deve-se escanear em volta, e adicionar os visinhos, não visitados,
-                a lista de nós não visitados, atualizar o nó atual do mapa e dizer que o nó atual é filho do nó anterior.
-                Também deve-se adiconar o nó atual a lista de visitados
-                '''
-                currentPose = robot.getAbsolutePosition(False)
-                neighborhood,angles = robot.scanAround(60)
-                mapping.addNoneVisitedNode(neighborhood)
-
-                currentNode = Node(currentPose,neighborhood,angles,mapping.currentNode,mapping.currentNode.neighborhoodAngle[0][2])
-
-                #Excluir da lista de visinhos possíveis e incluir na lista de nós visitados
-                #mapping.currentNode.deleteNeighborhoodCoord(mapping.currentNode.neighborhoodCoord[0])
-                #mapping.currentNode.deleteNeighborhoodAngle(mapping.currentNode.neighborhoodAngle[0])
-                mapping.currentNode.neighborhoodCoord.remove(mapping.currentNode.neighborhoodCoord[0])
-                mapping.currentNode.neighborhoodAngle.remove(mapping.currentNode.neighborhoodAngle[0])
-                
-                mapping.currentNode = currentNode
-                
+                if flag == True:
+                    '''
+                    Uma vez que se chegou no nó não visitado, deve-se escanear em volta, e adicionar os visinhos, não visitados,
+                    a lista de nós não visitados, atualizar o nó atual do mapa e dizer que o nó atual é filho do nó anterior.
+                    Também deve-se adiconar o nó atual a lista de visitados, assim como dizer que o atual nó, visinho do pai, foi visitado
+                    '''
+                    
+                    mapping.currentNode.confirmVisitedNeighbor()
+                    currentPose = robot.getAbsolutePosition(False)
+                    mapping.visitedNode(currentPose)
+                    neighborhood,angles = robot.scanAround(60)
+                    mapping.addNoneVisitedNode(neighborhood)
+    
+                    currentNode = Node(currentPose,mapping.currentNode,neighborAngle[2],distParent)
+                    currentNode.addNeighborhood(neighborhood, angles)
+                    
+                    mapping.currentNode = currentNode
                 
                 
             else:
                 print("nó visitado")
-                print("Coordenadas visitadas: " + str(mapping.currentNode.neighborhoodCoord[0]) )
-                #Excluir da lista de visinhos possíveis
-                mapping.currentNode.neighborhoodCoord.remove(mapping.currentNode.neighborhoodCoord[0])
-                mapping.currentNode.neighborhoodAngle.remove(mapping.currentNode.neighborhoodAngle[0])
+                print("Coordenadas visitadas: " + str(neighborCoord) )
 
         else:
             '''
@@ -164,8 +126,10 @@ if clientID!=-1:
             if mapping.currentNode.parent != None:
                 opossitAngle = AuxiliarFunctions.oppositeAngle(mapping.currentNode.parentAngle)
                 robot.rotateTo(opossitAngle, velocity)
-                robot.moveFoward(2*radius, 0, velocity*3)
+                robot.moveFoward(mapping.currentNode.parentDist, 0, velocity*3)
+                print("Distancia ao nó pai")
                 mapping.currentNode = mapping.currentNode.parent
+                
             else:
                 print("Chegou no nó inicial")
                 break
@@ -174,61 +138,14 @@ if clientID!=-1:
     arquivo = open("Coordenadas.txt",'a')
     arquivo.writelines(str(mapping.visitedList))
     arquivo.close()
+    
+    arquivo = open("arestas.txt",'a')
+    arquivo.writelines(str(mapping.matrixMap))
+    arquivo.close()
 
+    saveCoord(mapping.visitedList)
+    saveEdge(mapping.matrixMap)
     
-            
-                
-        
-        
-
-           
-
-    
-    
-    
-    '''
-    while(mapping.currentNode.angles != [False,False,False,False,False,False]):
-        for index in range(len(mapping.currentNode.angles)):
-            if mapping.currentNode.angles[index] == True:
-                #Rotacionar e ir até o nó
-                robot.rotate(60,0.6)
-                robot.moveFoward(0.3,0.02,1)
-                
-                #Verificar se o n todas as possibilidades e adicionar o nó
-                currentPose = robot.getAbsolutePosition(False)
-                
-                mapping.addVisitedNode(currentPose)
-                
-                scan = robot.scanAround(60)
-                
-            
-                newNode = Node(currentPose,scan)
-                
-                
-                
-                mapping.currentNode.angles[index] = False
-                
-                robot.moveFoward(-0.3,0.02,1)
-    
-    '''
-    
-
-        
-
-    
-    
-    '''
-    #Teste de rotação do motores
-    i = 0
-    robot.turnRobot()
-    while True:
-        print(robot.getAbsoluteOrientation(False))
-        i+=1
-        time.sleep(0.1)
-        if i > 300:
-            break
-    robot.stopRotation()
-    '''
 
     
     # Now send some data to CoppeliaSim in a non-blocking fashion:
@@ -242,3 +159,10 @@ if clientID!=-1:
 else:
     print ('Failed connecting to remote API server')
 print ('Program ended')
+
+
+'''
+    Mudança a se fazer:
+        Quando for detectado que um nó visinho já foi visitado, dar um jeito de gravar que o nó visinho
+        também é acessível por esse nó. Isso irá criar um mapa que mostra todas as ligações possíveis
+'''

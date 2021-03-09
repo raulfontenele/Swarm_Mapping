@@ -8,10 +8,12 @@ import numpy as np
 import sim
 
 class Lidar:
-    def __init__(self,name,clientID):
+    def __init__(self,name,clientID,angle,density):
         self.name = name
         self.clientID = clientID
         self.ObjectHandle = self.getObjectHandle(self.name)
+        self.angle = angle
+        self.density = density
         
         #Inicialização das funções
         self.getPointRead()
@@ -41,7 +43,8 @@ class Lidar:
         floatValues = sim.simxUnpackFloats(signalValue)
         try:
             matrix = np.array(floatValues)
-            reshapedMatrix = np.reshape(matrix,[22,3])
+            lin = (self.angle + 1)*self.density
+            reshapedMatrix = np.reshape(matrix,[lin,3])
         except:
             reshapedMatrix = 0
         

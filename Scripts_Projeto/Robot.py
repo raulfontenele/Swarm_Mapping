@@ -8,6 +8,7 @@ import sim
 import time
 import math
 from AuxiliarFunctions import AuxiliarFunctions
+from debug import logNeighbor
 
 class Robot:
     def __init__(self,idClient,motorsId,robotObject,lidar):
@@ -17,8 +18,8 @@ class Robot:
         #self.accelerometer = accelerometer
         self.lidar = lidar
         #self.gyroscope = gyroscope
-        
-        self.radius = 0.3
+        self.ownRadius = 0.15
+        self.radius = 0.25
         
         #Inicialização da função de posição
         self.getAbsolutePosition(True)
@@ -107,38 +108,37 @@ class Robot:
             sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[i],0,sim.simx_opmode_oneshot)
             
     def moveFoward(self,distance,interval,velocity):
-        if distance > 0:
-            #Ligar os motores pra frente
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],velocity,sim.simx_opmode_oneshot)
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],velocity,sim.simx_opmode_oneshot)
+        if self.checkDistance() ==  True:
+        
+            if distance > 0:
+                #Ligar os motores pra frente
+                sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],velocity,sim.simx_opmode_oneshot)
+                sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],velocity,sim.simx_opmode_oneshot)
+            else:
+                #Ligar os motores pra trás
+                sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],-velocity,sim.simx_opmode_oneshot)
+                sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],-velocity,sim.simx_opmode_oneshot)
+
+
+            #Abordagem utilizando a posição absoluta
+            initPosition = self.getAbsolutePosition(False)
+    
+            distanceAbs = 0
+    
+            while(distanceAbs <= abs(distance)):
+                         
+                position = self.getAbsolutePosition(False)
+                distanceAbs = math.sqrt((initPosition[0]-position[0])**2 + (initPosition[1]-position[1])**2)
+                if self.lidar.getPointRead()[2] <= 0.13 and self.lidar.getPointRead()[2] > 0.01:
+                    print("Parou por ir para frente por estar muito próximo a parede")
+                    print(self.lidar.getPointRead()[2])
+                    break
+                #self.lidar.getBruteDate()
+    
+            self.stopRotation()
+            return distanceAbs,True
         else:
-            #Ligar os motores pra trás
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],-velocity,sim.simx_opmode_oneshot)
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],-velocity,sim.simx_opmode_oneshot)
-        '''    
-        print("Acelerção VREP inicial")
-        acceleration = self.accelerometer.getAccelerometerReadVrep()
-        print(acceleration)
-        '''
-          
-        #Abordagem utilizando a posição absoluta
-        initPosition = self.getAbsolutePosition(False)
-        #print("Posição inicial global")
-        #print(initPosition)
-
-        distanceAbs = 0
-
-        while(distanceAbs <= abs(distance)):
-                     
-            position = self.getAbsolutePosition(False)
-            distanceAbs = math.sqrt((initPosition[0]-position[0])**2 + (initPosition[1]-position[1])**2)
-            if self.lidar.getPointRead()[2] <= 0.13:
-                print("Parou por ir para frente por estar muito próximo a parede")
-                print(self.lidar.getPointRead()[2])
-                break
-            #self.lidar.getBruteDate()
-
-        self.stopRotation()
+            return 0,False
         
     def getAbsolutePosition(self,flag):
         if flag == True:
@@ -150,37 +150,33 @@ class Robot:
     def scanAround(self,angleBase):
         nodes = []
         angles = []
-        error = 0
+        distances = []
+        #error = 0
         ang = [0,60,120,180,240,300]
 
             
         initCoord = self.getAbsolutePosition(False)
-        print("//==============================================//")
-        print("Coordenadas do nó atual: " + str(initCoord))
-
-        
+     
         for i in range(6):
-            #error = self.rotate(angleBase-error,0.4)
+            
             self.rotateTo(ang[i], 0.4)
-            #print(error)
-            bruteLidar = self.lidar.getBruteDate()
-            if self.lidar.getPointRead()[2] >= 3.5*self.radius and bruteLidar[0][1]>= 3.5*self.radius and bruteLidar[-1][1]>= 3.5*self.radius:
+            
+            #bruteLidar = self.lidar.getBruteDate()
+            distance = self.lidar.getPointRead()[2]
+            if self.checkDistance() ==  True:
                 
                 orientation = self.getAbsoluteOrientation(False)
-                
-                
+                   
                 coord = AuxiliarFunctions.projectCoord(orientation, initCoord, 2*self.radius)
-                print("Distancia lida:" + str(self.lidar.getPointRead()[2]))
-                print("Orientação atual:" + str(orientation) )
                 
                 nodes.append(coord)
                 angles.append(orientation)
-                
-                #Mostrar a coordenada atual e a projeção dos visinhos
-                print("Coordenadas do nó visinho: " + str(coord))
+                distances.append(distance)
 
-            time.sleep(0.5)
-        print("//==============================================//")
+            time.sleep(0.2)
+            
+        logNeighbor(nodes,angles,distances,initCoord)
+
         return nodes,angles
 
         
@@ -190,14 +186,25 @@ class Robot:
         
         
     def rotateTo(self,angle,velocity):
-        #Ligar os motores
-        sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],velocity,sim.simx_opmode_oneshot)
-        sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],-velocity,sim.simx_opmode_oneshot)
+        #Verificar pra qual lado é mais curto girar
+        currentOrientation = self.getAbsoluteOrientation(False)
+        index =2
         
-        #Abordagem utilizando a orientação absoluta
-        #initOrientation = self.getAbsoluteOrientation(False)
-        index = 2
-        sign = 1
+        diffHor = AuxiliarFunctions.diffAngles(angle,currentOrientation[index] , -1)
+        diffAntiHor = AuxiliarFunctions.diffAngles(angle,currentOrientation[index] , 1)
+
+        
+        if diffHor < diffAntiHor:
+            #Ligar os motores
+            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],velocity,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],-velocity,sim.simx_opmode_oneshot)
+            sign = 1
+        else:
+            #Ligar os motores
+            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],-velocity,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],velocity,sim.simx_opmode_oneshot)
+            sign = -1
+
         while(True):
             currentOrientation = self.getAbsoluteOrientation(False)
             diff = AuxiliarFunctions.diffAngles(angle,currentOrientation[index] , sign)
@@ -210,8 +217,21 @@ class Robot:
                 print("Sinal::" + str(sign))
                 print("Diferença::" + str(diff))
                 '''
-                
                 break
+            
+    def checkDistance(self):
+        cont = 0
+        threshold = 2*self.radius + 1.4*self.ownRadius
+        for i in range(3):
+            bruteLidar = self.lidar.getBruteDate()
+            distance = self.lidar.getPointRead()[2]
+            if distance >= threshold and bruteLidar[0][1]>= threshold and bruteLidar[-1][1]>= threshold:
+                cont+=1
+        
+        if cont>2:
+            return True
+        else:
+            return False
     '''
     def setOrientation(self,angle):
         returnCode = sim.simxSetObjectOrientation(self.idClient,self.robot,-1,[0,0,angle],sim.simx_opmode_oneshot)
