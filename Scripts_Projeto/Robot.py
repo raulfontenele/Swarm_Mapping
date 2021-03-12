@@ -8,7 +8,7 @@ import sim
 import time
 import math
 from AuxiliarFunctions import AuxiliarFunctions
-from debug import logNeighbor
+from debug import logNeighbor,logLidar
 
 class Robot:
     def __init__(self,idClient,motorsId,robotObject,lidar):
@@ -108,7 +108,8 @@ class Robot:
             sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[i],0,sim.simx_opmode_oneshot)
             
     def moveFoward(self,distance,interval,velocity):
-        if self.checkDistance() ==  True:
+        threshold = 2*self.radius + 1.4*self.ownRadius
+        if self.checkDistance(threshold) ==  True:
         
             if distance > 0:
                 #Ligar os motores pra frente
@@ -125,15 +126,13 @@ class Robot:
     
             distanceAbs = 0
     
-            while(distanceAbs <= abs(distance)):
+            while(distanceAbs <= abs(distance)-0.01):
                          
                 position = self.getAbsolutePosition(False)
                 distanceAbs = math.sqrt((initPosition[0]-position[0])**2 + (initPosition[1]-position[1])**2)
-                if self.lidar.getPointRead()[2] <= 0.13 and self.lidar.getPointRead()[2] > 0.01:
+                if self.checkDistance(self.ownRadius) ==  False:
                     print("Parou por ir para frente por estar muito próximo a parede")
-                    print(self.lidar.getPointRead()[2])
                     break
-                #self.lidar.getBruteDate()
     
             self.stopRotation()
             return distanceAbs,True
@@ -163,7 +162,8 @@ class Robot:
             
             #bruteLidar = self.lidar.getBruteDate()
             distance = self.lidar.getPointRead()[2]
-            if self.checkDistance() ==  True:
+            threshold = 2*self.radius + 1.4*self.ownRadius
+            if self.checkDistance(threshold) ==  True:
                 
                 orientation = self.getAbsoluteOrientation(False)
                    
@@ -219,19 +219,56 @@ class Robot:
                 '''
                 break
             
-    def checkDistance(self):
+    def checkDistance(self,thresholdMax,thresholdMin = 0.01):
         cont = 0
-        threshold = 2*self.radius + 1.4*self.ownRadius
-        for i in range(3):
+        lidarCenter = []
+        lidarRight = []
+        lidarLeft = []
+
+        #threshold = 2*self.radius + 1.4*self.ownRadius
+        for i in range(6):
             bruteLidar = self.lidar.getBruteDate()
             distance = self.lidar.getPointRead()[2]
-            if distance >= threshold and bruteLidar[0][1]>= threshold and bruteLidar[-1][1]>= threshold:
-                cont+=1
-        
-        if cont>2:
+
+            #Projetar quando da erro
+            if (distance <= thresholdMax or bruteLidar[0][1] <= thresholdMax or bruteLidar[-1][1]<= thresholdMax):
+                if (distance > thresholdMin or bruteLidar[0][1] > thresholdMin or bruteLidar[-1][1]>thresholdMin):
+                    cont+=1
+                    lidarCenter.append(distance)
+                    lidarLeft.append(bruteLidar[0][1])
+                    lidarRight.append(bruteLidar[-1][1])
+            time.sleep(0.1)
+            
+        if cont<=2:
             return True
         else:
+            logLidar(lidarCenter,lidarLeft,lidarRight)
             return False
+            
+            
+            '''
+            if application == 'project'
+                if distance >= thresholdMin and bruteLidar[0][1]>= thresholdMin and bruteLidar[-1][1]>= thresholdMin:
+                    cont+=1
+                else:
+                    lidarCenter.append(distance)
+                    lidarLeft.append(bruteLidar[0][1])
+                    lidarRight.append(bruteLidar[-1][1])
+            else:
+                if (distance  thresholdMax or bruteLidar[0][1]< thresholdMax or bruteLidar[-1][1]< thresholdMax):
+                    
+                    cont+=1
+                else:
+                    lidarCenter.append(distance)
+                    lidarLeft.append(bruteLidar[0][1])
+                    lidarRight.append(bruteLidar[-1][1])
+                
+        if cont>=3:
+            return True
+        else:
+            logLidar(lidarCenter,lidarLeft,lidarRight)
+            return False
+        '''
     '''
     def setOrientation(self,angle):
         returnCode = sim.simxSetObjectOrientation(self.idClient,self.robot,-1,[0,0,angle],sim.simx_opmode_oneshot)

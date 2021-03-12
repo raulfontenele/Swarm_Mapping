@@ -21,6 +21,8 @@ wallReference = 'ConcretBlock'
 velocity = 0.6
 radius = 0.25
 
+contagem = 0
+
 sim.simxFinish(-1) # just in case, close all opened connections
 clientID=sim.simxStart('127.0.0.1',19999,True,True,5000,5) # Connect to CoppeliaSim
 
@@ -46,9 +48,10 @@ if clientID!=-1:
     
     
     '''
-    Pegar a posição inicial, verificar os ângulos que podem ser visitados (e adicionalos a lista de
-    nós não visitados) e criar o nó inicial.
-    Criar o mapa e inicia-lo com o nó inicial
+    Inicialmente deve-se pegar a posição inicial e realizar o processo de scanner, afim de obter os nós visinhos
+    e criar um nó contendo as informações obtidas. Em seguida deve-se criar o mapa, adicionar o nó inicial a ele,
+    bem como definir o nó atual como o nó inicial. Por fim, deve-se adicionar o nó atual a lista de nós visitados
+    e os nós visinhos a lista de nós não visitados.
     '''
 
     initPose = robot.getAbsolutePosition(False)
@@ -82,9 +85,9 @@ if clientID!=-1:
         
         if mapping.currentNode.checkNeighborhood() == True:
             neighborCoord,neighborAngle = mapping.currentNode.getNeighbor()
+            print("Index atual: " + str(mapping.currentNode.visitedIndex) + " -- De: " + str(len(mapping.currentNode.neighborhoodCoord)))
             if mapping.checkVisited(neighborCoord) == False:
                 
-
                 print("Nó não visitado")
                 print("Coordenadas destino: " + str(neighborCoord) )
                 robot.rotateTo(neighborAngle[2], velocity)
@@ -98,7 +101,7 @@ if clientID!=-1:
                     Também deve-se adiconar o nó atual a lista de visitados, assim como dizer que o atual nó, visinho do pai, foi visitado
                     '''
                     
-                    mapping.currentNode.confirmVisitedNeighbor()
+                    #mapping.currentNode.confirmVisitedNeighbor()
                     currentPose = robot.getAbsolutePosition(False)
                     mapping.visitedNode(currentPose)
                     neighborhood,angles = robot.scanAround(60)
@@ -108,7 +111,9 @@ if clientID!=-1:
                     currentNode.addNeighborhood(neighborhood, angles)
                     
                     mapping.currentNode = currentNode
-                
+                else:
+                    print("Falha ao tentar ir para nó visinho")
+                    contagem +=1
                 
             else:
                 print("nó visitado")
@@ -127,14 +132,14 @@ if clientID!=-1:
                 opossitAngle = AuxiliarFunctions.oppositeAngle(mapping.currentNode.parentAngle)
                 robot.rotateTo(opossitAngle, velocity)
                 robot.moveFoward(mapping.currentNode.parentDist, 0, velocity*3)
-                print("Distancia ao nó pai")
+                print("Distancia ao nó pai: " + str(mapping.currentNode.parentDist))
                 mapping.currentNode = mapping.currentNode.parent
                 
             else:
                 print("Chegou no nó inicial")
                 break
     
-
+    '''
     arquivo = open("Coordenadas.txt",'a')
     arquivo.writelines(str(mapping.visitedList))
     arquivo.close()
@@ -142,12 +147,13 @@ if clientID!=-1:
     arquivo = open("arestas.txt",'a')
     arquivo.writelines(str(mapping.matrixMap))
     arquivo.close()
+    '''
 
     saveCoord(mapping.visitedList)
     saveEdge(mapping.matrixMap)
     
 
-    
+    print("Quantidade de vezes na excessão: " + str(contagem))
     # Now send some data to CoppeliaSim in a non-blocking fashion:
     sim.simxAddStatusbarMessage(clientID,'Hello CoppeliaSim!',sim.simx_opmode_oneshot)
 

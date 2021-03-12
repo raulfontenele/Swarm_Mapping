@@ -1,0 +1,6 @@
+Fazer ajustes no processo de mapeamento, para que seja possível que não hajam pontos com menos de 2 raios de distância.
+Sugestão:
+	Somente visitar os nós do primeiro visinho. Ou seja, se o nó já estiver na lista de nós não visitados, não visitá-lo.
+
+Modificação:
+	Caso o nó visinho já esteja na lista de nós visitados, criar uma aresta entre eles.

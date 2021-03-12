@@ -14,6 +14,7 @@ class Lidar:
         self.ObjectHandle = self.getObjectHandle(self.name)
         self.angle = angle
         self.density = density
+        self.flagBruteData = False
         
         #Inicialização das funções
         self.getPointRead()
@@ -39,14 +40,23 @@ class Lidar:
         return detectedPoint
         
     def getBruteDate(self):
-        returnCode,signalValue = sim.simxGetStringSignal(self.clientID,'measuredDataAtThisTime',sim.simx_opmode_streaming) 
+        if self.flagBruteData == False:
+            returnCode,signalValue = sim.simxGetStringSignal(self.clientID,'measuredDataAtThisTime',sim.simx_opmode_streaming) 
+            self.flagBruteData = True
+        else:
+            returnCode,signalValue = sim.simxGetStringSignal(self.clientID,'measuredDataAtThisTime',sim.simx_opmode_buffer)
+            
         floatValues = sim.simxUnpackFloats(signalValue)
         try:
             matrix = np.array(floatValues)
-            lin = (self.angle + 1)*self.density
-            reshapedMatrix = np.reshape(matrix,[lin,3])
+            lines = int(len(floatValues)/3)
+            #lin = (self.angle + 1)*self.density
+            reshapedMatrix = np.reshape(matrix,[lines,3])
         except:
             reshapedMatrix = 0
+            print("Deu merda nos dados brutos")
+            print(len(floatValues))
+            print(floatValues)
         
         return reshapedMatrix
             

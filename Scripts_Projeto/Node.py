@@ -36,11 +36,12 @@ class Node:
     def confirmVisitedNeighbor(self):
         self.visitedIndex += 1
     
+    '''
     def resetVisitedIndex(self):
         if self.resetFlag == False:
             self.visitedIndex = 0
             self.resetFlag = True
-    
+    '''
     '''
     def deleteNeighborhoodCoord(self,coord):
         for node in self.neighborhoodCoord:
