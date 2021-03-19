@@ -1,11 +1,13 @@
 import sim
 import time
+import math
 from Robot import Robot
 from Lidar import Lidar
 from Node import Node
 from Map import Map
 from AuxiliarFunctions import AuxiliarFunctions
 from Save import saveCoord,saveEdge
+from debug import logNodeInfo
 
 print ('Program started')
 
@@ -18,8 +20,9 @@ robotBody = 'K3_bodyPart1'
 motorsObject = []
 wallReference = 'ConcretBlock'
 
-velocity = 0.6
+velocity = 0.5
 radius = 0.25
+extRadius = radius/math.cos(math.pi/6)
 
 contagem = 0
 
@@ -60,7 +63,7 @@ if clientID!=-1:
     initNode = Node(initPose)
     initNode.addNeighborhood(neighborhood, angles)
     
-    mapping = Map(initNode,radius)
+    mapping = Map(initNode,extRadius)
     mapping.currentNode = mapping.initNode
     mapping.addVisitedNode(initPose)
     mapping.addNoneVisitedNode(neighborhood)
@@ -86,7 +89,7 @@ if clientID!=-1:
         if mapping.currentNode.checkNeighborhood() == True:
             neighborCoord,neighborAngle = mapping.currentNode.getNeighbor()
             print("Index atual: " + str(mapping.currentNode.visitedIndex) + " -- De: " + str(len(mapping.currentNode.neighborhoodCoord)))
-            if mapping.checkVisited(neighborCoord) == False:
+            if mapping.checkVisited(neighborCoord,True) == False:
                 
                 print("Nó não visitado")
                 print("Coordenadas destino: " + str(neighborCoord) )
@@ -94,26 +97,28 @@ if clientID!=-1:
                 distParent,flag = robot.moveFoward(2*radius, 0, velocity*3)
                 print("Distancia deslocada: " + str(distParent) )
                 
-                if flag == True:
-                    '''
-                    Uma vez que se chegou no nó não visitado, deve-se escanear em volta, e adicionar os visinhos, não visitados,
-                    a lista de nós não visitados, atualizar o nó atual do mapa e dizer que o nó atual é filho do nó anterior.
-                    Também deve-se adiconar o nó atual a lista de visitados, assim como dizer que o atual nó, visinho do pai, foi visitado
-                    '''
-                    
-                    #mapping.currentNode.confirmVisitedNeighbor()
-                    currentPose = robot.getAbsolutePosition(False)
-                    mapping.visitedNode(currentPose)
-                    neighborhood,angles = robot.scanAround(60)
-                    mapping.addNoneVisitedNode(neighborhood)
-    
-                    currentNode = Node(currentPose,mapping.currentNode,neighborAngle[2],distParent)
-                    currentNode.addNeighborhood(neighborhood, angles)
-                    
-                    mapping.currentNode = currentNode
+            
+                '''
+                Uma vez que se chegou no nó não visitado, deve-se escanear em volta, e adicionar os visinhos, não visitados,
+                a lista de nós não visitados, atualizar o nó atual do mapa e dizer que o nó atual é filho do nó anterior.
+                Também deve-se adiconar o nó atual a lista de visitados, assim como dizer que o atual nó, visinho do pai, foi visitado
+                '''
+                
+                #mapping.currentNode.confirmVisitedNeighbor()
+                currentPose = robot.getAbsolutePosition(False)
+                mapping.visitedNode(currentPose)
+                neighborhood,angles = robot.scanAround(60)
+                mapping.addNoneVisitedNode(neighborhood)
+
+                currentNode = Node(currentPose,mapping.currentNode,neighborAngle[2],distParent)
+                currentNode.addNeighborhood(neighborhood, angles)
+                
+                mapping.currentNode = currentNode
+                '''
                 else:
                     print("Falha ao tentar ir para nó visinho")
                     contagem +=1
+                '''
                 
             else:
                 print("nó visitado")
@@ -133,6 +138,7 @@ if clientID!=-1:
                 robot.rotateTo(opossitAngle, velocity)
                 robot.moveFoward(mapping.currentNode.parentDist, 0, velocity*3)
                 print("Distancia ao nó pai: " + str(mapping.currentNode.parentDist))
+                logNodeInfo(mapping.currentNode)
                 mapping.currentNode = mapping.currentNode.parent
                 
             else:
@@ -150,7 +156,8 @@ if clientID!=-1:
     '''
 
     saveCoord(mapping.visitedList)
-    saveEdge(mapping.matrixMap)
+    saveEdge(mapping.matrixMap,'nosVisitados')
+    saveEdge(mapping.edgeMap,'arestas')
     
 
     print("Quantidade de vezes na excessão: " + str(contagem))

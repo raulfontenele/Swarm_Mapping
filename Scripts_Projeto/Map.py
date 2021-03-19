@@ -13,6 +13,7 @@ class Map:
         self.visitedList = []
         self.noneVisitedList = []
         self.radius = radius
+        self.edgeMap = []
         self.matrixMap = []
     
     #def addNode(self,parent):
@@ -24,7 +25,7 @@ class Map:
         
     def addNoneVisitedNode(self,listCoord):
         for coord in listCoord:
-            if self.checkNoneVisitedList(coord) == False and self.checkVisited(coord) == False:
+            if self.checkNoneVisitedList(coord) == False and self.checkVisited(coord,False) == False:
                 self.noneVisitedList.append(coord)
         
     def visitedNode(self,coord):
@@ -32,14 +33,16 @@ class Map:
             diff2 = (coord[0] - node[0])**2 + (coord[1] - node[1])**2
             if math.sqrt(diff2) < self.radius:
                 self.noneVisitedList.remove(node)
-                self.addVisitedNode(coord)
                 break
-        
+        self.addVisitedNode(coord)
     
-    def checkVisited(self,projectedCoord):
+    def checkVisited(self,projectedCoord,flagControl):
         for node in self.visitedList:
             diff2 = (projectedCoord[0] - node[0])**2 + (projectedCoord[1] - node[1])**2
             if math.sqrt(diff2) <= self.radius:
+                if flagControl == True:
+                    print("Aresta adicionada")
+                    self.edgeMap.append([self.currentNode.coord,node])
                 return True
         return False
     

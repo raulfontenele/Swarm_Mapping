@@ -20,6 +20,7 @@ class Robot:
         #self.gyroscope = gyroscope
         self.ownRadius = 0.15
         self.radius = 0.25
+        self.extRadius = self.radius/math.cos(math.pi/6)
         
         #Inicialização da função de posição
         self.getAbsolutePosition(True)
@@ -113,12 +114,10 @@ class Robot:
         
             if distance > 0:
                 #Ligar os motores pra frente
-                sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],velocity,sim.simx_opmode_oneshot)
-                sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],velocity,sim.simx_opmode_oneshot)
+                self.turnOnRobot(velocity,'front')
             else:
                 #Ligar os motores pra trás
-                sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],-velocity,sim.simx_opmode_oneshot)
-                sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],-velocity,sim.simx_opmode_oneshot)
+                self.turnOnRobot(velocity,'back')
 
 
             #Abordagem utilizando a posição absoluta
@@ -173,16 +172,26 @@ class Robot:
                 angles.append(orientation)
                 distances.append(distance)
 
-            time.sleep(0.2)
+            time.sleep(0.15)
             
         logNeighbor(nodes,angles,distances,initCoord)
 
         return nodes,angles
 
         
-    def turnRobot(self):
-        sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],0.5,sim.simx_opmode_oneshot)
-        sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],-0.5,sim.simx_opmode_oneshot)
+    def turnOnRobot(self,velocity,rotationSense):
+        if rotationSense == "hor":
+            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],velocity,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],-velocity,sim.simx_opmode_oneshot)
+        elif rotationSense == "antihor":
+            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],-velocity,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],velocity,sim.simx_opmode_oneshot)
+        elif rotationSense == "front":
+            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],velocity,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],velocity,sim.simx_opmode_oneshot)
+        else:
+            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],-velocity,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],-velocity,sim.simx_opmode_oneshot)
         
         
     def rotateTo(self,angle,velocity):
@@ -195,14 +204,10 @@ class Robot:
 
         
         if diffHor < diffAntiHor:
-            #Ligar os motores
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],velocity,sim.simx_opmode_oneshot)
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],-velocity,sim.simx_opmode_oneshot)
+            self.turnOnRobot(velocity,'hor')
             sign = 1
         else:
-            #Ligar os motores
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],-velocity,sim.simx_opmode_oneshot)
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],velocity,sim.simx_opmode_oneshot)
+            self.turnOnRobot(velocity,'antihor')
             sign = -1
 
         while(True):
@@ -218,8 +223,10 @@ class Robot:
                 print("Diferença::" + str(diff))
                 '''
                 break
+
             
-    def checkDistance(self,thresholdMax,thresholdMin = 0.01):
+            
+    def checkDistance(self,thresholdMax,thresholdMin = 0.1):
         cont = 0
         lidarCenter = []
         lidarRight = []
@@ -231,12 +238,27 @@ class Robot:
             distance = self.lidar.getPointRead()[2]
 
             #Projetar quando da erro
+            #Percorrer metades de todos os pontos do lidar
+            flagProximity = False
+            for data in bruteLidar:
+                if data[1] <= thresholdMax and data[1] > thresholdMin:
+                    flagProximity = True
+                    break
+                    
+            if flagProximity == True:
+                cont+=1
+                lidarCenter.append(distance)
+                lidarLeft.append(bruteLidar[0][1])
+                lidarRight.append(bruteLidar[-1][1])
+                    
+            '''
             if (distance <= thresholdMax or bruteLidar[0][1] <= thresholdMax or bruteLidar[-1][1]<= thresholdMax):
                 if (distance > thresholdMin or bruteLidar[0][1] > thresholdMin or bruteLidar[-1][1]>thresholdMin):
                     cont+=1
                     lidarCenter.append(distance)
                     lidarLeft.append(bruteLidar[0][1])
                     lidarRight.append(bruteLidar[-1][1])
+            '''
             time.sleep(0.1)
             
         if cont<=2:

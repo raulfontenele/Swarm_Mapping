@@ -4,3 +4,10 @@ Sugestão:
 
 Modificação:
 	Caso o nó visinho já esteja na lista de nós visitados, criar uma aresta entre eles.
+
+Ajustar os algoritmos de rotação e translação para ajustar até que fique em uma margem de erro, seja rotacionando
+em ambos os sentidos, seja transladando.
+
+
+Recalcular a distância ao nó pai antes de andar de verdade.
+Verificar todos os pontos do lidar antes da movimentação, não somente os extremos e o ponto central
