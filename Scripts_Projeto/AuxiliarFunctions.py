@@ -7,6 +7,7 @@ Created on Tue Feb 16 19:05:50 2021
 import math
 
 class AuxiliarFunctions:
+    
     @staticmethod
     def diffAngles(initAngle,finalAngle,orientation):
         diff = finalAngle - initAngle
@@ -23,13 +24,13 @@ class AuxiliarFunctions:
     @staticmethod
     def projectCoord(orientation,initCoord,distance):
         #Inicialmente converter para o sistema natural e depois de graus para radianos
-        angle = -orientation[2]+90
+        angle = -orientation+90
         angleRad = 2*math.pi*angle/360
         
         deltaX = distance*math.sin(angleRad)
         deltaY = distance*math.cos(angleRad)
         
-        return [initCoord[0] + deltaX, initCoord[1] - deltaY]
+        return [initCoord[0] + deltaX, initCoord[1] - deltaY, initCoord[2]]
     
     @staticmethod
     def oppositeAngle(angle):
@@ -38,3 +39,24 @@ class AuxiliarFunctions:
         if opAngle >= 360:
             opAngle -= 360
         return opAngle
+    
+    @staticmethod
+    def CalcAngleDistance(initCoord,goalCoord):
+        deltaX = goalCoord[0] - initCoord[0]
+        deltaY = -(goalCoord[1] - initCoord[1])
+        
+        dist = math.sqrt( deltaX**2 + deltaY**2 )
+        angle = math.atan(deltaX/deltaY)
+
+        angleDeg = 360*angle/(2*math.pi)
+        angleSist = -angleDeg + 90
+        if angleSist < 0:
+            angleSist = 360 + angleSist
+
+        if (deltaY < 0 and deltaX > 0) or (deltaY < 0 and deltaX < 0):
+            angleSist = AuxiliarFunctions.oppositeAngle(angleSist)
+
+        return dist,angleSist
+        
+    
+    

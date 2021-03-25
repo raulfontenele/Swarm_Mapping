@@ -6,8 +6,130 @@ from Lidar import Lidar
 from Node import Node
 from Map import Map
 from AuxiliarFunctions import AuxiliarFunctions
-from Save import saveCoord,saveEdge
+from Save import saveCoord,saveEdge,saveMap
 from debug import logNodeInfo
+import json
+from PathPlanning import PathPlanning
+import datetime
+
+def Exploring(robotFile):
+    #Definição de variáveis
+    motorsObject = []
+    velocity = 0.4
+    radius = 0.25
+    #extRadius = radius/math.cos(math.pi/6)
+    global mapping
+    tInit = datetime.datetime.now()
+    #Pegar informações do json do robô
+    fileJson = open(robotFile)
+    robot = json.load(fileJson)
+    
+    #Pegar o objeto do robô
+    returnCode,khepera=sim.simxGetObjectHandle(clientID,robot["robotBody"],sim.simx_opmode_blocking)
+
+   #Criar objetos do acelerômetro, Lidar e giroscópio
+    lidar = Lidar(robot["lidar"],clientID,28,2)
+     
+    #Pegar objeto dos motores manipuláveis
+    for i in range(2):
+        returnCode,handle=sim.simxGetObjectHandle(clientID,robot["motorsName"][i],sim.simx_opmode_blocking)
+        motorsObject.append(handle)
+        
+    #Criar o objeto do robô
+    robot = Robot(clientID,robot["id"],motorsObject,khepera,lidar)
+    
+    #Tempo para estabelecer conexões com o servidor
+    time.sleep(0.1)
+    
+    initPose = robot.getAbsolutePosition(False)
+    neighborhood,angles = robot.scanAround(velocity*0.8,mapping)
+    
+    
+    mapping.addMapPoint(initPose,neighborhood,angles)
+    mapping.addVisitedNode(initPose)
+    mapping.addNoneVisitedNode(neighborhood)
+    
+    while len(mapping.noneVisitedList) >0 :
+        '''
+            verificar se existe algum visinho disponível para ser visitado, ou seja, não estar na lista de nós visitados
+            caso não, planejar o caminho para um nó não visitado
+        '''
+        #if neighborhood != None:
+        
+        try:
+            neighborCoord,neighborAngle = mapping.checkAvailability(neighborhood,angles)
+        except Exception:
+            neighborCoord = None
+        
+            
+        if neighborCoord != None:
+            #Visitar o nó 
+            print("Nó não visitado")
+            print("Coordenadas destino: " + str(neighborCoord) )
+            robot.rotateTo(neighborAngle, velocity*0.8)
+            distParent = robot.moveFoward(2*radius, 0, velocity*3)
+            print("Distancia deslocada: " + str(distParent) )
+            
+            '''
+                Uma vez que se chegou no nó não visitado, deve-se escanear em volta, e adicionar os visinhos, não visitados,
+                a lista de nós não visitados, atualizar o nó atual do mapa e dizer que o nó atual é filho do nó anterior.
+                Também deve-se adiconar o nó atual a lista de visitados, assim como dizer que o atual nó, visinho do pai, foi visitado
+            '''
+            
+            currentPose = robot.getAbsolutePosition(False)
+            mapping.visitedNode(currentPose)
+            
+            neighborhood,angles = robot.scanAround(velocity*0.8,mapping)
+            mapping.addNoneVisitedNode(neighborhood)
+            
+            mapping.addMapPoint(currentPose,neighborhood,angles)
+            
+        else:
+            if len(mapping.noneVisitedList) > 0:
+                #Escolher um nó para ir e planejar o caminho
+                node_start = Node(currentPose)
+                node_start.gcost = 0
+            
+                node_goal = Node(mapping.noneVisitedList[0])
+                #goal = mapping.noneVisitedList[0]
+                print("planejar o caminho")
+                path = PathPlanning(mapping,node_start,node_goal)
+                route = path.AStarAlgorithm()
+                print("Posição atual:" + str(robot.getAbsolutePosition(False)))
+                print("Rota")
+                print(route)
+                #Ir até o lugar planejado
+                for index in reversed(range(1,len(route))):
+                    current_position = robot.getAbsolutePosition(False)
+                    #angle = AuxiliarFunctions.oppositeAngle(route[index][1][2])
+                    distance,angle = AuxiliarFunctions.CalcAngleDistance(current_position,route[index-1])
+                    print("Distância:" + str(distance) + "// Angulo:" + str(angle))
+                    robot.rotateTo(angle, velocity*0.8)
+                    robot.moveFoward(distance, 0, velocity*3)
+                    print("Posição atual e objetivo:")
+                    print(robot.getAbsolutePosition(False))
+                    print(route[index-1])
+                
+
+                print("Terminou com posição atual e objetivo:")
+                print(robot.getAbsolutePosition(False))
+                print(route[0])
+                
+                currentPose = robot.getAbsolutePosition(False)
+                mapping.visitedNode(currentPose)
+                
+                neighborhood,angles = robot.scanAround(velocity*0.8,mapping)
+                mapping.addNoneVisitedNode(neighborhood)
+                
+                mapping.addMapPoint(currentPose,neighborhood,angles)
+                
+    saveCoord(mapping.visitedList)
+    saveMap(mapping.structMap, "map")
+    tFinal = datetime.datetime.now()
+    deltaT = tFinal- tInit
+    print(deltaT)
+    #saveEdge(mapping.edgeMap,'arestas')
+    print("Terminou")
 
 print ('Program started')
 
@@ -29,149 +151,17 @@ contagem = 0
 sim.simxFinish(-1) # just in case, close all opened connections
 clientID=sim.simxStart('127.0.0.1',19999,True,True,5000,5) # Connect to CoppeliaSim
 
-if clientID!=-1:
-    print ('Connected to remote API server')
-    
-    #Pegar o objeto de Pioneer
-    returnCode,khepera=sim.simxGetObjectHandle(clientID,robotBody,sim.simx_opmode_blocking)
+mapping = Map(extRadius)
+Exploring('robot1.json')
 
-   #Criar objetos do acelerômetro, Lidar e giroscópio
-    lidar = Lidar("LaserScannerLaser_2D", clientID,28,2)
-    
-    #Pegar objeto dos motores manipuláveis
-    for i in range(2):
-        returnCode,handle=sim.simxGetObjectHandle(clientID,motorsName[i],sim.simx_opmode_blocking)
-        motorsObject.append(handle)
-        
-    #Criar o objeto do robô
-    robot = Robot(clientID,motorsObject,khepera,lidar)
-    
-    #Tempo para estabelecer conexões com o servidor
-    time.sleep(0.1)
-    
-    
-    '''
-    Inicialmente deve-se pegar a posição inicial e realizar o processo de scanner, afim de obter os nós visinhos
-    e criar um nó contendo as informações obtidas. Em seguida deve-se criar o mapa, adicionar o nó inicial a ele,
-    bem como definir o nó atual como o nó inicial. Por fim, deve-se adicionar o nó atual a lista de nós visitados
-    e os nós visinhos a lista de nós não visitados.
-    '''
 
-    initPose = robot.getAbsolutePosition(False)
-    neighborhood,angles = robot.scanAround(60)
-    
-    initNode = Node(initPose)
-    initNode.addNeighborhood(neighborhood, angles)
-    
-    mapping = Map(initNode,extRadius)
-    mapping.currentNode = mapping.initNode
-    mapping.addVisitedNode(initPose)
-    mapping.addNoneVisitedNode(neighborhood)
 
-    '''
-        Inicialmente deve-se escanear todos os nós em volta e adicionar aqueles que possuem visinhança
-        e que ainda não foram visitados a lista de nós não visitados. Uma vez visitado o nó, ele 
-        deverá ser removido da lista de nós não visitados e adicionado a lista de nós visitados.
-        
-        
-        Questão, como fazer para ele caminhar entre os nós??
-        Como escolher o mais perto?
-        Como fazer ele evitar o caminho mais longo, quando possível?
-        A cada passo, na hora de voltar, verificar se pode pular por visinhos?
-        
-    '''
-    while mapping.noneVisitedList != None :
-        '''
-            Verificar se todos os vizinhos já foram visitados. Caso algum ainda não tenha sido, 
-            visitar ele.
-        '''
-        
-        if mapping.currentNode.checkNeighborhood() == True:
-            neighborCoord,neighborAngle = mapping.currentNode.getNeighbor()
-            print("Index atual: " + str(mapping.currentNode.visitedIndex) + " -- De: " + str(len(mapping.currentNode.neighborhoodCoord)))
-            if mapping.checkVisited(neighborCoord,True) == False:
-                
-                print("Nó não visitado")
-                print("Coordenadas destino: " + str(neighborCoord) )
-                robot.rotateTo(neighborAngle[2], velocity)
-                distParent,flag = robot.moveFoward(2*radius, 0, velocity*3)
-                print("Distancia deslocada: " + str(distParent) )
-                
-            
-                '''
-                Uma vez que se chegou no nó não visitado, deve-se escanear em volta, e adicionar os visinhos, não visitados,
-                a lista de nós não visitados, atualizar o nó atual do mapa e dizer que o nó atual é filho do nó anterior.
-                Também deve-se adiconar o nó atual a lista de visitados, assim como dizer que o atual nó, visinho do pai, foi visitado
-                '''
-                
-                #mapping.currentNode.confirmVisitedNeighbor()
-                currentPose = robot.getAbsolutePosition(False)
-                mapping.visitedNode(currentPose)
-                neighborhood,angles = robot.scanAround(60)
-                mapping.addNoneVisitedNode(neighborhood)
+# Before closing the connection to CoppeliaSim, make sure that the last command sent out had time to arrive. You can guarantee this with (for example):
+sim.simxGetPingTime(clientID)
 
-                currentNode = Node(currentPose,mapping.currentNode,neighborAngle[2],distParent)
-                currentNode.addNeighborhood(neighborhood, angles)
-                
-                mapping.currentNode = currentNode
-                '''
-                else:
-                    print("Falha ao tentar ir para nó visinho")
-                    contagem +=1
-                '''
-                
-            else:
-                print("nó visitado")
-                print("Coordenadas visitadas: " + str(neighborCoord) )
+# Now close the connection to CoppeliaSim:
+sim.simxFinish(clientID)
 
-        else:
-            '''
-                Caso não haja mais nós visinhos a serem visitados, deverá retornar ao nó pai e 
-                repetir o processo até que não hajam mais nós a serem visitados.
-                Para retornar ao pai, o robô derá pegar o ângulo de entrada para o nó atual, calcular
-                o simétrico dele e andar de novo o caminho inverso que realizou.
-                Também deverá ser atualizado o nó atual do mapa
-            '''
-            print("Acabaram os nós visinhos. Voltando ao pai")
-            if mapping.currentNode.parent != None:
-                opossitAngle = AuxiliarFunctions.oppositeAngle(mapping.currentNode.parentAngle)
-                robot.rotateTo(opossitAngle, velocity)
-                robot.moveFoward(mapping.currentNode.parentDist, 0, velocity*3)
-                print("Distancia ao nó pai: " + str(mapping.currentNode.parentDist))
-                logNodeInfo(mapping.currentNode)
-                mapping.currentNode = mapping.currentNode.parent
-                
-            else:
-                print("Chegou no nó inicial")
-                break
-    
-    '''
-    arquivo = open("Coordenadas.txt",'a')
-    arquivo.writelines(str(mapping.visitedList))
-    arquivo.close()
-    
-    arquivo = open("arestas.txt",'a')
-    arquivo.writelines(str(mapping.matrixMap))
-    arquivo.close()
-    '''
-
-    saveCoord(mapping.visitedList)
-    saveEdge(mapping.matrixMap,'nosVisitados')
-    saveEdge(mapping.edgeMap,'arestas')
-    
-
-    print("Quantidade de vezes na excessão: " + str(contagem))
-    # Now send some data to CoppeliaSim in a non-blocking fashion:
-    sim.simxAddStatusbarMessage(clientID,'Hello CoppeliaSim!',sim.simx_opmode_oneshot)
-
-    # Before closing the connection to CoppeliaSim, make sure that the last command sent out had time to arrive. You can guarantee this with (for example):
-    sim.simxGetPingTime(clientID)
-
-    # Now close the connection to CoppeliaSim:
-    sim.simxFinish(clientID)
-else:
-    print ('Failed connecting to remote API server')
-print ('Program ended')
 
 
 '''
@@ -179,3 +169,4 @@ print ('Program ended')
         Quando for detectado que um nó visinho já foi visitado, dar um jeito de gravar que o nó visinho
         também é acessível por esse nó. Isso irá criar um mapa que mostra todas as ligações possíveis
 '''
+
