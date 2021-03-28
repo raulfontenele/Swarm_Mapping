@@ -18,6 +18,8 @@ class Robot:
         #self.accelerometer = accelerometer
         self.lidar = lidar
         #self.gyroscope = gyroscope
+        #        self.ownRadius = 0.07
+        #self.radius = 0.15
         self.ownRadius = 0.15
         self.radius = 0.25
         self.extRadius = self.radius/math.cos(math.pi/6)
@@ -147,7 +149,7 @@ class Robot:
     def scanAround(self,velocity,mapping):
         nodes = []
         angles = []
-        distances = []
+        #distances = []
         #error = 0
         ang = [0,60,120,180,240,300]
         
@@ -156,7 +158,7 @@ class Robot:
         
         for angle in ang:
             coord = AuxiliarFunctions.projectCoord(angle, initCoord, 2*self.radius)
-            flag,node = mapping.checkVisited(coord,False)
+            flag,node = mapping.checkVisited(coord)
             if flag == False:
                 angList.append(angle)
                 
@@ -170,7 +172,7 @@ class Robot:
             self.rotateTo(angList[i], velocity)
             
             #bruteLidar = self.lidar.getBruteDate()
-            distance = self.lidar.getPointRead()[2]
+            #distance = self.lidar.getPointRead()[2]
             threshold = 2*self.radius + 1.4*self.ownRadius
             if self.checkDistance(threshold) ==  True:
                 
@@ -255,17 +257,18 @@ class Robot:
             flagProximity = False
             #for index in range(len(bruteLidar)):
                 #angle = 
+            angLimit = (math.pi/2 - math.atan((self.ownRadius + 0.03)/(2*self.radius + self.ownRadius + 0.03)))*180/math.pi
             ang = 0
             interator = 1
             for index in range(0,len(bruteLidar),2):
                 dist = math.sqrt(bruteLidar[index][1]**2 + bruteLidar[index][2]**2)
-                if ang < 76 and abs(bruteLidar[index][2])<self.ownRadius + 0.02 and dist>thresholdMin:
+                if ang < angLimit and abs(bruteLidar[index][2])<self.ownRadius + 0.02 and dist>thresholdMin:
                     flagProximity = True
                     #print("Angulo:" + str(ang))
                     #print("distância:" + str(dist))
                     #print("Limiar:" + str(self.ownRadius*math.cos(ang*math.pi/180)+0.05))
                     break
-                elif ang>=76 and bruteLidar[index][1] <= thresholdMax and dist > thresholdMin:
+                elif ang>=angLimit and bruteLidar[index][1] <= thresholdMax and dist > thresholdMin:
                     flagProximity = True
                     #print("Angulo:" + str(ang))
                     #print("distância:" + str(dist))

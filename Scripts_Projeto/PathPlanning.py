@@ -36,7 +36,7 @@ class PathPlanning:
         for node in self.map.structMap:
             #print(node["nodeCoord"])
             diff2 = (node["nodeCoord"][0] - node_current.coord[0])**2 + (node["nodeCoord"][1] - node_current.coord[1])**2
-            if math.sqrt( diff2) < 0.25:
+            if math.sqrt( diff2) < self.map.radius:
                 ##Colocar todos os visinhos na variável neighborhood
                 for index in range(len(node["neighborhood"])):
                 #for neighbor in :

@@ -13,20 +13,25 @@ class Map:
         self.visitedList = []
         self.noneVisitedList = []
         self.radius = radius
-        self.edgeMap = []
-        self.matrixMap = []
+        self.goalsMap = []
         self.structMap = []
     
-    #def addNode(self,parent):
-        #parent.
+    def initGoalsNode(self,robotId,currentCoord):
+        self.goalsMap.append(
+            {
+                "id":robotId,
+                "nextGoal":currentCoord,
+                "finalGoal":currentCoord
+            })
+        
         
     def addVisitedNode(self,coord):
         self.visitedList.append(coord)
-        #self.matrixMap.append([self.currentNode.coord,coord])
+        
         
     def addNoneVisitedNode(self,listCoord):
         for coord in listCoord:
-            flag,node = self.checkVisited(coord,False)
+            flag,node = self.checkVisited(coord)
             if self.checkNoneVisitedList(coord) == False and flag == False:
                 self.noneVisitedList.append(coord)
         
@@ -38,13 +43,10 @@ class Map:
                 break
         self.addVisitedNode(coord)
     
-    def checkVisited(self,projectedCoord,flagControl):
+    def checkVisited(self,projectedCoord):
         for node in self.visitedList:
             diff2 = (projectedCoord[0] - node[0])**2 + (projectedCoord[1] - node[1])**2
             if math.sqrt(diff2) <= self.radius:
-                if flagControl == True:
-                    print("Aresta adicionada")
-                    self.edgeMap.append([self.currentNode.coord,node])
                 return True,node
         return False,None
     
@@ -63,11 +65,19 @@ class Map:
         n_neighborhood = []
         for neighbor in neighborhood:
             flag = False
-            for nodeVisited in self.visitedList:
-                diff2 = (neighbor[0] - nodeVisited[0])**2 + (neighbor[1] - nodeVisited[1])**2
+            for mapRow in self.structMap:
+                diff2 = (neighbor[0] - mapRow["nodeCoord"][0])**2 + (neighbor[1] - mapRow["nodeCoord"][1])**2
                 if math.sqrt(diff2) < self.radius:
-                    n_neighborhood.append(nodeVisited)
+                    n_neighborhood.append(mapRow["nodeCoord"])
                     flag = True
+                    for nwNeighbor in mapRow["neighborhood"]:
+                        diff2 = (nwNeighbor[0] - currentCoord[0])**2 + (nwNeighbor[1] - currentCoord[1])**2
+                        if math.sqrt(diff2) < self.radius:
+                            #nwNeighbor = currentCoord
+                            indexNeighbor = mapRow["neighborhood"].index(nwNeighbor)
+                            indexElement = self.structMap.index(mapRow)
+                            self.structMap[indexElement]["neighborhood"][indexNeighbor] = currentCoord
+                            break
                     break
             if flag == False:
                 n_neighborhood.append(neighbor)
@@ -81,6 +91,19 @@ class Map:
         self.structMap.append(struct)
         #print("Estrutura do mapa que foi adicionada:")
         #print(struct)
+    def checkGoalAnother(self,coord):
+        '''
+            A regra de avaliação consiste em um robô definir seu objetivo, onde o mesmo não deverá
+            ser o próximo objetivo e nem o final de nenhum outro robô
+        '''
+
+        for goal in self.goalsMap:
+            if math.sqrt((coord[0] - goal["nextGoal"][0])**2 + (coord[1] - goal["nextGoal"][1])**2) < self.radius:
+                return True
+            elif math.sqrt((coord[0] - goal["finalGoal"][0])**2 + (coord[1] - goal["finalGoal"][1])**2) < self.radius:
+                return True
+        return False
+                    
     
     def checkAvailability(self,neighborhood,angles):
         '''
@@ -88,11 +111,17 @@ class Map:
         print(neighborhood)
         print(angles)
         '''
-        
         for index in range(len(neighborhood)):
-            flag,node = self.checkVisited(neighborhood[index],False)
-            if flag == False:
+            flag,node = self.checkVisited(neighborhood[index])
+            if flag == False and self.checkGoalAnother(neighborhood[index]) == False:
                 return [neighborhood[index],angles[index]]
+    
+    def updateGoals(self,nextGoal,finalGoal,robotId):
+        for index in range(len(self.goalsMap)):
+            if self.goalsMap[index]["id"] == robotId:
+                self.goalsMap[index]["nextGoal"] = nextGoal
+                self.goalsMap[index]["finalGoal"] = finalGoal
+                
             
     
             

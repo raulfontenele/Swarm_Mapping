@@ -22,26 +22,27 @@ def Exploring(robotFile):
     tInit = datetime.datetime.now()
     #Pegar informações do json do robô
     fileJson = open(robotFile)
-    robot = json.load(fileJson)
+    robotInfo = json.load(fileJson)
     
     #Pegar o objeto do robô
-    returnCode,khepera=sim.simxGetObjectHandle(clientID,robot["robotBody"],sim.simx_opmode_blocking)
+    returnCode,khepera=sim.simxGetObjectHandle(clientID,robotInfo["robotBody"],sim.simx_opmode_blocking)
 
    #Criar objetos do acelerômetro, Lidar e giroscópio
-    lidar = Lidar(robot["lidar"],clientID,28,2)
+    lidar = Lidar(robotInfo["lidar"],clientID,28,2)
      
     #Pegar objeto dos motores manipuláveis
     for i in range(2):
-        returnCode,handle=sim.simxGetObjectHandle(clientID,robot["motorsName"][i],sim.simx_opmode_blocking)
+        returnCode,handle=sim.simxGetObjectHandle(clientID,robotInfo["motorsName"][i],sim.simx_opmode_blocking)
         motorsObject.append(handle)
         
     #Criar o objeto do robô
-    robot = Robot(clientID,robot["id"],motorsObject,khepera,lidar)
+    robot = Robot(clientID,robotInfo["id"],motorsObject,khepera,lidar)
     
     #Tempo para estabelecer conexões com o servidor
     time.sleep(0.1)
     
     initPose = robot.getAbsolutePosition(False)
+    mapping.initGoalsNode(robotInfo["id"], initPose)
     neighborhood,angles = robot.scanAround(velocity*0.8,mapping)
     
     
@@ -66,6 +67,8 @@ def Exploring(robotFile):
             #Visitar o nó 
             print("Nó não visitado")
             print("Coordenadas destino: " + str(neighborCoord) )
+            #Definir o próximo objetivo/ objetivo final e visita-lo
+            mapping.updateGoals(neighborCoord, neighborCoord, robotInfo["id"])
             robot.rotateTo(neighborAngle, velocity*0.8)
             distParent = robot.moveFoward(2*radius, 0, velocity*3)
             print("Distancia deslocada: " + str(distParent) )
@@ -89,8 +92,19 @@ def Exploring(robotFile):
                 #Escolher um nó para ir e planejar o caminho
                 node_start = Node(currentPose)
                 node_start.gcost = 0
-            
-                node_goal = Node(mapping.noneVisitedList[0])
+                nextGoalIndex = 0
+                
+                # Escolher o ponto futuro apenas se o mesmo não for objetivo de alguém
+                while True:
+                    if mapping.checkGoalAnother(mapping.noneVisitedList[0]) == True:
+                        nextGoalIndex +=1
+                    else:
+                        node_goal = Node(mapping.noneVisitedList[nextGoalIndex])
+                        break
+                
+                mapping.updateGoals(currentPose, mapping.noneVisitedList[nextGoalIndex], robotInfo["id"])
+                    
+                #node_goal = Node(mapping.noneVisitedList[0])
                 #goal = mapping.noneVisitedList[0]
                 print("planejar o caminho")
                 path = PathPlanning(mapping,node_start,node_goal)
@@ -123,7 +137,7 @@ def Exploring(robotFile):
                 
                 mapping.addMapPoint(currentPose,neighborhood,angles)
                 
-    saveCoord(mapping.visitedList)
+    #saveCoord(mapping.visitedList)
     saveMap(mapping.structMap, "map")
     tFinal = datetime.datetime.now()
     deltaT = tFinal- tInit
@@ -163,10 +177,4 @@ sim.simxGetPingTime(clientID)
 sim.simxFinish(clientID)
 
 
-
-'''
-    Mudança a se fazer:
-        Quando for detectado que um nó visinho já foi visitado, dar um jeito de gravar que o nó visinho
-        também é acessível por esse nó. Isso irá criar um mapa que mostra todas as ligações possíveis
-'''
 
