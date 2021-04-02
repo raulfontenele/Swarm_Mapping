@@ -5,6 +5,7 @@ Created on Wed Feb 17 18:37:37 2021
 @author: raulf
 """
 import math
+from Save import saveCoord,saveEdge,saveMap
 
 class Map:
     def __init__(self,radius):
@@ -15,6 +16,7 @@ class Map:
         self.radius = radius
         self.goalsMap = []
         self.structMap = []
+        self.statusMap = []
     
     def initGoalsNode(self,robotId,currentCoord):
         self.goalsMap.append(
@@ -23,6 +25,12 @@ class Map:
                 "nextGoal":currentCoord,
                 "finalGoal":currentCoord
             })
+    def initStatusMap(self,robotId,currentStatus):
+        self.statusMap.append(
+            {
+                "id":robotId,
+                "status":currentStatus
+                })
         
         
     def addVisitedNode(self,coord):
@@ -89,18 +97,19 @@ class Map:
             "angles":       angles
         }
         self.structMap.append(struct)
+        saveMap(self.structMap, "map")
         #print("Estrutura do mapa que foi adicionada:")
         #print(struct)
-    def checkGoalAnother(self,coord):
+    def checkGoalAnother(self,coord,typeDist):
         '''
             A regra de avaliação consiste em um robô definir seu objetivo, onde o mesmo não deverá
-            ser o próximo objetivo e nem o final de nenhum outro robô
+            ser o próximo objetivo ou o final de nenhum outro robô, dependendo da escolha
         '''
 
         for goal in self.goalsMap:
-            if math.sqrt((coord[0] - goal["nextGoal"][0])**2 + (coord[1] - goal["nextGoal"][1])**2) < self.radius:
+            if math.sqrt((coord[0] - goal["nextGoal"][0])**2 + (coord[1] - goal["nextGoal"][1])**2) < self.radius and (typeDist == "next" or typeDist == "both"):
                 return True
-            elif math.sqrt((coord[0] - goal["finalGoal"][0])**2 + (coord[1] - goal["finalGoal"][1])**2) < self.radius:
+            elif math.sqrt((coord[0] - goal["finalGoal"][0])**2 + (coord[1] - goal["finalGoal"][1])**2) < self.radius and (typeDist == "final" or typeDist == "both"):
                 return True
         return False
                     
@@ -113,7 +122,7 @@ class Map:
         '''
         for index in range(len(neighborhood)):
             flag,node = self.checkVisited(neighborhood[index])
-            if flag == False and self.checkGoalAnother(neighborhood[index]) == False:
+            if flag == False and self.checkGoalAnother(neighborhood[index],"both") == False:
                 return [neighborhood[index],angles[index]]
     
     def updateGoals(self,nextGoal,finalGoal,robotId):
@@ -121,6 +130,27 @@ class Map:
             if self.goalsMap[index]["id"] == robotId:
                 self.goalsMap[index]["nextGoal"] = nextGoal
                 self.goalsMap[index]["finalGoal"] = finalGoal
+                break
+                
+    def updateStatus(self,robotId,status):
+        for index in range(len(self.statusMap)):
+            if self.statusMap[index]["id"] == robotId:
+                self.statusMap[index]["status"] = status
+    
+    def checkAdjNumber(self,currentNode):
+        for mapRow in self.structMap:
+            diff2 = (currentNode[0] - mapRow["nodeCoord"][0])**2 + (currentNode[1] - mapRow["nodeCoord"][1])**2
+            if math.sqrt(diff2) < self.radius:
+                return len(mapRow["neighborhood"])
+    
+    def updateVisitedNode(self):
+        for noneVisitedNode in self.noneVisitedList:
+            for visitedNode in self.visitedList:
+                if math.sqrt((noneVisitedNode[0] - visitedNode[0])**2 + (noneVisitedNode[1] - visitedNode[1])**2) < self.radius:
+                    self.noneVisitedList.remove(noneVisitedNode)
+                    print("Apagou o nó " + str(noneVisitedNode))
+                    break
+                
                 
             
     

@@ -39,9 +39,8 @@ class PathPlanning:
             if math.sqrt( diff2) < self.map.radius:
                 ##Colocar todos os visinhos na variável neighborhood
                 for index in range(len(node["neighborhood"])):
-                #for neighbor in :
                     neighborhood.append(Node(node["neighborhood"][index]))
-        #line = [x for x in self.map.structMap if x["nodeCoord"] ==  coord]
+
         '''
         coorX = node_current.coord[0]
         coorY = node_current.coord[1]
@@ -55,8 +54,10 @@ class PathPlanning:
         if self.map[coorX ][coorY - 1] != 1 and coorY - 1 > 0:
             neighbor.append( Node([coorX,coorY - 1]) ) 
         '''
+        '''
         if len(neighborhood) == 0:
             neighborhood.append(node_current.parent)
+        '''
             
         return neighborhood
     

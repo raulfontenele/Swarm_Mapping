@@ -5,9 +5,9 @@ Created on Mon Mar  8 17:46:01 2021
 @author: raulf
 """
 
-def logNeighbor(neighborhood,angles,currentNode):
+def logNeighbor(neighborhood,angles,currentNode,robotId):
     print("//------------------------------------------------------------------------------------------------------------//")
-    print("//---------------  Nó atual: " + str(currentNode) +" --------------------------//") 
+    print("//----  Nó atual: " + str(currentNode) + " --------// -- Robot Id:  " + str(robotId) + "-------//") 
     print("// ---------------- Coordenadas ---------------- // -------- Angulação ------- //")
     for index in range(len(neighborhood)):
         print("//--- " + str(neighborhood[index])+ " ---//---  " + str(angles[index]) + "  ---//")

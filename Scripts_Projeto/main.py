@@ -11,24 +11,30 @@ from debug import logNodeInfo
 import json
 from PathPlanning import PathPlanning
 import datetime
+import threading
 
-def Exploring(robotFile):
+def Exploring(robotFile,comPort):
     #Definição de variáveis
     motorsObject = []
-    velocity = 0.4
+    velocity = 0.9
+    #velocity = 0.4
     radius = 0.25
     #extRadius = radius/math.cos(math.pi/6)
     global mapping
     tInit = datetime.datetime.now()
     #Pegar informações do json do robô
-    fileJson = open(robotFile)
+    fileJson = open("robot" + str(robotFile) + ".json")
     robotInfo = json.load(fileJson)
+    
+    #Testar sem fechar conexões existentes
+    #sim.simxFinish(-1) # just in case, close all opened connections
+    clientID=sim.simxStart('127.0.0.1',comPort,True,True,5000,5) # Connect to CoppeliaSim
     
     #Pegar o objeto do robô
     returnCode,khepera=sim.simxGetObjectHandle(clientID,robotInfo["robotBody"],sim.simx_opmode_blocking)
 
    #Criar objetos do acelerômetro, Lidar e giroscópio
-    lidar = Lidar(robotInfo["lidar"],clientID,28,2)
+    lidar = Lidar(robotInfo["lidar"],clientID,robotInfo["id"])
      
     #Pegar objeto dos motores manipuláveis
     for i in range(2):
@@ -39,17 +45,25 @@ def Exploring(robotFile):
     robot = Robot(clientID,robotInfo["id"],motorsObject,khepera,lidar)
     
     #Tempo para estabelecer conexões com o servidor
-    time.sleep(0.1)
+    time.sleep(0.2)
+    
+    mapping.initStatusMap(robotInfo["id"], "stopping")
     
     initPose = robot.getAbsolutePosition(False)
+    print("Posição Inicial do robô " + str(robotInfo["id"]) + ": " + str(initPose))
     mapping.initGoalsNode(robotInfo["id"], initPose)
+    mapping.initStatusMap(robotInfo["id"], "exploring")
     neighborhood,angles = robot.scanAround(velocity*0.8,mapping)
     
     
     mapping.addMapPoint(initPose,neighborhood,angles)
     mapping.addVisitedNode(initPose)
     mapping.addNoneVisitedNode(neighborhood)
+    mapping.updateVisitedNode()
     
+    '''
+        Não pode haver nós a serem visitados e nem os visinhos podem estar explorando ou se mexendo
+    '''
     while len(mapping.noneVisitedList) >0 :
         '''
             verificar se existe algum visinho disponível para ser visitado, ou seja, não estar na lista de nós visitados
@@ -65,13 +79,16 @@ def Exploring(robotFile):
             
         if neighborCoord != None:
             #Visitar o nó 
-            print("Nó não visitado")
-            print("Coordenadas destino: " + str(neighborCoord) )
+            print("Nó não visitado do robô:" + str(robotInfo["id"]))
+            
             #Definir o próximo objetivo/ objetivo final e visita-lo
             mapping.updateGoals(neighborCoord, neighborCoord, robotInfo["id"])
+            mapping.updateStatus(robotInfo["id"], "moving")
+            
             robot.rotateTo(neighborAngle, velocity*0.8)
             distParent = robot.moveFoward(2*radius, 0, velocity*3)
-            print("Distancia deslocada: " + str(distParent) )
+            print("Distancia deslocada: " + str(distParent) + " pelo robô "+ str(robotInfo["id"]))
+            
             
             '''
                 Uma vez que se chegou no nó não visitado, deve-se escanear em volta, e adicionar os visinhos, não visitados,
@@ -80,7 +97,13 @@ def Exploring(robotFile):
             '''
             
             currentPose = robot.getAbsolutePosition(False)
+            
+            print("Coordenadas destino: " + str(neighborCoord) )
+            print("Coordenada final:" + str(currentPose) + " do robô " + str(robotInfo["id"]))
+            
             mapping.visitedNode(currentPose)
+            
+            mapping.updateStatus(robotInfo["id"], "exploring")
             
             neighborhood,angles = robot.scanAround(velocity*0.8,mapping)
             mapping.addNoneVisitedNode(neighborhood)
@@ -96,33 +119,53 @@ def Exploring(robotFile):
                 
                 # Escolher o ponto futuro apenas se o mesmo não for objetivo de alguém
                 while True:
-                    if mapping.checkGoalAnother(mapping.noneVisitedList[0]) == True:
+                    if nextGoalIndex >= len(mapping.noneVisitedList):
+                        node_goal = None
+                        break
+                    elif mapping.checkGoalAnother(mapping.noneVisitedList[nextGoalIndex],"both") == True:
                         nextGoalIndex +=1
                     else:
                         node_goal = Node(mapping.noneVisitedList[nextGoalIndex])
                         break
-                
-                mapping.updateGoals(currentPose, mapping.noneVisitedList[nextGoalIndex], robotInfo["id"])
+                if node_goal != None:
+                    mapping.updateGoals(currentPose, mapping.noneVisitedList[nextGoalIndex], robotInfo["id"])
+                    mapping.updateStatus(robotInfo["id"], "moving")
+                        
+                    #node_goal = Node(mapping.noneVisitedList[0])
+                    #goal = mapping.noneVisitedList[0]
+                    print("planejar o caminho")
+                    saveMap(mapping.structMap, "mappingPath")
+                    path = PathPlanning(mapping,node_start,node_goal)
+                    route = path.AStarAlgorithm()
+                    print("Posição atual:" + str(robot.getAbsolutePosition(False)) + " do robô " + str(robotInfo["id"]))
+                    print("Posição objetivo:" + str(node_goal.coord) + " do robô " + str(robotInfo["id"]))
+                    print("Rota")
+                    print(route)
                     
-                #node_goal = Node(mapping.noneVisitedList[0])
-                #goal = mapping.noneVisitedList[0]
-                print("planejar o caminho")
-                path = PathPlanning(mapping,node_start,node_goal)
-                route = path.AStarAlgorithm()
-                print("Posição atual:" + str(robot.getAbsolutePosition(False)))
-                print("Rota")
-                print(route)
-                #Ir até o lugar planejado
-                for index in reversed(range(1,len(route))):
-                    current_position = robot.getAbsolutePosition(False)
-                    #angle = AuxiliarFunctions.oppositeAngle(route[index][1][2])
-                    distance,angle = AuxiliarFunctions.CalcAngleDistance(current_position,route[index-1])
-                    print("Distância:" + str(distance) + "// Angulo:" + str(angle))
-                    robot.rotateTo(angle, velocity*0.8)
-                    robot.moveFoward(distance, 0, velocity*3)
-                    print("Posição atual e objetivo:")
-                    print(robot.getAbsolutePosition(False))
-                    print(route[index-1])
+                    flagConflit = False
+                    
+                    while True:
+                        #Ir até o lugar planejado
+                        for index in reversed(range(1,len(route))):
+                            if mapping.checkGoalAnother(route[index-1],"next") == False:
+                                current_position = robot.getAbsolutePosition(False)
+                                distance,angle = AuxiliarFunctions.CalcAngleDistance(current_position,route[index-1])
+                                print("Distância:" + str(distance) + "// Angulo:" + str(angle))
+                                robot.rotateTo(angle, velocity*0.8)
+                                robot.moveFoward(distance, 0, velocity*3)
+                                print("Posição atual e objetivo:")
+                                print(robot.getAbsolutePosition(False))
+                                print(route[index-1])
+                            else:
+                                flagConflit = True
+                                break
+                            
+                        currentPosition = robot.getAbsolutePosition(False)
+                        if math.sqrt( (route[0][0]-currentPosition[0] )**2 + (route[0][1]-currentPosition[1] )**2 ) < radius:
+                            break
+                        
+                        if flagConflit == True:
+                            print("deu conflito")
                 
 
                 print("Terminou com posição atual e objetivo:")
@@ -144,6 +187,12 @@ def Exploring(robotFile):
     print(deltaT)
     #saveEdge(mapping.edgeMap,'arestas')
     print("Terminou")
+    
+    # Before closing the connection to CoppeliaSim, make sure that the last command sent out had time to arrive. You can guarantee this with (for example):
+    sim.simxGetPingTime(clientID)
+    
+    # Now close the connection to CoppeliaSim:
+    sim.simxFinish(clientID)
 
 print ('Program started')
 
@@ -162,19 +211,21 @@ extRadius = radius/math.cos(math.pi/6)
 
 contagem = 0
 
-sim.simxFinish(-1) # just in case, close all opened connections
-clientID=sim.simxStart('127.0.0.1',19999,True,True,5000,5) # Connect to CoppeliaSim
+
 
 mapping = Map(extRadius)
-Exploring('robot1.json')
 
 
+robot1str = "robot1"
+robot2str = "robot2"
 
-# Before closing the connection to CoppeliaSim, make sure that the last command sent out had time to arrive. You can guarantee this with (for example):
-sim.simxGetPingTime(clientID)
+threading.Thread(target=Exploring,args=(1,19999)).start()
+threading.Thread(target=Exploring,args=(2,19998)).start()
+#Exploring('robot1.json')
 
-# Now close the connection to CoppeliaSim:
-sim.simxFinish(clientID)
+
+time.sleep(200)
+
 
 
 

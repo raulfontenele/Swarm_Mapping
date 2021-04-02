@@ -8,14 +8,13 @@ import numpy as np
 import sim
 
 class Lidar:
-    def __init__(self,name,clientID,angle,density):
+    def __init__(self,name,clientID,idFunction):
         self.name = name
         self.clientID = clientID
         self.ObjectHandle = self.getObjectHandle(self.name)
-        self.angle = angle
-        self.density = density
+
         self.flagBruteData = False
-        
+        self.idFunction = idFunction
         #Inicialização das funções
         self.getPointRead()
         self.getBruteDate()
@@ -41,10 +40,10 @@ class Lidar:
         
     def getBruteDate(self):
         if self.flagBruteData == False:
-            returnCode,signalValue = sim.simxGetStringSignal(self.clientID,'measuredDataAtThisTime',sim.simx_opmode_streaming) 
+            returnCode,signalValue = sim.simxGetStringSignal(self.clientID,'measuredDataAtThisTime' + str(self.idFunction),sim.simx_opmode_streaming) 
             self.flagBruteData = True
         else:
-            returnCode,signalValue = sim.simxGetStringSignal(self.clientID,'measuredDataAtThisTime',sim.simx_opmode_buffer)
+            returnCode,signalValue = sim.simxGetStringSignal(self.clientID,'measuredDataAtThisTime' + str(self.idFunction),sim.simx_opmode_buffer)
             
         floatValues = sim.simxUnpackFloats(signalValue)
         try:
