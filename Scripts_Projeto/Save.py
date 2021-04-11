@@ -21,5 +21,10 @@ def saveMap(mapping,fileName):
     file = open( str(fileName) + ".txt",'w')
     for node in mapping:
         file.write(str(node) +"\n")
+        
+def saveDebug(string):
+    file = open( "debugLog.txt",'a')
+    file.write(string + "\n")
+    file.close()    
 
         

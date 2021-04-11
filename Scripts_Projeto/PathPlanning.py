@@ -1,5 +1,6 @@
 from Node import Node
 import math
+from Save import saveDebug
 
 class PathPlanning:
 
@@ -102,6 +103,7 @@ class PathPlanning:
 
             if len(self.openList) == 0:
                 print("deu merda")
+                saveDebug("Deu problema no planejamento de caminho")
                 break
 
         route = []

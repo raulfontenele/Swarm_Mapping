@@ -65,7 +65,7 @@ class Map:
                 return True
         return False
     
-    def addMapPoint(self,currentCoord,neighborhood,angles):
+    def addMapPoint(self,currentCoord,neighborhood,angles,robotId):
         #Verificar se o ponto já existe e, em caso positivo, colocar o ponto que já existe no lugar do projetado
         '''
             Precisa ser modificado
@@ -94,7 +94,8 @@ class Map:
         struct = {
             "nodeCoord":    currentCoord,
             "neighborhood": n_neighborhood,
-            "angles":       angles
+            "angles":       angles,
+            "robotId":      robotId
         }
         self.structMap.append(struct)
         saveMap(self.structMap, "map")
@@ -113,7 +114,19 @@ class Map:
                 return True
         return False
                     
-    
+    def getFreeNeighbor(self,currentNode):
+        for mapRow in self.structMap:
+            diff2 = (currentNode[0] - mapRow["nodeCoord"][0])**2 + (currentNode[1] - mapRow["nodeCoord"][1])**2
+            if math.sqrt(diff2) < self.radius:
+                neighborhood =  mapRow["neighborhood"]
+                break
+        for neighbor in neighborhood:
+            if self.checkGoalAnother(neighbor,"next") == False:
+                return neighbor
+                
+                
+            
+            
     def checkAvailability(self,neighborhood,angles):
         '''
         print("tamanho do troço: " + str(len(neighborhood)) )
@@ -150,6 +163,11 @@ class Map:
                     self.noneVisitedList.remove(noneVisitedNode)
                     print("Apagou o nó " + str(noneVisitedNode))
                     break
+    
+    def getCoordNoneVisitedList(self,coord):
+        for noneVisitedNode in self.noneVisitedList:
+            if math.sqrt((noneVisitedNode[0] - coord[0])**2 + (noneVisitedNode[1] - coord[1])**2) < self.radius:
+                return noneVisitedNode
                 
                 
             

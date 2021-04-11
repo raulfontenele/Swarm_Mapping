@@ -18,7 +18,7 @@ class Robot:
         #self.accelerometer = accelerometer
         self.lidar = lidar
         #self.gyroscope = gyroscope
-        #        self.ownRadius = 0.07
+        #self.ownRadius = 0.07
         #self.radius = 0.15
         self.ownRadius = 0.15
         self.radius = 0.25
@@ -81,11 +81,6 @@ class Robot:
         else:
             returnCode,eulerAngles = sim.simxGetObjectOrientation(self.idClient,self.robot,-1,sim.simx_opmode_buffer)
         
-        '''
-        #Sem a conversão de euler
-        for i in range(len(eulerAngles)):
-            eulerAngles[i] = eulerAngles[i]*180/math.pi
-        '''
         #Com a conversão dos angulos de euler
         '''
             Os valores dos ângulos de euler variam de 0 a -2*pi entre os ângulos de 90º e -90º nos quadrantes 1 e 4
@@ -102,8 +97,6 @@ class Robot:
             if eulerAngles[i] >= 360:
                 eulerAngles[i] -= 360
         
-
-
         #print("angulos de euler graus:")
         return eulerAngles
     
@@ -111,26 +104,34 @@ class Robot:
         for i in range(len(self.motorsId)):
             sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[i],0,sim.simx_opmode_oneshot)
             
-    def moveFoward(self,distance,interval,velocity):
+    def moveFoward(self,distance,angle,velocity):
         #threshold = 2*self.radius + 1.4*self.ownRadius
  
         if distance > 0:
             #Ligar os motores pra frente
-            self.turnOnRobot(velocity,'front')
+            self.turnOnRobot(velocity,velocity,'front')
         else:
             #Ligar os motores pra trás
-            self.turnOnRobot(velocity,'back')
+            self.turnOnRobot(velocity,velocity,'back')
 
 
         #Abordagem utilizando a posição absoluta
         initPosition = self.getAbsolutePosition(False)
 
         distanceAbs = 0
+        
+        P = 0.01
 
         while(distanceAbs <= abs(distance)):
                      
             position = self.getAbsolutePosition(False)
             distanceAbs = math.sqrt((initPosition[0]-position[0])**2 + (initPosition[1]-position[1])**2)
+            
+            #Aplicar um controlador P
+            error = AuxiliarFunctions.diffAngleThreshold(angle,self.getAbsoluteOrientation(False)[2])
+            rightVelocity = velocity*(1 - error*P)
+            leftVelocity = velocity*(1 + error*P)
+            self.turnOnRobot(leftVelocity,rightVelocity,'front')
             #if self.checkDistance(self.ownRadius) ==  False:
                 #print("Parou por ir para frente por estar muito próximo a parede")
                 #break
@@ -160,29 +161,24 @@ class Robot:
             coord = AuxiliarFunctions.projectCoord(angle, initCoord, 2*self.radius)
             flag,node = mapping.checkVisited(coord)
             if flag == False:
-                angList.append(angle)
-                
+                angList.append(angle)      
             else:
                 nodes.append(node)
                 angles.append(angle)
-        print("Angulos visitados: " + str(angles))
+        #print("Angulos visitados: " + str(angles))
 
-        
         for i in range(len(angList)):
             
             self.rotateTo(angList[i], velocity)
             
-            #bruteLidar = self.lidar.getBruteDate()
-            #distance = self.lidar.getPointRead()[2]
             threshold = 2*self.radius + 1.4*self.ownRadius
             
             orientation = self.getAbsoluteOrientation(False)
                    
-            coord = AuxiliarFunctions.projectCoord(orientation[2], initCoord, 2*self.radius)
+            coord = AuxiliarFunctions.projectCoord(angList[i], initCoord, 2*self.radius)
             if self.checkDistance(threshold) ==  True or mapping.checkGoalAnother(coord, 'next') == True:
                 nodes.append(coord)
                 angles.append(orientation[2])
-                #distances.append(distance)
 
             time.sleep(0.15)
             
@@ -191,19 +187,19 @@ class Robot:
         return nodes,angles
 
         
-    def turnOnRobot(self,velocity,rotationSense):
+    def turnOnRobot(self,velocityR,velocityL,rotationSense):
         if rotationSense == "hor":
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],velocity,sim.simx_opmode_oneshot)
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],-velocity,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],velocityL,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],-velocityR,sim.simx_opmode_oneshot)
         elif rotationSense == "antihor":
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],-velocity,sim.simx_opmode_oneshot)
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],velocity,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],-velocityL,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],velocityR,sim.simx_opmode_oneshot)
         elif rotationSense == "front":
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],velocity,sim.simx_opmode_oneshot)
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],velocity,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],velocityL,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],velocityR,sim.simx_opmode_oneshot)
         else:
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],-velocity,sim.simx_opmode_oneshot)
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],-velocity,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],-velocityL,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],-velocityR,sim.simx_opmode_oneshot)
         
         
     def rotateTo(self,angle,velocity):
@@ -216,17 +212,17 @@ class Robot:
 
         
         if diffHor < diffAntiHor:
-            self.turnOnRobot(velocity,'hor')
+            self.turnOnRobot(velocity,velocity,'hor')
             sign = 1
         else:
-            self.turnOnRobot(velocity,'antihor')
+            self.turnOnRobot(velocity,velocity,'antihor')
             sign = -1
 
         while(True):
             currentOrientation = self.getAbsoluteOrientation(False)
             diff = AuxiliarFunctions.diffAngles(angle,currentOrientation[index] , sign)
             
-            if diff <= 1:
+            if diff <= 0.8:
                 self.stopRotation()
                 '''
                 print("Inicial::" + str(angle))

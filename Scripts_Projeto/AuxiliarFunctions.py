@@ -20,6 +20,15 @@ class AuxiliarFunctions:
             else:
                 diff = 360 - (diff)
         return diff
+    @staticmethod
+    def diffAngleThreshold(threshold,orientation):
+        angleHor = AuxiliarFunctions.diffAngles(threshold,orientation,1)
+        angleAntiHor = AuxiliarFunctions.diffAngles(threshold,orientation,-1)
+        if angleAntiHor > angleHor:
+            return angleHor
+        else:
+            return -angleAntiHor
+        
     
     @staticmethod
     def projectCoord(orientation,initCoord,distance):

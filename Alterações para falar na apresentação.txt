@@ -21,3 +21,27 @@ Desafios atuais:
 
 
 Como ver um valor ótimo pro angulo do lidar.
+
+Estrutura cristalina de sólidos e líquidos
+
+
+
+-----------------------------------------------------------------------------------------------------
+
+Falar do mapa em estrela
+	Robôs precisaram ser melhores e com hexagonos menores
+
+Tempo de simulação reduzido com robôs de dimensões menores.
+Tempo de simulação aumenta com a quantidade de robôs
+
+Error com múltiplos robôs por causa da posição
+Aplicação de controlador proporcional
+	Mal implementado, tornando lento, o que causa mais problemas em distâncias menores
+
+Mostrar testes.
+	Justificar porque do teste com o quadrado lateral
+
+Existe ainda o conflito cruzado. O resto parece resolvido
+
+Erro com a introdução de 
+
