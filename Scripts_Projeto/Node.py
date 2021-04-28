@@ -13,7 +13,7 @@ class Node:
         self.fcost = self.gcost + self.hcost
 
     def calculateGCost(self):
-        self.gcost = self.parent.gcost + 10
+        self.gcost = self.parent.gcost + ((self.parent.coord[0] - self.coord[0])**2 + (self.parent.coord[1] - self.coord[1])**2)**(1/2)
     
     def getFcode(self):
         return self.fcost

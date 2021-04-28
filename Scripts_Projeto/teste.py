@@ -17,8 +17,8 @@ import threading
 def Exploring(robotFile,comPort):
     #Definição de variáveis
     motorsObject = []
-    velocity = 0.7
-    #velocity = 0.4
+    #velocity = 0.7
+    velocity = 0.4
     radius = 0.25
     global mapping
     
@@ -55,9 +55,15 @@ def Exploring(robotFile,comPort):
     #Tempo para estabelecer conexões com o servidor
     time.sleep(0.2)
     print("Passou 4")
-    #robot.moveFoward(2, 0, velocity*3)
-    tfinal = datetime.datetime.now()
+    robot.rotateTo(0, 0.8)
+    robot.moveFoward(2, 0, velocity*3)
+    robot.rotateTo(180, 0.8)
+    robot.moveFoward(2, 180, velocity*3)
+    robot.rotateTo(60, 0.8)
+    robot.moveFoward(2, 60, velocity*3)
     
+    tfinal = datetime.datetime.now()
+    '''
     #print(tfinal - tInit)
     for i in range(500):
         if i == 0:
@@ -65,7 +71,7 @@ def Exploring(robotFile,comPort):
         else:
             lidar.getDetectedState(True)
         time.sleep(0.1)
-        
+    ''' 
     #lidar.teste()
     
     # Before closing the connection to CoppeliaSim, make sure that the last command sent out had time to arrive. You can guarantee this with (for example):

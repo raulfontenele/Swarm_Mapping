@@ -41,6 +41,7 @@ class PathPlanning:
                 ##Colocar todos os visinhos na variável neighborhood
                 for index in range(len(node["neighborhood"])):
                     neighborhood.append(Node(node["neighborhood"][index]))
+                break
 
         '''
         coorX = node_current.coord[0]
@@ -96,14 +97,14 @@ class PathPlanning:
                     self.openList.append(neighbor)
                 elif self.checkOpenList(neighbor) :
                     neighbor = [node for node in self.openList if node.coord == neighbor.coord][0]
-                    if ( node_current.gcost + 10 < neighbor.gcost ):                      
+                    if ( node_current.gcost + 0.5 < neighbor.gcost ):                      
                         neighbor.parent = node_current
                         neighbor.calculateGCost()
                         neighbor.calculateFCost()
 
             if len(self.openList) == 0:
                 print("deu merda")
-                saveDebug("Deu problema no planejamento de caminho")
+                saveDebug("Deu problema no planejamento de caminho com origem em" + str(self.node_start.coord) + " e objetivo " + str(self.node_goal.coord))
                 break
 
         route = []

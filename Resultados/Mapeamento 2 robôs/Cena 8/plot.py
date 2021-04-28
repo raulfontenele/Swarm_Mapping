@@ -46,7 +46,7 @@ def fun2():
         for neighbor in struct["neighborhood"]:
             plt.plot( [struct["nodeCoord"][0],neighbor[0]],[struct["nodeCoord"][1],neighbor[1]])
             plt.scatter(struct["nodeCoord"][0],struct["nodeCoord"][1],s = 1000,marker='h')
-    
+    plt.grid()
     plt.show()
 
 #struturedMap()

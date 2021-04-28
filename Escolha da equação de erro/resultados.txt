@@ -1,0 +1,376 @@
+Cenário 2 -> 2 robôs - minimum ---> Mapa 1
+
+Configuração-> Ângulo: 0 Distância:1
+Mean error: 0,14655539056777653
+Configuração-> Ângulo: 0,05 Distância:0,95
+Mean error: 0,14030308309687228
+Configuração-> Ângulo: 0,1 Distância:0,9
+Mean error: 0,1340507756259677
+Configuração-> Ângulo: 0,15 Distância:0,85
+Mean error: 0,12779846815506365
+Configuração-> Ângulo: 0,2 Distância:0,8
+Mean error: 0,12154616068415974
+Configuração-> Ângulo: 0,25 Distância:0,75
+Mean error: 0,11529385321325512
+Configuração-> Ângulo: 0,3 Distância:0,7
+Mean error: 0,10904154574235128
+Configuração-> Ângulo: 0,35 Distância:0,65
+Mean error: 0,10278923827144669
+Configuração-> Ângulo: 0,4 Distância:0,6
+Mean error: 0,0965369308005424
+Configuração-> Ângulo: 0,45 Distância:0,55
+Mean error: 0,09028462332963806
+Configuração-> Ângulo: 0,5 Distância:0,5
+Mean error: 0,08403231585873383
+Configuração-> Ângulo: 0,55 Distância:0,44999999999999996
+Mean error: 0,07778000838782957
+Configuração-> Ângulo: 0,6 Distância:0,4
+Mean error: 0,07152770091692534
+Configuração-> Ângulo: 0,65 Distância:0,35
+Mean error: 0,06527539344602107
+Configuração-> Ângulo: 0,7 Distância:0,30000000000000004
+Mean error: 0,05902308597511675
+Configuração-> Ângulo: 0,75 Distância:0,25
+Mean error: 0,0527707785042125
+Configuração-> Ângulo: 0,8 Distância:0,19999999999999996
+Mean error: 0,04651847103330828
+Configuração-> Ângulo: 0,85 Distância:0,15000000000000002
+Mean error: 0,04026616356240403
+Configuração-> Ângulo: 0,9 Distância:0,09999999999999998
+Mean error: 0,03401385609149974
+Configuração-> Ângulo: 0,95 Distância:0,050000000000000044
+Mean error: 0,027761548620595454
+Configuração-> Ângulo: 1 Distância:0
+Mean error: 0,02150924114969118
+Max error angle = 24,164234988452165
+
+
+---------------------------------------------------------------------------------------
+Cenário 1 -> 2 robôs - minimum ---> Mapa 2
+
+Configuração-> Ângulo: 0 Distância:1
+Mean error: 0,13185783310563473
+Configuração-> Ângulo: 0,05 Distância:0,95
+Mean error: 0,12615766680869797
+Configuração-> Ângulo: 0,1 Distância:0,9
+Mean error: 0,12045750051176139
+Configuração-> Ângulo: 0,15 Distância:0,85
+Mean error: 0,11475733421482413
+Configuração-> Ângulo: 0,2 Distância:0,8
+Mean error: 0,10905716791788786
+Configuração-> Ângulo: 0,25 Distância:0,75
+Mean error: 0,10335700162095099
+Configuração-> Ângulo: 0,3 Distância:0,7
+Mean error: 0,09765683532401416
+Configuração-> Ângulo: 0,35 Distância:0,65
+Mean error: 0,0919566690270773
+Configuração-> Ângulo: 0,4 Distância:0,6
+Mean error: 0,0862565027301406
+Configuração-> Ângulo: 0,45 Distância:0,55
+Mean error: 0,08055633643320388
+Configuração-> Ângulo: 0,5 Distância:0,5
+Mean error: 0,07485617013626701
+Configuração-> Ângulo: 0,55 Distância:0,44999999999999996
+Mean error: 0,06915600383933021
+Configuração-> Ângulo: 0,6 Distância:0,4
+Mean error: 0,06345583754239344
+Configuração-> Ângulo: 0,65 Distância:0,35
+Mean error: 0,057755671245456774
+Configuração-> Ângulo: 0,7 Distância:0,30000000000000004
+Mean error: 0,052055504948519946
+Configuração-> Ângulo: 0,75 Distância:0,25
+Mean error: 0,04635533865158305
+Configuração-> Ângulo: 0,8 Distância:0,19999999999999996
+Mean error: 0,040655172354646434
+Configuração-> Ângulo: 0,85 Distância:0,15000000000000002
+Mean error: 0,034955006057709674
+Configuração-> Ângulo: 0,9 Distância:0,09999999999999998
+Mean error: 0,029254839760772804
+Configuração-> Ângulo: 0,95 Distância:0,050000000000000044
+Mean error: 0,023554673463836075
+Configuração-> Ângulo: 1 Distância:0
+Mean error: 0,017854507166899316
+Max error angle = 28,218935877325386
+
+------------------------------------------------------------------
+Cena 8 -> 2 robôs - minimum ---> Mapa 3
+
+
+Configuração-> Ângulo: 0 Distância:1
+Mean error: 0,09125624458399852
+Configuração-> Ângulo: 0,05 Distância:0,95
+Mean error: 0,08734916207312907
+Configuração-> Ângulo: 0,1 Distância:0,9  
+Mean error: 0,08344207956225962
+Configuração-> Ângulo: 0,15 Distância:0,85
+Mean error: 0,07953499705139018
+Configuração-> Ângulo: 0,2 Distância:0,8  
+Mean error: 0,07562791454052066
+Configuração-> Ângulo: 0,25 Distância:0,75
+Mean error: 0,07172083202965127
+Configuração-> Ângulo: 0,3 Distância:0,7  
+Mean error: 0,06781374951878182
+Configuração-> Ângulo: 0,35 Distância:0,65
+Mean error: 0,06390666700791237
+Configuração-> Ângulo: 0,4 Distância:0,6
+Mean error: 0,05999958449704292
+Configuração-> Ângulo: 0,45 Distância:0,55
+Mean error: 0,056092501986173486
+Configuração-> Ângulo: 0,5 Distância:0,5
+Mean error: 0,052185419475303974
+Configuração-> Ângulo: 0,55 Distância:0,44999999999999996
+Mean error: 0,04827833696443454
+Configuração-> Ângulo: 0,6 Distância:0,4
+Mean error: 0,04437125445356509
+Configuração-> Ângulo: 0,65 Distância:0,35
+Mean error: 0,04046417194269565
+Configuração-> Ângulo: 0,7 Distância:0,30000000000000004
+Mean error: 0,03655708943182619
+Configuração-> Ângulo: 0,75 Distância:0,25
+Mean error: 0,032650006920956744
+Configuração-> Ângulo: 0,8 Distância:0,19999999999999996
+Mean error: 0,028742924410087273
+Configuração-> Ângulo: 0,85 Distância:0,15000000000000002
+Mean error: 0,024835841899217843
+Configuração-> Ângulo: 0,9 Distância:0,09999999999999998
+Mean error: 0,020928759388348372
+Configuração-> Ângulo: 0,95 Distância:0,050000000000000044
+Mean error: 0,017021676877478912
+Configuração-> Ângulo: 1 Distância:0
+Mean error: 0,013114594366609477
+Max error angle = 3,817902217195069
+
+
+
+----------------------------------------------------------------------
+Cena 5 -> 2 robôs - minimum ---> Mapa 4
+
+Configuração-> Ângulo: 0 Distância:1
+Mean error: 1,758105433549713
+Configuração-> Ângulo: 0,05 Distância:0,95
+Mean error: 1,6717851310069616
+Configuração-> Ângulo: 0,1 Distância:0,9
+Mean error: 1,5854648284642119
+Configuração-> Ângulo: 0,15 Distância:0,85
+Mean error: 1,49914452592146
+Configuração-> Ângulo: 0,2 Distância:0,8
+Mean error: 1,4128242233787083
+Configuração-> Ângulo: 0,25 Distância:0,75
+Mean error: 1,3265039208359584
+Configuração-> Ângulo: 0,3 Distância:0,7
+Mean error: 1,240183618293208
+Configuração-> Ângulo: 0,35 Distância:0,65
+Mean error: 1,1538633157504565
+Configuração-> Ângulo: 0,4 Distância:0,6
+Mean error: 1,0675430132077055
+Configuração-> Ângulo: 0,45 Distância:0,55
+Mean error: 0,9812227106649544
+Configuração-> Ângulo: 0,5 Distância:0,5
+Mean error: 0,8949024081222038
+Configuração-> Ângulo: 0,55 Distância:0,44999999999999996
+Mean error: 0,8085821055794532
+Configuração-> Ângulo: 0,6 Distância:0,4
+Mean error: 0,7222618030367022
+Configuração-> Ângulo: 0,65 Distância:0,35
+Mean error: 0,6359415004939523
+Configuração-> Ângulo: 0,7 Distância:0,30000000000000004
+Mean error: 0,5496211979512007
+Configuração-> Ângulo: 0,75 Distância:0,25
+Mean error: 0,46330089540845
+Configuração-> Ângulo: 0,8 Distância:0,19999999999999996
+Mean error: 0,37698059286569857
+Configuração-> Ângulo: 0,85 Distância:0,15000000000000002
+Mean error: 0,2906602903229479
+Configuração-> Ângulo: 0,9 Distância:0,09999999999999998
+Mean error: 0,204339987780197
+Configuração-> Ângulo: 0,95 Distância:0,050000000000000044
+Mean error: 0,11801968523744621
+Configuração-> Ângulo: 1 Distância:0
+Mean error: 0,031699382694695334
+Max error angle = 23,461006232643967
+
+---------------------------------------------------------------------------------------
+Cenário 2 -> 2 robôs - minimum ---> Mapa 1 (Normalização da angulação em 180)
+Configuração-> Angulo: 0 Distância:1
+Mean error: 0,14655539056777653
+Configuração-> Angulo: 0,05 Distância:0,95
+Mean error: 0,1413785451543567
+Configuração-> Angulo: 0,1 Distância:0,9
+Mean error: 0,13620169974093654
+Configuração-> Angulo: 0,15 Distância:0,85
+Mean error: 0,1310248543275174
+Configuração-> Angulo: 0,2 Distância:0,8
+Mean error: 0,12584800891409761
+Configuração-> Angulo: 0,25 Distância:0,75
+Mean error: 0,12067116350067793
+Configuração-> Angulo: 0,3 Distância:0,7
+Mean error: 0,11549431808725837
+Configuração-> Angulo: 0,35 Distância:0,65
+Mean error: 0,1103174726738388
+Configuração-> Angulo: 0,4 Distância:0,6
+Mean error: 0,10514062726041885
+Configuração-> Angulo: 0,45 Distância:0,55
+Mean error: 0,09996378184699903
+Configuração-> Angulo: 0,5 Distância:0,5
+Mean error: 0,0947869364335796
+Configuração-> Angulo: 0,55 Distância:0,44999999999999996
+Mean error: 0,08961009102015957
+Configuração-> Angulo: 0,6 Distância:0,4
+Mean error: 0,08443324560674004
+Configuração-> Angulo: 0,65 Distância:0,35
+Mean error: 0,07925640019332034
+Configuração-> Angulo: 0,7 Distância:0,30000000000000004
+Mean error: 0,07407955477990072
+Configuração-> Angulo: 0,75 Distância:0,25
+Mean error: 0,06890270936648096
+Configuração-> Angulo: 0,8 Distância:0,19999999999999996
+Mean error: 0,06372586395306112
+Configuração-> Angulo: 0,85 Distância:0,15000000000000002
+Mean error: 0,05854901853964155
+Configuração-> Angulo: 0,9 Distância:0,09999999999999998
+Mean error: 0,05337217312622178
+Configuração-> Angulo: 0,95 Distância:0,050000000000000044
+Mean error: 0,0481953277128022
+Configuração-> Angulo: 1 Distância:0
+Mean error: 0,04301848229938236
+Max error angle = 24,164234988452165
+
+---------------------------------------------------------------------------------------
+Cenário 1 -> 2 robôs - minimum ---> Mapa 2 (Normalização da angulação em 180)
+
+Configuração-> Angulo: 0 Distância:1
+Mean error: 0,13185783310563473
+Configuração-> Angulo: 0,05 Distância:0,95
+Mean error: 0,127050392167043
+Configuração-> Angulo: 0,1 Distância:0,9
+Mean error: 0,12224295122845105
+Configuração-> Angulo: 0,15 Distância:0,85
+Mean error: 0,11743551028985914
+Configuração-> Angulo: 0,2 Distância:0,8
+Mean error: 0,11262806935126762
+Configuração-> Angulo: 0,25 Distância:0,75
+Mean error: 0,10782062841267584
+Configuração-> Angulo: 0,3 Distância:0,7
+Mean error: 0,10301318747408385
+Configuração-> Angulo: 0,35 Distância:0,65
+Mean error: 0,0982057465354921
+Configuração-> Angulo: 0,4 Distância:0,6
+Mean error: 0,09339830559690032
+Configuração-> Angulo: 0,45 Distância:0,55
+Mean error: 0,08859086465830847
+Configuração-> Angulo: 0,5 Distância:0,5
+Mean error: 0,0837834237197166
+Configuração-> Angulo: 0,55 Distância:0,44999999999999996
+Mean error: 0,07897598278112489
+Configuração-> Angulo: 0,6 Distância:0,4
+Mean error: 0,07416854184253308
+Configuração-> Angulo: 0,65 Distância:0,35
+Mean error: 0,06936110090394124
+Configuração-> Angulo: 0,7 Distância:0,30000000000000004
+Mean error: 0,0645536599653494
+Configuração-> Angulo: 0,75 Distância:0,25
+Mean error: 0,05974621902675762
+Configuração-> Angulo: 0,8 Distância:0,19999999999999996
+Mean error: 0,05493877808816582
+Configuração-> Angulo: 0,85 Distância:0,15000000000000002
+Mean error: 0,05013133714957406
+Configuração-> Angulo: 0,9 Distância:0,09999999999999998
+Mean error: 0,04532389621098212
+Configuração-> Angulo: 0,95 Distância:0,050000000000000044
+Mean error: 0,04051645527239043
+Configuração-> Angulo: 1 Distância:0
+Mean error: 0,03570901433379863
+Max error angle = 28,218935877325386
+
+---------------------------------------------------------------------------------------
+Cena 8 -> 2 robôs - minimum ---> Mapa 3 (Normalização da angulação em 180)
+
+Configuração-> Angulo: 0 Distância:1
+Mean error: 0,09125624458399852
+Configuração-> Angulo: 0,05 Distância:0,95
+Mean error: 0,08800489179145952
+Configuração-> Angulo: 0,1 Distância:0,9  
+Mean error: 0,08475353899892055
+Configuração-> Angulo: 0,15 Distância:0,85
+Mean error: 0,08150218620638167
+Configuração-> Angulo: 0,2 Distância:0,8  
+Mean error: 0,0782508334138426
+Configuração-> Angulo: 0,25 Distância:0,75
+Mean error: 0,07499948062130364
+Configuração-> Angulo: 0,3 Distância:0,7  
+Mean error: 0,07174812782876465
+Configuração-> Angulo: 0,35 Distância:0,65
+Mean error: 0,06849677503622564
+Configuração-> Angulo: 0,4 Distância:0,6  
+Mean error: 0,0652454222436867
+Configuração-> Angulo: 0,45 Distância:0,55
+Mean error: 0,06199406945114771
+Configuração-> Angulo: 0,5 Distância:0,5
+Mean error: 0,058742716658608723
+Configuração-> Angulo: 0,55 Distância:0,44999999999999996
+Mean error: 0,05549136386606974
+Configuração-> Angulo: 0,6 Distância:0,4
+Mean error: 0,05224001107353081
+Configuração-> Angulo: 0,65 Distância:0,35
+Mean error: 0,04898865828099182
+Configuração-> Angulo: 0,7 Distância:0,30000000000000004
+Mean error: 0,0457373054884528
+Configuração-> Angulo: 0,75 Distância:0,25
+Mean error: 0,042485952695913834
+Configuração-> Angulo: 0,8 Distância:0,19999999999999996
+Mean error: 0,03923459990337485
+Configuração-> Angulo: 0,85 Distância:0,15000000000000002
+Mean error: 0,035983247110835885
+Configuração-> Angulo: 0,9 Distância:0,09999999999999998
+Mean error: 0,032731894318296886
+Configuração-> Angulo: 0,95 Distância:0,050000000000000044
+Mean error: 0,02948054152575794
+Configuração-> Angulo: 1 Distância:0
+Mean error: 0,026229188733218955
+Max error angle = 3,817902217195069
+
+---------------------------------------------------------------------------------------
+Cena 5 -> 2 robôs - minimum ---> Mapa 4 (Normalização da angulação em 180)
+Configuração-> Angulo: 0 Distância:1
+Mean error: 1,758105433549713
+Configuração-> Angulo: 0,05 Distância:0,95
+Mean error: 1,673370100141698
+Configuração-> Angulo: 0,1 Distância:0,9  
+Mean error: 1,588634766733681
+Configuração-> Angulo: 0,15 Distância:0,85
+Mean error: 1,5038994333256643
+Configuração-> Angulo: 0,2 Distância:0,8  
+Mean error: 1,419164099917648
+Configuração-> Angulo: 0,25 Distância:0,75
+Mean error: 1,3344287665096313
+Configuração-> Angulo: 0,3 Distância:0,7  
+Mean error: 1,2496934331016165
+Configuração-> Angulo: 0,35 Distância:0,65
+Mean error: 1,1649580996936006
+Configuração-> Angulo: 0,4 Distância:0,6  
+Mean error: 1,0802227662855841
+Configuração-> Angulo: 0,45 Distância:0,55
+Mean error: 0,9954874328775677
+Configuração-> Angulo: 0,5 Distância:0,5
+Mean error: 0,9107520994695518
+Configuração-> Angulo: 0,55 Distância:0,44999999999999996
+Mean error: 0,8260167660615356
+Configuração-> Angulo: 0,6 Distância:0,4
+Mean error: 0,74128143265352
+Configuração-> Angulo: 0,65 Distância:0,35
+Mean error: 0,6565460992455036
+Configuração-> Angulo: 0,7 Distância:0,30000000000000004
+Mean error: 0,5718107658374875
+Configuração-> Angulo: 0,75 Distância:0,25
+Mean error: 0,48707543242947127
+Configuração-> Angulo: 0,8 Distância:0,19999999999999996
+Mean error: 0,40234009902145484
+Configuração-> Angulo: 0,85 Distância:0,15000000000000002
+Mean error: 0,317604765613439
+Configuração-> Angulo: 0,9 Distância:0,09999999999999998
+Mean error: 0,23286943220542305
+Configuração-> Angulo: 0,95 Distância:0,050000000000000044
+Mean error: 0,1481340987974069
+Configuração-> Angulo: 1 Distância:0
+Mean error: 0,06339876538939067
+Max error angle = 23,461006232643967

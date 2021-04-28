@@ -66,13 +66,13 @@ class Lidar:
         #print("reshaped")
         #print(reshapedMatrix)
     def getDetectedState(self,flag):
-        name = "LaserScannerLaser_2D"
-        obj = self.getObjectHandle(name)
-        print(obj)
-        print(self.ObjectHandle)
+        #name = "LaserScannerLaser_2D"
+        #obj = self.getObjectHandle(name)
+        #print(obj)
+        #print(self.ObjectHandle)
         if flag == True:
             returnCode,detectionState,detectedPoint,detectedObjectHandle,detectedSurfaceNormalVector=sim.simxReadProximitySensor(self.clientID,self.ObjectHandle,sim.simx_opmode_streaming)
-            print(detectionState)
+            #print("estado de detecção:" + str(detectionState))
             return detectionState
         else:
             returnCode,detectionState,detectedPoint,detectedObjectHandle,detectedSurfaceNormalVector=sim.simxReadProximitySensor(self.clientID,self.ObjectHandle,sim.simx_opmode_buffer)

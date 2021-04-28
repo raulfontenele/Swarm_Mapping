@@ -9,6 +9,7 @@ import time
 import math
 from AuxiliarFunctions import AuxiliarFunctions
 from debug import logNeighbor,logLidar
+from Save import saveDebug
 
 class Robot:
     def __init__(self,idClient,robotId,motorsId,robotObject,lidar):
@@ -21,7 +22,7 @@ class Robot:
         #self.ownRadius = 0.07
         #self.radius = 0.15
         self.ownRadius = 0.15
-        self.radius = 0.25
+        self.radius = 0.5
         self.extRadius = self.radius/math.cos(math.pi/6)
         self.id = robotId
         
@@ -120,7 +121,7 @@ class Robot:
 
         distanceAbs = 0
         
-        P = 0.01
+        P = 0.017
 
         while(distanceAbs <= abs(distance)):
                      
@@ -129,6 +130,7 @@ class Robot:
             
             #Aplicar um controlador P
             error = AuxiliarFunctions.diffAngleThreshold(angle,self.getAbsoluteOrientation(False)[2])
+            #print(error)
             rightVelocity = velocity*(1 - error*P)
             leftVelocity = velocity*(1 + error*P)
             self.turnOnRobot(leftVelocity,rightVelocity,'front')
@@ -152,11 +154,11 @@ class Robot:
         angles = []
         #distances = []
         #error = 0
-        ang = [0,60,120,180,240,300]
+        angList = [0,60,120,180,240,300]
         
         initCoord = self.getAbsolutePosition(False)
-        angList = []
-        
+        #angList = []
+        '''
         for angle in ang:
             coord = AuxiliarFunctions.projectCoord(angle, initCoord, 2*self.radius)
             flag,node = mapping.checkVisited(coord)
@@ -166,23 +168,23 @@ class Robot:
                 nodes.append(node)
                 angles.append(angle)
         #print("Angulos visitados: " + str(angles))
-
+        '''
         for i in range(len(angList)):
             
             self.rotateTo(angList[i], velocity)
-            
-            threshold = 2*self.radius + 1.4*self.ownRadius
-            
-            orientation = self.getAbsoluteOrientation(False)
-                   
+                  
             coord = AuxiliarFunctions.projectCoord(angList[i], initCoord, 2*self.radius)
-            if self.checkDistance(threshold) ==  True or mapping.checkGoalAnother(coord, 'next') == True:
+            #if self.checkDistance(threshold) ==  True or mapping.checkGoalAnother(coord, 'next') == True:
+            if self.lidar.getDetectedState(True) ==  False or mapping.checkGoalAnother(coord, 'next', self.id) == True:
                 nodes.append(coord)
-                angles.append(orientation[2])
+                angles.append(angList[i])
 
             time.sleep(0.15)
             
         logNeighbor(nodes,angles,initCoord,self.id)
+        if len(nodes) == 0:
+            saveDebug("Deu problema porque o nó " + str(initCoord) + " não tem visinho")
+            print("Nó sem visinhos")
 
         return nodes,angles
 
@@ -222,7 +224,7 @@ class Robot:
             currentOrientation = self.getAbsoluteOrientation(False)
             diff = AuxiliarFunctions.diffAngles(angle,currentOrientation[index] , sign)
             
-            if diff <= 0.8:
+            if diff <= 0.4:
                 self.stopRotation()
                 '''
                 print("Inicial::" + str(angle))
