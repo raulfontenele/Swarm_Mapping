@@ -53,11 +53,18 @@ class AuxiliarFunctions:
     def CalcAngleDistance(initCoord,goalCoord):
         deltaX = goalCoord[0] - initCoord[0]
         deltaY = -(goalCoord[1] - initCoord[1])
+        #print("Delta X: " + str(deltaX) )
+        #print("delta Y: " + str(deltaY) )
         
-        dist = math.sqrt( deltaX**2 + deltaY**2 )
-        angle = math.atan(deltaX/deltaY)
-
-        angleDeg = 360*angle/(2*math.pi)
+        dist = ( deltaX**2 + deltaY**2 ) **(1/2)
+        if deltaY == 0:
+            angleDeg = 90
+        else:
+            angle = math.atan(deltaX/deltaY)
+            #print("Angle real in the function:" + str(angle))
+            angleDeg = 360*angle/(2*math.pi)
+            
+        #print("Angle deg in the function:" + str(angleDeg))
         angleSist = -angleDeg + 90
         if angleSist < 0:
             angleSist = 360 + angleSist

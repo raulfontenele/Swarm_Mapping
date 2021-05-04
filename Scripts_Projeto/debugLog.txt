@@ -1,103 +1,134 @@
 Deu conflito na execução do robô 2
-Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar
-Deu problema no planejamento de caminho com origem em [1.9702228307724, 4.313887119293213, 0.035470686852931976] e objetivo [1.0138203501701355, -0.8659255465630812, 0.035322099924087524]
-Deu problema no planejamento de caminho com origem em[1.9702228307724, 4.313887119293213, 0.035470686852931976] e objetivo [1.0138203501701355, -0.8659255465630812, 0.035322099924087524]
-Deu conflito na execução do robô 2
-Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 2
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
 Deu conflito na execução do robô 1
-Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1
 Deu conflito na execução do robô 1
-Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
 Deu conflito na execução do robô 1
-Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1
 Deu conflito na execução do robô 1
-Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
 Deu conflito na execução do robô 3
-Deu conflito que será resolvido com a movimentação de um dos robôs envolvidos
-O robô 3 vai dar passagem
-Deu problema no planejamento de caminho com origem em[0.004764221142977476, -2.620033025741577, 0.035465046763420105] e objetivo [2.5143892765045166, -1.7642248117459567, 0.03546307235956192]
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 3 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 3 parou porque está esperando aparecer nó não visitado
-O robô 3 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 3 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 3 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 3 parou porque está esperando aparecer nó não visitado
-O robô 3 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 3 parou porque está esperando aparecer nó não visitado
-O robô 3 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 3 parou porque está esperando aparecer nó não visitado
-O robô 3 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 3 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 3 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 3 parou porque está esperando aparecer nó não visitado
-O robô 3 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 3 parou porque está esperando aparecer nó não visitado
-O robô 3 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 3 parou porque está esperando aparecer nó não visitado
-O robô 3 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 3 parou porque está esperando aparecer nó não visitado
-O robô 3 parou porque está esperando aparecer nó não visitado
-O robô 1 parou porque está esperando aparecer nó não visitado
-Deu conflito na execução do robô 2
-Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar
-Deu conflito na execução do robô 2
-Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar
-Deu conflito na execução do robô 2
-Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
-O robô 1 parou porque está esperando aparecer nó não visitado
-O robô 1 parou porque está esperando aparecer nó não visitado
-O robô 1 parou porque está esperando aparecer nó não visitado
-O robô 1 parou porque está esperando aparecer nó não visitado
-O robô 1 parou porque está esperando aparecer nó não visitado
-O robô 1 parou porque está esperando aparecer nó não visitado
-O robô 1 parou porque está esperando aparecer nó não visitado
-O robô 1 parou porque está esperando aparecer nó não visitado
-O robô 1 parou porque está esperando aparecer nó não visitado
-O robô 1 parou porque está esperando aparecer nó não visitado
-O robô 1 parou porque está esperando aparecer nó não visitado
-O robô 1 parou porque está esperando aparecer nó não visitado
-O robô 1 parou porque está esperando aparecer nó não visitado
-O robô 1 parou porque está esperando aparecer nó não visitado
-O robô 1 parou porque está esperando aparecer nó não visitado
-O robô 1 parou porque está esperando aparecer nó não visitado
-O robô 2 parou porque está esperando aparecer nó não visitado
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 3
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+Deu conflito na execução do robô 1
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1
+Deu conflito na execução do robô 1
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+Deu conflito na execução do robô 3
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 3
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+Posição do robô 1 não coincide no currentPose com a posição real
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário
+Deu conflito na execução do robô 1
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1
+Deu conflito na execução do robô 1
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1

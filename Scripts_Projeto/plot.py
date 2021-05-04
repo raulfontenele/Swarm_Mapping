@@ -71,18 +71,39 @@ def fun2():
     file = open('map.txt','r')
     lines = file.readlines()
 
+    plt.figure(0)
     for line in lines:
         line = line.replace("'",'"')
         struct =json.loads(line)
         for neighbor in struct["neighborhood"]:
             plt.plot( [struct["nodeCoord"][0],neighbor[0]],[struct["nodeCoord"][1],neighbor[1]])
             plt.scatter(struct["nodeCoord"][0],struct["nodeCoord"][1], s = 1000, marker='h', c= "#0000cc")
+    plt.grid()
+
+    file = open('coord.csv','r')
+    lines = file.readlines()
+    plt.figure(1)
+    for line in lines:
+        values = line.split(',')
+        plt.scatter(float(values[0]),float(values[1]), s = 1000, marker='h', c= "#0000cc")
     
     plt.grid()
     plt.show()
 
+def fun3():
+    file = open('coord.csv','r')
+    lines = file.readlines()
 
+    for line in lines:
+        values = line.split(',')
+        #print(values)
+        #print(values[0])
+        plt.scatter(float(values[0]),float(values[1]), s = 1000, marker='h', c= "#0000cc")
+    
+    plt.grid()
+    plt.show()
 
 fun2()
 #graph()
 #analysis()
+#fun3()

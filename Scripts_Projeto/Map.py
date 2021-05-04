@@ -5,7 +5,8 @@ Created on Wed Feb 17 18:37:37 2021
 @author: raulf
 """
 import math
-from Save import saveCoord,saveEdge,saveMap
+from Save import saveCoord,saveEdge,saveMap,saveDebug
+import json
 
 class Map:
     def __init__(self,radius):
@@ -70,10 +71,8 @@ class Map:
     
     def addMapPoint(self,currentCoord,neighborhood,angles,robotId):
         #Verificar se o ponto já existe e, em caso positivo, colocar o ponto que já existe no lugar do projetado
-        '''
-            Precisa ser modificado
-        '''
-        print("A quantidade de visinhos a entrar no  addPoint é " + str(len(neighborhood)))
+
+        #print("A quantidade de visinhos a entrar no  addPoint é " + str(len(neighborhood)))
         n_neighborhood = []
         for neighbor in neighborhood:
             flag = False
@@ -94,7 +93,7 @@ class Map:
             if flag == False:
                 n_neighborhood.append(neighbor)
         
-        print("A quantidade real de visinhos a entrar no  addPoint é " + str(len(n_neighborhood)))   
+        #print("A quantidade real de visinhos a entrar no  addPoint é " + str(len(n_neighborhood)))   
         struct = {
             "nodeCoord":    currentCoord,
             "neighborhood": n_neighborhood,
@@ -140,6 +139,13 @@ class Map:
         for index in range(len(neighborhood)):
             flag,node = self.checkVisited(neighborhood[index])
             if flag == False and self.checkGoalAnother(neighborhood[index],"both",robotId) == False:
+                flag,coord = self.checkVisitedCoord(neighborhood[index])
+                if flag == True:
+                    self.visitedNode(coord)
+                    print("Conflito de informações nas coordenadas visitadas")
+                    string = "A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário"
+                    saveDebug(string)
+                    continue
                 return [neighborhood[index],angles[index]]
     
     def updateGoals(self,currentNode,nextGoal,finalGoal,robotId):
@@ -205,7 +211,27 @@ class Map:
                     return status["status"]
         else:
             return "moving"
-        
+    #---------------------------------------------------------------------#    
+    def checkVisitedStruct(self,projectedCoord):
+        for struct in self.structMap:
+            diff2 = (projectedCoord[0] - struct["nodeCoord"][0])**2 + (projectedCoord[1] - struct["nodeCoord"][1])**2
+            if math.sqrt(diff2) <= self.radius:
+                return True
+        return False
+    #---------------------------------------------------------------------#
+    def checkVisitedCoord(self,projectedCoord):
+        file = open('map.txt','r')
+        lines = file.readlines()
+    
+        for line in lines:
+            line = line.replace("'",'"')
+            struct =json.loads(line)
+            diff2 = (projectedCoord[0] - struct["nodeCoord"][0])**2 + (projectedCoord[1] - struct["nodeCoord"][0])**2
+            if math.sqrt(diff2) <= self.radius:
+                file.close()
+                return True,struct["nodeCoord"]
+        file.close()
+        return False,None
                 
                 
                 

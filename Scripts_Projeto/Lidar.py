@@ -20,6 +20,7 @@ class Lidar:
         #Inicialização das funções
         #self.getPointRead()
         #self.getBruteDate()
+        self.getDetectedState(True)
 
         
     def getObjectChildHandle(self,parantHandle,childIndex):

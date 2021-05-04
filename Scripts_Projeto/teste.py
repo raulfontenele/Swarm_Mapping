@@ -55,12 +55,14 @@ def Exploring(robotFile,comPort):
     #Tempo para estabelecer conexões com o servidor
     time.sleep(0.2)
     print("Passou 4")
-    robot.rotateTo(0, 0.8)
-    robot.moveFoward(2, 0, velocity*3)
+    #robot.rotateTo(0, 0.8)
+    robot.moveFoward(3, 0, velocity*3)
+    '''
     robot.rotateTo(180, 0.8)
     robot.moveFoward(2, 180, velocity*3)
     robot.rotateTo(60, 0.8)
     robot.moveFoward(2, 60, velocity*3)
+    '''
     
     tfinal = datetime.datetime.now()
     '''

@@ -10,6 +10,7 @@ import math
 from AuxiliarFunctions import AuxiliarFunctions
 from debug import logNeighbor,logLidar
 from Save import saveDebug
+from datetime import datetime
 
 class Robot:
     def __init__(self,idClient,robotId,motorsId,robotObject,lidar):
@@ -22,7 +23,7 @@ class Robot:
         #self.ownRadius = 0.07
         #self.radius = 0.15
         self.ownRadius = 0.15
-        self.radius = 0.5
+        self.radius = 0.25
         self.extRadius = self.radius/math.cos(math.pi/6)
         self.id = robotId
         
@@ -121,23 +122,76 @@ class Robot:
 
         distanceAbs = 0
         
-        P = 0.017
-
-        while(distanceAbs <= abs(distance)):
+        #Ku = 0.545
+        #Tu = 0.0063851
+        
+        #Kp = 0.6*Ku
+        #Ki = 2*Kp/Tu
+        #Kd = Kp*Tu/8
+        
+        Kp = 0.28
+        Ki = 0.008
+        Kd = 0.0009
+        
+        #Kp = 0
+        #Ki = 0
+        #Kd = 0
+        
+        
+        #initTime = datetime.now()
+        lastTime = datetime.now()
+        
+        accError = 0
+        lastError = AuxiliarFunctions.diffAngleThreshold(angle,self.getAbsoluteOrientation(False)[2])
+        time.sleep(0.0001)
+        #cicle = 0
+        #flag = False
+        while(distanceAbs <= abs(distance)-0.01):
                      
             position = self.getAbsolutePosition(False)
             distanceAbs = math.sqrt((initPosition[0]-position[0])**2 + (initPosition[1]-position[1])**2)
             
             #Aplicar um controlador P
             error = AuxiliarFunctions.diffAngleThreshold(angle,self.getAbsoluteOrientation(False)[2])
+            #if abs(error) < 0.01 and flag == False and cicle > 0:
+                #print("//==========================================================================//")
+                #print(cicle)
+                #print("//==========================================================================//")
+                #flag = True
+            dt = float((datetime.now() - lastTime).microseconds/1000000 - 0.0001)
+            #print("Tempo")
+            #print(dt)
+            #print(datetime.now().microsecond)
+            accError += error*dt
+            #print("Acumulado")
+            #print(accError)
+            rateError = (error - lastError)/dt
+            #print("Rate")
+            #print(rateError)
+            #print("Error")
             #print(error)
-            rightVelocity = velocity*(1 - error*P)
-            leftVelocity = velocity*(1 + error*P)
+            
+            
+            correctError = Kp*error + Ki*accError + Kd*rateError
+            '''
+            if correctError > 0.5:
+                correctError = 5
+            elif correctError < -0.5:
+                correctError = -0.5
+            '''
+            
+            #print("Correcao de erro")
+            #print(correctError)
+            rightVelocity = velocity*(1 - correctError)
+            leftVelocity = velocity*(1 + correctError)
             self.turnOnRobot(leftVelocity,rightVelocity,'front')
             #if self.checkDistance(self.ownRadius) ==  False:
                 #print("Parou por ir para frente por estar muito próximo a parede")
                 #break
-
+            lastTime = datetime.now()
+            lastError = error
+            #cicle += 1
+            time.sleep(0.001)
         self.stopRotation()
         return distanceAbs
 
@@ -149,14 +203,14 @@ class Robot:
             returnCode,position = sim.simxGetObjectPosition(self.idClient,self.robot,-1,sim.simx_opmode_buffer )
         return position
     
-    def scanAround(self,velocity,mapping):
+    def scanAround(self,velocity,mapping,initCoord):
         nodes = []
         angles = []
         #distances = []
         #error = 0
         angList = [0,60,120,180,240,300]
         
-        initCoord = self.getAbsolutePosition(False)
+        #initCoord = self.getAbsolutePosition(False)
         #angList = []
         '''
         for angle in ang:
@@ -181,6 +235,8 @@ class Robot:
 
             time.sleep(0.15)
             
+        self.rotateTo(0, velocity)
+        
         logNeighbor(nodes,angles,initCoord,self.id)
         if len(nodes) == 0:
             saveDebug("Deu problema porque o nó " + str(initCoord) + " não tem visinho")

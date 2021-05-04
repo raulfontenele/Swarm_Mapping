@@ -8,8 +8,8 @@ import numpy as np
 import json
 
 def saveCoord(coordList):
-    a = np.asarray(coordList)
-    np.savetxt("coord.csv", a, delimiter=",")
+    #a = np.asarray(coordList)
+    np.savetxt("coord.csv", coordList, delimiter=",")
     
 def saveEdge(edgeList,fileName):
 
