@@ -58,7 +58,10 @@ class AuxiliarFunctions:
         
         dist = ( deltaX**2 + deltaY**2 ) **(1/2)
         if deltaY == 0:
-            angleDeg = 90
+            if deltaX < 0:
+                angleDeg = 270
+            else:
+                angleDeg = 90
         else:
             angle = math.atan(deltaX/deltaY)
             #print("Angle real in the function:" + str(angle))

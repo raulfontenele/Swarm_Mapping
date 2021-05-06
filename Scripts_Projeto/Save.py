@@ -7,9 +7,9 @@ Created on Mon Mar  8 22:30:26 2021
 import numpy as np
 import json
 
-def saveCoord(coordList):
+def saveCoord(coordList,name):
     #a = np.asarray(coordList)
-    np.savetxt("coord.csv", coordList, delimiter=",")
+    np.savetxt(name, coordList, delimiter=",")
     
 def saveEdge(edgeList,fileName):
 
@@ -25,6 +25,20 @@ def saveMap(mapping,fileName):
 def saveDebug(string):
     file = open( "debugLog.txt",'a')
     file.write(string + "\n")
-    file.close()    
+    file.close()
 
+def saveDebugCoord(string,fileName):
+    file = open( fileName + ".txt",'a')
+    file.write(string + "\n")
+    file.close()     
+
+def saveLists(nameFile,listCoord,nameList,coord):
+    with open(nameFile, 'a') as file:
+        file.write("=============================================================" + "\n")
+        file.write(str(coord) + "\n")
+        file.write("-----------------------" + str(nameList) + "-----------------------" + "\n")
+        for coord in listCoord:
+            file.write(str(coord) + "\n")
+        file.write("----------------------------------------------------------------------" + "\n")
+        
         

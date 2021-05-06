@@ -5,8 +5,9 @@ Created on Wed Feb 17 18:37:37 2021
 @author: raulf
 """
 import math
-from Save import saveCoord,saveEdge,saveMap,saveDebug
+from Save import saveCoord,saveEdge,saveMap,saveDebug,saveLists
 import json
+import csv
 
 class Map:
     def __init__(self,radius):
@@ -19,6 +20,7 @@ class Map:
         self.structMap = []
         self.statusMap = []
         self.stepMap = []
+    
     
     def initGoalsNode(self,robotId,currentCoord):
         self.goalsMap.append(
@@ -43,8 +45,8 @@ class Map:
     def addNoneVisitedNode(self,listCoord):
         
         for coord in listCoord:
-            flag,node = self.checkVisited(coord)
-            if self.checkNoneVisitedList(coord) == False and flag == False:
+            #flag,node = self.checkVisited(coord)
+            if self.checkNoneVisitedList(coord) == False and self.checkVisited(coord) == False:
                 self.noneVisitedList.append(coord)
         
     def visitedNode(self,coord):
@@ -54,13 +56,23 @@ class Map:
                 self.noneVisitedList.remove(node)
                 break
         self.addVisitedNode(coord)
+        if self.checkNoneVisitedList(coord) == True:
+            print("Continua na lista de nós não visitados")
+            string = "Continua na lista de nós não visitados"
+            saveDebug(string)
+        #flag,node = self.checkVisited(coord)
+        if self.checkVisited(coord) == False:
+            print("Ainda não está na lista de nós visitados")
+            string = "Ainda não está na lista de nós visitados"
+            saveDebug(string)
+            
     
     def checkVisited(self,projectedCoord):
         for node in self.visitedList:
             diff2 = (projectedCoord[0] - node[0])**2 + (projectedCoord[1] - node[1])**2
             if math.sqrt(diff2) <= self.radius:
-                return True,node
-        return False,None
+                return True
+        return False
     
     def checkNoneVisitedList(self,coord):
         for node in self.noneVisitedList:
@@ -137,15 +149,41 @@ class Map:
 
         #Checar se existem visinhos disponíveis para serem visitados
         for index in range(len(neighborhood)):
-            flag,node = self.checkVisited(neighborhood[index])
-            if flag == False and self.checkGoalAnother(neighborhood[index],"both",robotId) == False:
-                flag,coord = self.checkVisitedCoord(neighborhood[index])
-                if flag == True:
-                    self.visitedNode(coord)
+            #flag,node = self.checkVisited(neighborhood[index])
+            if self.checkVisited(neighborhood[index]) == False and self.checkGoalAnother(neighborhood[index],"both",robotId) == False:
+                saveLists("visitedNoneVisitedList.txt",self.visitedList,'visitedList',neighborhood[index])
+                saveLists("visitedNoneVisitedList.txt",self.noneVisitedList,'noneVisitedList',neighborhood[index])
+                #flag,coord = self.checkVisitedCoord(neighborhood[index])
+                
+                if self.checkVisitedCoord(neighborhood[index]) == True:
                     print("Conflito de informações nas coordenadas visitadas")
                     string = "A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário"
                     saveDebug(string)
+                    saveLists("visitedNoneVisitedList.txt",self.visitedList,'visitedList',neighborhood[index])
+                    saveLists("visitedNoneVisitedList.txt",self.noneVisitedList,'noneVisitedList',neighborhood[index])
+                    '''
+                    self.visitedNode(neighborhood[index])
+                    flag2,node = self.checkVisited(neighborhood[index])
+                    if flag2 == True:
+                        string = "Deu certo a atualização"
+                    else:
+                        string = "Não deu certo a atualização"
+                    print(string)
+                    saveDebug(string)
+                    if self.checkNoneVisitedList(neighborhood[index]) == False:
+                        string = "Deu certo a atualização 2"
+                    else:
+                        string = "Não deu certo a atualização 2"
+                    print(string)
+                    saveDebug(string)
+                    
                     continue
+                    '''
+                if self.checkNoneVisitedList2(neighborhood[index]):
+                    print("Coordenada considerada repetida")
+                    string = "Coordenada considerada repetida: " + str(neighborhood[index])
+                    saveDebug(string)
+                
                 return [neighborhood[index],angles[index]]
     
     def updateGoals(self,currentNode,nextGoal,finalGoal,robotId):
@@ -229,9 +267,58 @@ class Map:
             diff2 = (projectedCoord[0] - struct["nodeCoord"][0])**2 + (projectedCoord[1] - struct["nodeCoord"][0])**2
             if math.sqrt(diff2) <= self.radius:
                 file.close()
-                return True,struct["nodeCoord"]
+                return True
         file.close()
+        return False
+    #======================================================================================#
+    def addNoneVisitedNode2(self,listCoord):
+        
+        for coord in listCoord:
+            flag,node = self.checkVisitedCoord(coord)
+            if self.checkNoneVisitedList2(coord) == False and flag == False:
+                file = open("noneVisitedList.txt",'a')
+                file.writelines(str(coord))
+                file.close()
+                #self.noneVisitedList.append(coord)
+        self.addNoneVisitedNode(listCoord)
+        
+    def visitedNode2(self,coord):
+        with open("noneVisitedList.txt", "r+") as f:
+            noneVisitedList = f.readlines()
+            f.seek(0)
+            for node in noneVisitedList:
+                node = node.replace('[',"")
+                node = node.replace(']',"")
+                node = node.split(',')
+                diff2 = (coord[0] - float(node[0]))**2 + (coord[1] - float(node[1]))**2
+                if math.sqrt(diff2) < self.radius:
+                    f.write(str(node))
+            f.truncate()
+        self.visitedNode(coord)
+            
+        
+    '''
+    def checkVisited2(self,projectedCoord):
+        for node in self.visitedList:
+            diff2 = (projectedCoord[0] - node[0])**2 + (projectedCoord[1] - node[1])**2
+            if math.sqrt(diff2) <= self.radius:
+                return True,node
         return False,None
+    '''
+    
+    def checkNoneVisitedList2(self,coord):
+        
+        with open('coord.csv', 'r') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                diff2 = (coord[0] - float(row[0]))**2 + (coord[1] - float(row[1]))**2
+                if math.sqrt(diff2) <= self.radius:
+                    return True
+            return False
+
+            
+
+    
                 
                 
                 

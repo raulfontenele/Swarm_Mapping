@@ -6,7 +6,7 @@ from Lidar import Lidar
 from Node import Node
 from Map import Map
 from AuxiliarFunctions import AuxiliarFunctions
-from Save import saveCoord,saveEdge,saveMap,saveDebug
+from Save import saveCoord,saveEdge,saveMap,saveDebug,saveDebugCoord
 from debug import logNodeInfo
 import json
 from PathPlanning import PathPlanning
@@ -40,7 +40,7 @@ def Exploring(robotFile,comPort):
     motorsObject = []
     #velocity = 0.7
     velocity = 0.4
-    radius = 0.5
+    radius = 0.25
     #radius = 0.15
     global mapping
     
@@ -84,6 +84,8 @@ def Exploring(robotFile,comPort):
     
     mapping.addMapPoint(currentPose,neighborhood,angles,robotInfo["id"])
     mapping.addVisitedNode(currentPose)
+    string = "Coordenada adicionada pela condição 1:"+str(currentPose)
+    saveDebugCoord(string,"debugLogCoord")
     mapping.addNoneVisitedNode(neighborhood)
     mapping.updateVisitedNode()
 
@@ -112,7 +114,6 @@ def Exploring(robotFile,comPort):
             except Exception:
                 neighborCoord = None
         
-            
         if neighborCoord != None:
             #Visitar o nó 
             print("Nó não visitado do robô:" + str(robotInfo["id"]))
@@ -121,14 +122,15 @@ def Exploring(robotFile,comPort):
             #print("Valor da coordenada do check:" + str(neighborCoord))
             #flag = mapping.checkVisitedStruct(neighborCoord)
             #print("O valor da flag: " + str(flag) + " do robô:" + str(robotInfo["id"]))
-            realDestiny = mapping.getCoordNoneVisitedList(neighborCoord)
+            with lock:
+                realDestiny = mapping.getCoordNoneVisitedList(neighborCoord)
             #print("Valor da coordenada real:" + str(realDestiny))
             diff = ((neighborCoord[0] - realDestiny[0])**2 + (neighborCoord[1] - realDestiny[1])**2 )**(1/2)
             
             if diff>radius/4:
                 realDestiny = neighborCoord
                 #currentPose = realPose
-                print("-------------- Diferença que fez dar errado----------------")
+                print("---------------------- Diferença que fez dar errado ----------------------")
                 print(diff)
                 string = "Destino do robô " + str(robotInfo["id"]) + " não coincide com o destino real"
                 saveDebug(string)
@@ -146,19 +148,27 @@ def Exploring(robotFile,comPort):
                 saveDebug(string)
                 
             #currentPose = robot.getAbsolutePosition(False)
+            string = 'Coordenada atual:' + str(currentPose) + '\n'
+            string += "Coordenada neighbor index:"+ str(neighborCoord) + " // Coordenada real:"+ str(realDestiny) + '\n'
+            
             distance,angle = AuxiliarFunctions.CalcAngleDistance(currentPose,realDestiny)
             
             #Definir o próximo objetivo/objetivo final, atualizar o status e visitá-lo
             with lock:
                 mapping.updateGoals(currentPose,realDestiny, realDestiny, robotInfo["id"])
                 mapping.updateStatus(robotInfo["id"], "moving")
-            
+                
             robot.rotateTo(angle, velocity*0.7)
             #print("Movimentação 1 do robô: " + str(robotInfo["id"]))
             robot.moveFoward(distance, angle, velocity*3)
             
             with lock:
                 currentPose = robot.getAbsolutePosition(False)
+                string += "Coordenada de chegada:" + str(currentPose)
+                saveDebugCoord(string,"debugLogDestiny")
+                mapping.visitedNode(currentPose)
+                string = "Coordenada adicionada pela condição 2:"+str(currentPose)
+                saveDebugCoord(string,'debugLogCoord')
                 mapping.updateGoals(currentPose,realDestiny,realDestiny,robotInfo["id"])
                 
                 '''
@@ -178,8 +188,9 @@ def Exploring(robotFile,comPort):
                 #print("Coordenadas destino: " + str(neighborCoord) )
                 #print("Coordenada final:" + str(currentPose) + " do robô " + str(robotInfo["id"]))
                 
-                mapping.visitedNode(currentPose)
-                saveCoord(mapping.visitedList)
+                
+                saveCoord(mapping.visitedList,"coord.csv")
+                saveCoord(mapping.noneVisitedList,"noneVisited.csv")
                 
                 mapping.updateStatus(robotInfo["id"], "exploring")
                 
@@ -207,6 +218,10 @@ def Exploring(robotFile,comPort):
                 with lock:
                     while True:
                         if order == 'fifo':
+                            #if mapping.checkVisitedCoord(mapping.noneVisitedList[nextGoalIndex]) == True:
+                                #mapping.visitedNode(mapping.noneVisitedList[nextGoalIndex])
+                                #print("Nó adicionado pelo planejamento")
+                            #else:
                             if nextGoalIndex >= len(mapping.noneVisitedList):
                                 node_goal = None
                                 break
@@ -217,6 +232,12 @@ def Exploring(robotFile,comPort):
                                 finalGoal = mapping.noneVisitedList[nextGoalIndex]
                                 break
                         else:
+                            #if mapping.checkNoneVisitedList2(mapping.noneVisitedList[nextGoalIndex]) == True:
+                                #mapping.visitedNode(mapping.noneVisitedList[nextGoalIndex])
+                                #print("Nó adicionado pelo planejamento")
+                                ##string = "A coordenada " + str()
+                                #saveDebug(string)
+                            #else:
                             if nextGoalIndex >= len(mapping.noneVisitedList):
                                 node_goal = None
                                 break
@@ -230,6 +251,11 @@ def Exploring(robotFile,comPort):
                     
                     
                 if node_goal != None:
+                    if mapping.checkNoneVisitedList2(mapping.noneVisitedList[nextGoalIndex]) == True:
+                        #mapping.visitedNode(mapping.noneVisitedList[nextGoalIndex])
+                        print("Nó adicionado pelo planejamento")
+                        string = "A coordenada " + str(finalGoal) + " supostamente já foi adicionada e ainda é coordenada final"
+                        saveDebug(string)
                     with lock:
                         mapping.updateGoals(currentPose,currentPose, finalGoal, robotInfo["id"])
                         mapping.updateStatus(robotInfo["id"], "moving")
@@ -343,7 +369,10 @@ def Exploring(robotFile,comPort):
                         #currentPose = robot.getAbsolutePosition(False)
                         with lock:
                             mapping.visitedNode(currentPose)
-                            saveCoord(mapping.visitedList)
+                            string = "Coordenada adicionada pela condição 3:"+str(currentPose)
+                            saveDebugCoord(string,"debugLogCoord")
+                            saveCoord(mapping.visitedList,"coord.csv")
+                            saveCoord(mapping.noneVisitedList,"noneVisited.csv")
                         
                         neighborhood,angles = robot.scanAround(0.7*velocity,mapping,currentPose)
                         with lock:
@@ -408,6 +437,7 @@ contagem = 0
 
 mapping = Map(extRadius)
 
+sim.simxFinish(-1)
 
 robot1str = "robot1"
 robot2str = "robot2"
