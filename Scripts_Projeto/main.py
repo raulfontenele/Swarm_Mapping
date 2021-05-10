@@ -39,8 +39,8 @@ def Exploring(robotFile,comPort):
     #Definição de variáveis
     motorsObject = []
     #velocity = 0.7
-    velocity = 0.4
-    radius = 0.25
+    velocity = 0.35
+    radius = 0.5
     #radius = 0.15
     global mapping
     

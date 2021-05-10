@@ -151,38 +151,6 @@ class Map:
         for index in range(len(neighborhood)):
             #flag,node = self.checkVisited(neighborhood[index])
             if self.checkVisited(neighborhood[index]) == False and self.checkGoalAnother(neighborhood[index],"both",robotId) == False:
-                saveLists("visitedNoneVisitedList.txt",self.visitedList,'visitedList',neighborhood[index])
-                saveLists("visitedNoneVisitedList.txt",self.noneVisitedList,'noneVisitedList',neighborhood[index])
-                #flag,coord = self.checkVisitedCoord(neighborhood[index])
-                
-                if self.checkVisitedCoord(neighborhood[index]) == True:
-                    print("Conflito de informações nas coordenadas visitadas")
-                    string = "A função detectou que a coordenada já foi visitada, mesmo o código mostrando o contrário"
-                    saveDebug(string)
-                    saveLists("visitedNoneVisitedList.txt",self.visitedList,'visitedList',neighborhood[index])
-                    saveLists("visitedNoneVisitedList.txt",self.noneVisitedList,'noneVisitedList',neighborhood[index])
-                    '''
-                    self.visitedNode(neighborhood[index])
-                    flag2,node = self.checkVisited(neighborhood[index])
-                    if flag2 == True:
-                        string = "Deu certo a atualização"
-                    else:
-                        string = "Não deu certo a atualização"
-                    print(string)
-                    saveDebug(string)
-                    if self.checkNoneVisitedList(neighborhood[index]) == False:
-                        string = "Deu certo a atualização 2"
-                    else:
-                        string = "Não deu certo a atualização 2"
-                    print(string)
-                    saveDebug(string)
-                    
-                    continue
-                    '''
-                if self.checkNoneVisitedList2(neighborhood[index]):
-                    print("Coordenada considerada repetida")
-                    string = "Coordenada considerada repetida: " + str(neighborhood[index])
-                    saveDebug(string)
                 
                 return [neighborhood[index],angles[index]]
     

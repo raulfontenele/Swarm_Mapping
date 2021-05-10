@@ -1,0 +1,3 @@
+Movimentação calculada - minimum
+Sem valor de coordenada antes do cálculo
+Com destino prévio
