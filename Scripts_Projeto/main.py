@@ -444,8 +444,8 @@ robot2str = "robot2"
 lock = threading.Lock()
 
 threading.Thread(target=Exploring,args=(1,19999)).start()
-threading.Thread(target=Exploring,args=(2,19998)).start()
-threading.Thread(target=Exploring,args=(3,19997)).start()
+#threading.Thread(target=Exploring,args=(2,19998)).start()
+#threading.Thread(target=Exploring,args=(3,19997)).start()
 #threading.Thread(target=Exploring,args=(4,19995)).start()
 #Exploring(4,19995)
 

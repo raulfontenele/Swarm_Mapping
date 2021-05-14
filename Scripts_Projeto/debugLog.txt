@@ -8640,3 +8640,64 @@ O robô 1 parou porque está esperando aparecer nó não visitado
 O robô 2 parou porque está esperando aparecer nó não visitado
 O robô 1 parou porque está esperando aparecer nó não visitado
 O robô 3 parou porque está esperando aparecer nó não visitado
+Deu conflito na execução do robô 2
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 2
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+Destino do robô 1 não coincide com o destino real
+Destino do robô 1 não coincide com o destino real
+Destino do robô 1 não coincide com o destino real
+Destino do robô 1 não coincide com o destino real
+Destino do robô 1 não coincide com o destino real
+Destino do robô 1 não coincide com o destino real
+Destino do robô 1 não coincide com o destino real
+Destino do robô 1 não coincide com o destino real
+Destino do robô 1 não coincide com o destino real
+Destino do robô 1 não coincide com o destino real
+Destino do robô 1 não coincide com o destino real
+Destino do robô 1 não coincide com o destino real
+Destino do robô 1 não coincide com o destino real
+Destino do robô 1 não coincide com o destino real
+Destino do robô 1 não coincide com o destino real
+Destino do robô 1 não coincide com o destino real
+Destino do robô 1 não coincide com o destino real
+Destino do robô 1 não coincide com o destino real
+O robô 1 parou porque está esperando aparecer nó não visitado
