@@ -40,7 +40,7 @@ def Exploring(robotFile,comPort):
     motorsObject = []
     #velocity = 0.7
     velocity = 0.35
-    radius = 0.5
+    radius = 0.25
     #radius = 0.15
     global mapping
     
@@ -126,7 +126,7 @@ def Exploring(robotFile,comPort):
                 realDestiny = mapping.getCoordNoneVisitedList(neighborCoord)
             #print("Valor da coordenada real:" + str(realDestiny))
             diff = ((neighborCoord[0] - realDestiny[0])**2 + (neighborCoord[1] - realDestiny[1])**2 )**(1/2)
-            
+            '''
             if diff>radius/4:
                 realDestiny = neighborCoord
                 #currentPose = realPose
@@ -146,7 +146,7 @@ def Exploring(robotFile,comPort):
                 print(diff)
                 string = "Posição do robô " + str(robotInfo["id"]) + " não coincide no currentPose com a posição real"
                 saveDebug(string)
-                
+            '''  
             #currentPose = robot.getAbsolutePosition(False)
             string = 'Coordenada atual:' + str(currentPose) + '\n'
             string += "Coordenada neighbor index:"+ str(neighborCoord) + " // Coordenada real:"+ str(realDestiny) + '\n'
@@ -430,7 +430,7 @@ motorsObject = []
 wallReference = 'ConcretBlock'
 '''
 #radius = 0.15
-radius = 0.25
+radius = 0.45
 extRadius = radius/math.cos(math.pi/6)
 
 contagem = 0
@@ -444,8 +444,8 @@ robot2str = "robot2"
 lock = threading.Lock()
 
 threading.Thread(target=Exploring,args=(1,19999)).start()
-#threading.Thread(target=Exploring,args=(2,19998)).start()
-#threading.Thread(target=Exploring,args=(3,19997)).start()
+threading.Thread(target=Exploring,args=(2,19998)).start()
+threading.Thread(target=Exploring,args=(3,19997)).start()
 #threading.Thread(target=Exploring,args=(4,19995)).start()
 #Exploring(4,19995)
 

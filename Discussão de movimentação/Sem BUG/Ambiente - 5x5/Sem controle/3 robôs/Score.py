@@ -27,8 +27,8 @@ def getScore(thresholdDistance):
         
         #Mean error
         meanError = error/lenNodeMap
-        #print("Configuração-> Angulo: " + str(i) + " Distância:" + str(1-i))
-        print("Mean error: " + str(meanError))
+        #print("Mean error: " + str(meanError))
+        print(error)
 
     print("Max error angle = " + str(max(errorAngleList)))
 

@@ -23,7 +23,7 @@ class Robot:
         #self.ownRadius = 0.07
         #self.radius = 0.15
         self.ownRadius = 0.15
-        self.radius = 0.25
+        self.radius = 0.45
         self.extRadius = self.radius/math.cos(math.pi/6)
         self.id = robotId
         
