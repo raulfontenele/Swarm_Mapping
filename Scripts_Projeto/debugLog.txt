@@ -10104,3 +10104,447 @@ O robô 2 parou porque está esperando aparecer nó não visitado
 O robô 1 parou porque está esperando aparecer nó não visitado
 O robô 2 parou porque está esperando aparecer nó não visitado
 O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+Deu conflito na execução do robô 2
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 2
+Deu conflito na execução do robô 2
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 2
+Deu conflito na execução do robô 2
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 2
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+Deu conflito na execução do robô 1
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1
+Deu conflito na execução do robô 1
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+Deu conflito na execução do robô 3
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 3
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+Deu conflito na execução do robô 1
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1
+Deu conflito na execução do robô 1
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1
+Deu conflito na execução do robô 3
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 3
+Deu conflito na execução do robô 2
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 2
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+Deu conflito na execução do robô 2
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 2
+Deu conflito na execução do robô 2
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 2
+Deu conflito na execução do robô 2
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 2
+Deu conflito na execução do robô 3
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 3
+Deu conflito na execução do robô 3
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 3
+Deu conflito na execução do robô 3
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 3
+Deu conflito na execução do robô 2
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 2
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+Deu conflito na execução do robô 1
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1
+Deu conflito na execução do robô 1
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1
+Deu conflito na execução do robô 1
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1
+Deu conflito na execução do robô 1
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1
+Deu conflito na execução do robô 1
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1
+Deu conflito na execução do robô 1
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+Deu conflito na execução do robô 3
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 3
+Deu conflito na execução do robô 3
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 3
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+Deu conflito na execução do robô 1
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1
+Deu conflito na execução do robô 2
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 2
+Deu conflito na execução do robô 2
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 2
+Deu problema no planejamento de caminho com origem em[3.37687349319458, -1.7491832971572876, 0.0354652926325798] e objetivo [2.4009337425231934, -1.7354815978043898, 0.03546492010354996]
+Deu problema no planejamento de caminho com origem em[4.708308219909668, -4.683951377868652, 0.035468388348817825] e objetivo [2.4009337425231934, -1.7354815978043898, 0.03546492010354996]
+Deu problema no planejamento de caminho com origem em[1.6873455047607422, -2.1293818950653076, 0.03546752780675888] e objetivo [2.4009337425231934, -1.7354815978043898, 0.03546492010354996]
+Deu problema no planejamento de caminho com origem em[4.700195789337158, -4.684395790100098, 0.03546895831823349] e objetivo [2.4009337425231934, -1.7354815978043898, 0.03546492010354996]
+Deu conflito na execução do robô 2
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 2
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+Deu conflito na execução do robô 1
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+Deu conflito na execução do robô 1
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1
+Deu conflito na execução do robô 1
+Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - 1
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 1 parou porque está esperando aparecer nó não visitado
+O robô 3 parou porque está esperando aparecer nó não visitado
+O robô 2 parou porque está esperando aparecer nó não visitado

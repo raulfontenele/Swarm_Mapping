@@ -40,7 +40,7 @@ def Exploring(robotFile,comPort):
     motorsObject = []
     #velocity = 0.7
     velocity = 0.35
-    radius = 0.25
+    radius = 0.3
     #radius = 0.15
     global mapping
     
@@ -54,6 +54,8 @@ def Exploring(robotFile,comPort):
     #Testar sem fechar conexões existentes
     #sim.simxFinish(-1) # just in case, close all opened connections
     clientID=sim.simxStart('127.0.0.1',comPort,True,True,5000,5) # Connect to CoppeliaSim
+
+        
     
     #Pegar o objeto do robô
     returnCode,khepera=sim.simxGetObjectHandle(clientID,robotInfo["robotBody"],sim.simx_opmode_blocking)
@@ -411,10 +413,10 @@ def Exploring(robotFile,comPort):
     #saveEdge(mapping.edgeMap,'arestas')
     print("Terminou")
     
-    # Before closing the connection to CoppeliaSim, make sure that the last command sent out had time to arrive. You can guarantee this with (for example):
+    # # Before closing the connection to CoppeliaSim, make sure that the last command sent out had time to arrive. You can guarantee this with (for example):
     sim.simxGetPingTime(clientID)
     
-    # Now close the connection to CoppeliaSim:
+    # # Now close the connection to CoppeliaSim:
     sim.simxFinish(clientID)
 
 print ('Program started')
@@ -430,7 +432,7 @@ motorsObject = []
 wallReference = 'ConcretBlock'
 '''
 #radius = 0.15
-radius = 0.45
+radius = 0.25
 extRadius = radius/math.cos(math.pi/6)
 
 contagem = 0
@@ -443,10 +445,10 @@ robot1str = "robot1"
 robot2str = "robot2"
 lock = threading.Lock()
 
+
 threading.Thread(target=Exploring,args=(1,19999)).start()
 threading.Thread(target=Exploring,args=(2,19998)).start()
 threading.Thread(target=Exploring,args=(3,19997)).start()
-#threading.Thread(target=Exploring,args=(4,19995)).start()
 #Exploring(4,19995)
 
 
