@@ -32,20 +32,33 @@ def orderByDistance(listToOrder,point):
     
     #print(sorted_list1)
     return sorted_list1
+
+def orderBySeparate(listToOrder,robotsPosition):
+    distanceList = []
+    for node in listToOrder:
+        distance = 0
+        for robotCoord in robotsPosition:
+            distance += math.sqrt( (node[0] - robotCoord[0])**2 +  (node[1] - robotCoord[1])**2)
+        distanceList.append(distance)
+    
+    zipped_lists = zip(distanceList, listToOrder)
+    sorted_zipped_lists = sorted(zipped_lists, reverse=True)
+
+    sorted_list = [element for _, element in sorted_zipped_lists]
+
+    return sorted_list
         
 
 
-def Exploring(robotFile,comPort):
+def Exploring(robotFile,comPort,radiusZone):
     #Definição de variáveis
     motorsObject = []
     #velocity = 0.7
     velocity = 0.35
-    radius = 0.3
-    #radius = 0.15
     global mapping
     
     tInit = datetime.datetime.now()
-    order = 'minimum'
+    order = 'maximum'
     
     #Pegar informações do json do robô
     fileJson = open("robot" + str(robotFile) + ".json")
@@ -69,7 +82,7 @@ def Exploring(robotFile,comPort):
         motorsObject.append(handle)
         
     #Criar o objeto do robô
-    robot = Robot(clientID,robotInfo["id"],motorsObject,khepera,lidar)
+    robot = Robot(clientID,robotInfo["id"],motorsObject,khepera,lidar,radiusZone)
     
     #Tempo para estabelecer conexões com o servidor
     time.sleep(0.2)
@@ -215,6 +228,12 @@ def Exploring(robotFile,comPort):
                 if order == 'minimum':
                     with lock:
                         listDistance = orderByDistance(mapping.noneVisitedList,currentPose)
+                elif order == 'maximum':
+                    with lock:
+                        robotsPosition = []
+                        for nodes in mapping.goalsMap:
+                            robotsPosition.append(nodes["currentPosition"])
+                        listDistance = orderBySeparate(mapping.noneVisitedList,robotsPosition)
                     
                 # Escolher o ponto futuro apenas se o mesmo não for objetivo de alguém
                 with lock:
@@ -234,12 +253,6 @@ def Exploring(robotFile,comPort):
                                 finalGoal = mapping.noneVisitedList[nextGoalIndex]
                                 break
                         else:
-                            #if mapping.checkNoneVisitedList2(mapping.noneVisitedList[nextGoalIndex]) == True:
-                                #mapping.visitedNode(mapping.noneVisitedList[nextGoalIndex])
-                                #print("Nó adicionado pelo planejamento")
-                                ##string = "A coordenada " + str()
-                                #saveDebug(string)
-                            #else:
                             if nextGoalIndex >= len(mapping.noneVisitedList):
                                 node_goal = None
                                 break
@@ -422,15 +435,6 @@ def Exploring(robotFile,comPort):
 print ('Program started')
 
 #Variáveis do projeto
-#motorsName = ['Pioneer_p3dx_leftMotor','Pioneer_p3dx_rightMotor']
-#robotName = 'Pioneer_p3dx'
-'''
-motorsName = ['K3_leftWheelMotor','K3_rightWheelMotor']
-robotName = 'K3_robot'
-robotBody = 'K3_bodyPart1'
-motorsObject = []
-wallReference = 'ConcretBlock'
-'''
 #radius = 0.15
 radius = 0.25
 extRadius = radius/math.cos(math.pi/6)
@@ -441,14 +445,12 @@ mapping = Map(extRadius)
 
 sim.simxFinish(-1)
 
-robot1str = "robot1"
-robot2str = "robot2"
 lock = threading.Lock()
 
 
-threading.Thread(target=Exploring,args=(1,19999)).start()
-threading.Thread(target=Exploring,args=(2,19998)).start()
-threading.Thread(target=Exploring,args=(3,19997)).start()
+threading.Thread(target=Exploring,args=(1,19999,radius)).start()
+threading.Thread(target=Exploring,args=(2,19998,radius)).start()
+threading.Thread(target=Exploring,args=(3,19997,radius)).start()
 #Exploring(4,19995)
 
 

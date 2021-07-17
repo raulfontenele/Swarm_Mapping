@@ -1,1 +1,1 @@
-Ambiente 7x7 // Sem obstáculos // Com controle.
+Ambiente 7x7 // Sem obstáculos// 3 robôs // Com controle - Sem controle.

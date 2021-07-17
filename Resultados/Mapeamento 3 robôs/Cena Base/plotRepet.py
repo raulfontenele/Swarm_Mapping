@@ -82,6 +82,7 @@ def graphHex(radius):
     
     #fig, ax = plt.subplots(1)
     ax.set_aspect('equal')
+    
     # Add some coloured hexagons
     for cd in coord:
         #color = c[0].lower()  # matplotlib understands lower case words for colours
@@ -89,8 +90,11 @@ def graphHex(radius):
                             orientation=np.radians(30), 
                             alpha=0.2, edgecolor='k')
         ax.add_patch(hex)
-    plt.scatter(-coord[:,1],coord[:,0], s = 100, c = qtdArray ,marker='h', cmap="plasma")
-    plt.colorbar()
+    ax.tick_params(labelsize=20)
+    #ax.tick_params(axis='y', labelsize=20)
+    plt.scatter(-coord[:,1],coord[:,0], s = 300, c = qtdArray ,marker='h', cmap="plasma")
+    cbar = plt.colorbar()
+    cbar.ax.tick_params(labelsize=20)
 
     ax.imshow(img,extent=[-5, 5, -5, 5])
     file = open('map.txt','r')

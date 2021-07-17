@@ -13,7 +13,7 @@ from Save import saveDebug
 from datetime import datetime
 
 class Robot:
-    def __init__(self,idClient,robotId,motorsId,robotObject,lidar):
+    def __init__(self,idClient,robotId,motorsId,robotObject,lidar,radiusZone):
         self.idClient = idClient
         self.motorsId = motorsId
         self.robot = robotObject
@@ -23,7 +23,7 @@ class Robot:
         #self.ownRadius = 0.07
         #self.radius = 0.15
         self.ownRadius = 0.15
-        self.radius = 0.25
+        self.radius = radiusZone
         self.extRadius = self.radius/math.cos(math.pi/6)
         self.id = robotId
         
