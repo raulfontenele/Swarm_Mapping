@@ -67,7 +67,7 @@ def Exploring(robotFile,comPort,radiusZone):
     #Testar sem fechar conexões existentes
     #sim.simxFinish(-1) # just in case, close all opened connections
     clientID=sim.simxStart('127.0.0.1',comPort,True,True,5000,5) # Connect to CoppeliaSim
-
+    
         
     
     #Pegar o objeto do robô

@@ -79,7 +79,7 @@ class Lidar:
             returnCode,detectionState,detectedPoint,detectedObjectHandle,detectedSurfaceNormalVector=sim.simxReadProximitySensor(self.clientID,self.ObjectHandle,sim.simx_opmode_buffer)
             print(detectionState)
             return detectionState
-        
+    '''   
     def teste(self):
         returnCode,outInts,outFloats,outStrings,outBuffer=sim.simxCallScriptFunction(self.clientID,"LaserScannerLaser_2D",sim.sim_scripttype_childscript,"sysCall_sensing",[],[],[],0,sim.simx_opmode_blocking)
         print(returnCode)
@@ -121,4 +121,4 @@ class Lidar:
         print(v1)
         print(v2)
         print(detectionState)
-        
+    '''
