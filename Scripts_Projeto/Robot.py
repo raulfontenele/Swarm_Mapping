@@ -13,19 +13,16 @@ from Save import saveDebug
 from datetime import datetime
 
 class Robot:
-    def __init__(self,idClient,robotId,motorsId,robotObject,lidar,radiusZone):
-        self.idClient = idClient
-        self.motorsId = motorsId
-        self.robot = robotObject
-        #self.accelerometer = accelerometer
+    def __init__(self,communicationApi,robotInfos,lidar,radiusZone):
+        self.comm = communicationApi
+        self.robotInfos = robotInfos
+        #self.motorsId = motorsId
+        #self.robot = robotObject
         self.lidar = lidar
-        #self.gyroscope = gyroscope
-        #self.ownRadius = 0.07
-        #self.radius = 0.15
         self.ownRadius = 0.15
         self.radius = radiusZone
         self.extRadius = self.radius/math.cos(math.pi/6)
-        self.id = robotId
+        #self.id = robotId
         
         #Inicialização da função de posição
         self.getAbsolutePosition(True)
@@ -39,11 +36,11 @@ class Robot:
             
             # Realizar o controle do angulo de rotação
             if angle > 0:
-                sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],velocity,sim.simx_opmode_oneshot)
-                sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],-velocity,sim.simx_opmode_oneshot)
+                sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["leftMotor"],velocity,sim.simx_opmode_oneshot)
+                sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["rightMotor"],-velocity,sim.simx_opmode_oneshot)
             else:
-                sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],-velocity,sim.simx_opmode_oneshot)
-                sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],velocity,sim.simx_opmode_oneshot)
+                sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["leftMotor"],-velocity,sim.simx_opmode_oneshot)
+                sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["rightMotor"],velocity,sim.simx_opmode_oneshot)
             
     
             #print("orientação inicial giroscópio")
@@ -79,9 +76,9 @@ class Robot:
         
     def getAbsoluteOrientation(self,flag):
         if flag == True:
-            returnCode,eulerAngles = sim.simxGetObjectOrientation(self.idClient,self.robot,-1,sim.simx_opmode_streaming)
+            returnCode,eulerAngles = sim.simxGetObjectOrientation(self.comm.clientId,self.robotInfos["robot"],-1,sim.simx_opmode_streaming)
         else:
-            returnCode,eulerAngles = sim.simxGetObjectOrientation(self.idClient,self.robot,-1,sim.simx_opmode_buffer)
+            returnCode,eulerAngles = sim.simxGetObjectOrientation(self.comm.clientId,self.robotInfos["robot"],-1,sim.simx_opmode_buffer)
         
         #Com a conversão dos angulos de euler
         '''
@@ -103,8 +100,12 @@ class Robot:
         return eulerAngles
     
     def stopRotation(self):
-        for i in range(len(self.motorsId)):
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[i],0,sim.simx_opmode_oneshot)
+        self.comm.Pause(True)
+        sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["leftMotor"],0,sim.simx_opmode_oneshot)
+        sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["rightMotor"],0,sim.simx_opmode_oneshot)
+        self.comm.Pause(False)
+        #for i in range(len(self.motorsId)):
+            
             
     def moveFoward(self,distance,angle,velocity):
         #threshold = 2*self.radius + 1.4*self.ownRadius
@@ -198,9 +199,9 @@ class Robot:
         
     def getAbsolutePosition(self,flag):
         if flag == True:
-            returnCode,position = sim.simxGetObjectPosition(self.idClient,self.robot,-1,sim.simx_opmode_streaming )
+            returnCode,position = sim.simxGetObjectPosition(self.comm.clientId,self.robotInfos["robot"],-1,sim.simx_opmode_streaming )
         else:
-            returnCode,position = sim.simxGetObjectPosition(self.idClient,self.robot,-1,sim.simx_opmode_buffer )
+            returnCode,position = sim.simxGetObjectPosition(self.comm.clientId,self.robotInfos["robot"],-1,sim.simx_opmode_buffer )
         return position
     
     def scanAround(self,velocity,mapping,initCoord):
@@ -229,7 +230,7 @@ class Robot:
                   
             coord = AuxiliarFunctions.projectCoord(angList[i], initCoord, 2*self.radius)
             #if self.checkDistance(threshold) ==  True or mapping.checkGoalAnother(coord, 'next') == True:
-            if self.lidar.getDetectedState(True) ==  False or mapping.checkGoalAnother(coord, 'next', self.id) == True:
+            if self.lidar.getDetectedState(True) ==  False or mapping.checkGoalAnother(coord, 'next', self.robotInfos["ID"]) == True:
                 nodes.append(coord)
                 angles.append(angList[i])
 
@@ -237,7 +238,7 @@ class Robot:
             
         self.rotateTo(0, velocity)
         
-        logNeighbor(nodes,angles,initCoord,self.id)
+        logNeighbor(nodes,angles,initCoord,self.robotInfos["ID"])
         if len(nodes) == 0:
             saveDebug("Deu problema porque o nó " + str(initCoord) + " não tem visinho")
             print("Nó sem visinhos")
@@ -246,18 +247,20 @@ class Robot:
 
         
     def turnOnRobot(self,velocityR,velocityL,rotationSense):
+        self.comm.Pause(True)
         if rotationSense == "hor":
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],velocityL,sim.simx_opmode_oneshot)
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],-velocityR,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["leftMotor"],velocityL,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["rightMotor"],-velocityR,sim.simx_opmode_oneshot)
         elif rotationSense == "antihor":
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],-velocityL,sim.simx_opmode_oneshot)
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],velocityR,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["leftMotor"],-velocityL,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["rightMotor"],velocityR,sim.simx_opmode_oneshot)
         elif rotationSense == "front":
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],velocityL,sim.simx_opmode_oneshot)
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],velocityR,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["leftMotor"],velocityL,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["rightMotor"],velocityR,sim.simx_opmode_oneshot)
         else:
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[0],-velocityL,sim.simx_opmode_oneshot)
-            sim.simxSetJointTargetVelocity(self.idClient,self.motorsId[1],-velocityR,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["leftMotor"],-velocityL,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["rightMotor"],-velocityR,sim.simx_opmode_oneshot)
+        self.comm.Pause(False)
         
         
     def rotateTo(self,angle,velocity):
@@ -282,12 +285,6 @@ class Robot:
             
             if diff <= 0.4:
                 self.stopRotation()
-                '''
-                print("Inicial::" + str(angle))
-                print("Final::" + str(currentOrientation[index]))
-                print("Sinal::" + str(sign))
-                print("Diferença::" + str(diff))
-                '''
                 break
 
             
