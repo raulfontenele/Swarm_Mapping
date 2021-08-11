@@ -1,3 +1,0 @@
-{
-	[coordenadas do no atual],[[Lista de nós visinhos]],[[lista de angulação dos nós visinhos]]
-}

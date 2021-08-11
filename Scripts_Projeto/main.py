@@ -7,11 +7,16 @@ from Node import Node
 from Map import Map
 from AuxiliarFunctions import AuxiliarFunctions
 from Save import saveCoord,saveEdge,saveMap,saveDebug,saveDebugCoord
-from debug import logNodeInfo
+from debug import logNodeInfo, logRobotInfo
 import json
 from PathPlanning import PathPlanning
 import datetime
 import threading
+
+from rich.console import Console
+from rich.table import Table
+
+from CommunicationAPI import CommunicationAPI
 
 def checkRobotExploring(mapping):
     for robot in mapping.statusMap:
@@ -61,43 +66,48 @@ def Exploring(robotFile,comPort,radiusZone):
     order = 'maximum'
     
     #Pegar informações do json do robô
-    fileJson = open("robot" + str(robotFile) + ".json")
+    fileJson = open("robot.json")
+    robotString =  "Robot" + str(robotFile) 
     robotInfo = json.load(fileJson)
     
-    #Testar sem fechar conexões existentes
-    #sim.simxFinish(-1) # just in case, close all opened connections
-    clientID=sim.simxStart('127.0.0.1',comPort,True,True,5000,5) # Connect to CoppeliaSim
-    
-        
+    comm = CommunicationAPI('127.0.0.1', comPort)
     
     #Pegar o objeto do robô
-    returnCode,khepera=sim.simxGetObjectHandle(clientID,robotInfo["robotBody"],sim.simx_opmode_blocking)
+    returnCode,khepera=sim.simxGetObjectHandle(comm.clientId,robotInfo[robotString]["robotBody"],sim.simx_opmode_blocking)
 
-   #Criar objetos do acelerômetro, Lidar e giroscópio
-    lidar = Lidar(robotInfo["lidar"],clientID,robotInfo["id"])
-     
     #Pegar objeto dos motores manipuláveis
     for i in range(2):
-        returnCode,handle=sim.simxGetObjectHandle(clientID,robotInfo["motorsName"][i],sim.simx_opmode_blocking)
+        returnCode,handle=sim.simxGetObjectHandle(comm.clientId,robotInfo[robotString]["motorsName"][i],sim.simx_opmode_blocking)
         motorsObject.append(handle)
-        
+    
+    # Criar o objeto robô
+    robotObject = {
+        "ID":           robotInfo[robotString]["id"],
+        "leftMotor":    motorsObject[0],
+        "rightMotor":   motorsObject[1],
+        "robot":        khepera  
+        }
+    
+    #Criar objetos do acelerômetro, Lidar e giroscópio
+    lidar = Lidar(robotInfo[robotString]["lidar"],comm.clientId,robotObject["ID"])
+    
     #Criar o objeto do robô
-    robot = Robot(clientID,robotInfo["id"],motorsObject,khepera,lidar,radiusZone)
+    robot = Robot(comm,robotObject,lidar,radiusZone)
     
     #Tempo para estabelecer conexões com o servidor
     time.sleep(0.2)
     
-    mapping.initStatusMap(robotInfo["id"], "stopping")
+    mapping.initStatusMap(robotObject["ID"], "stopping")
     
     currentPose = robot.getAbsolutePosition(False)
-    print("Posição Inicial do robô " + str(robotInfo["id"]) + ": " + str(currentPose))
-    mapping.addStepMap(robotInfo["id"], currentPose)
-    mapping.initGoalsNode(robotInfo["id"], currentPose)
-    mapping.initStatusMap(robotInfo["id"], "exploring")
+    print("Posição Inicial do robô " + str(robotObject["ID"]) + ": " + str(currentPose))
+    mapping.addStepMap(robotObject["ID"], currentPose)
+    mapping.initGoalsNode(robotObject["ID"], currentPose)
+    mapping.initStatusMap(robotObject["ID"], "exploring")
     neighborhood,angles = robot.scanAround(0.7*velocity,mapping,currentPose)
 
     
-    mapping.addMapPoint(currentPose,neighborhood,angles,robotInfo["id"])
+    mapping.addMapPoint(currentPose,neighborhood,angles,robotObject["ID"])
     mapping.addVisitedNode(currentPose)
     string = "Coordenada adicionada pela condição 1:"+str(currentPose)
     saveDebugCoord(string,"debugLogCoord")
@@ -114,9 +124,9 @@ def Exploring(robotFile,comPort,radiusZone):
         '''
         if len(mapping.noneVisitedList) == 0:
             #Varificar se o nó atual não está na passagem de ninguém
-            mapping.updateStatus(robotInfo["id"], "stopping")
+            mapping.updateStatus(robotObject["ID"], "stopping")
             time.sleep(1)
-            string = "O robô " + str(robotInfo["id"]) + " parou porque está esperando aparecer nó não visitado"
+            string = "O robô " + str(robotObject["ID"]) + " parou porque está esperando aparecer nó não visitado"
             saveDebug(string)
             
         '''
@@ -125,44 +135,20 @@ def Exploring(robotFile,comPort,radiusZone):
         '''
         with lock:
             try:
-                neighborCoord,neighborAngle = mapping.checkAvailability(neighborhood,angles,robotInfo["id"])
+                neighborCoord,neighborAngle = mapping.checkAvailability(neighborhood,angles,robotObject["ID"])
             except Exception:
                 neighborCoord = None
         
         if neighborCoord != None:
             #Visitar o nó 
-            print("Nó não visitado do robô:" + str(robotInfo["id"]))
+            print("Nó não visitado do robô:" + str(robotObject["ID"]))
             
             # Deslocar para a coordenada previamente incluida na lista, a fim de tentar minimizar o erro
-            #print("Valor da coordenada do check:" + str(neighborCoord))
-            #flag = mapping.checkVisitedStruct(neighborCoord)
-            #print("O valor da flag: " + str(flag) + " do robô:" + str(robotInfo["id"]))
             with lock:
                 realDestiny = mapping.getCoordNoneVisitedList(neighborCoord)
             #print("Valor da coordenada real:" + str(realDestiny))
             diff = ((neighborCoord[0] - realDestiny[0])**2 + (neighborCoord[1] - realDestiny[1])**2 )**(1/2)
-            '''
-            if diff>radius/4:
-                realDestiny = neighborCoord
-                #currentPose = realPose
-                print("---------------------- Diferença que fez dar errado ----------------------")
-                print(diff)
-                string = "Destino do robô " + str(robotInfo["id"]) + " não coincide com o destino real"
-                saveDebug(string)
-            
-            print("Suposta posição do robô: " + str(currentPose))
-            realPose = robot.getAbsolutePosition(False)
-            print("Posição real do robô: " + str(realPose))
-            diff = ((currentPose[0] - realPose[0])**2 + (currentPose[1] - realPose[1])**2 )**(1/2)
-            #print(diff)
-            if diff>radius/4:
-                currentPose = realPose
-                print("--------------Diferença que fez dar errado 2 ----------------")
-                print(diff)
-                string = "Posição do robô " + str(robotInfo["id"]) + " não coincide no currentPose com a posição real"
-                saveDebug(string)
-            '''  
-            #currentPose = robot.getAbsolutePosition(False)
+ 
             string = 'Coordenada atual:' + str(currentPose) + '\n'
             string += "Coordenada neighbor index:"+ str(neighborCoord) + " // Coordenada real:"+ str(realDestiny) + '\n'
             
@@ -170,11 +156,10 @@ def Exploring(robotFile,comPort,radiusZone):
             
             #Definir o próximo objetivo/objetivo final, atualizar o status e visitá-lo
             with lock:
-                mapping.updateGoals(currentPose,realDestiny, realDestiny, robotInfo["id"])
-                mapping.updateStatus(robotInfo["id"], "moving")
+                mapping.updateGoals(currentPose,realDestiny, realDestiny, robotObject["ID"])
+                mapping.updateStatus(robotObject["ID"], "moving")
                 
             robot.rotateTo(angle, velocity*0.7)
-            #print("Movimentação 1 do robô: " + str(robotInfo["id"]))
             robot.moveFoward(distance, angle, velocity*3)
             
             with lock:
@@ -184,13 +169,8 @@ def Exploring(robotFile,comPort,radiusZone):
                 mapping.visitedNode(currentPose)
                 string = "Coordenada adicionada pela condição 2:"+str(currentPose)
                 saveDebugCoord(string,'debugLogCoord')
-                mapping.updateGoals(currentPose,realDestiny,realDestiny,robotInfo["id"])
+                mapping.updateGoals(currentPose,realDestiny,realDestiny,robotObject["ID"])
                 
-                '''
-                robot.rotateTo(defineAngle(neighborAngle), velocity*0.8)
-                distParent = robot.moveFoward(2*radius, 0, velocity*3)
-                '''
-                #print("Distancia deslocada: " + str(distParent) + " pelo robô "+ str(robotInfo["id"]))
                 
                 '''
                     Uma vez que se chegou no nó não visitado, deve-se escanear em volta, e adicionar os visinhos, não visitados,
@@ -199,22 +179,22 @@ def Exploring(robotFile,comPort,radiusZone):
                 '''
                 
                 
-                mapping.addStepMap(robotInfo["id"], currentPose)
+                mapping.addStepMap(robotObject["ID"], currentPose)
                 #print("Coordenadas destino: " + str(neighborCoord) )
-                #print("Coordenada final:" + str(currentPose) + " do robô " + str(robotInfo["id"]))
+                #print("Coordenada final:" + str(currentPose) + " do robô " + str(robotObject["ID"]))
                 
                 
                 saveCoord(mapping.visitedList,"coord.csv")
                 saveCoord(mapping.noneVisitedList,"noneVisited.csv")
                 
-                mapping.updateStatus(robotInfo["id"], "exploring")
+                mapping.updateStatus(robotObject["ID"], "exploring")
                 
             neighborhood,angles = robot.scanAround(velocity*0.7,mapping,currentPose)
             with lock:
-            #print("O robô " + str(robotInfo["id"]) + " vai adicionar " + str(len(neighborhood)) + " visinhos")
+            #print("O robô " + str(robotObject["ID"]) + " vai adicionar " + str(len(neighborhood)) + " visinhos")
                 mapping.addNoneVisitedNode(neighborhood)
                 
-                mapping.addMapPoint(currentPose,neighborhood,angles,robotInfo["id"])
+                mapping.addMapPoint(currentPose,neighborhood,angles,robotObject["ID"])
             
         else:
             if len(mapping.noneVisitedList) > 0:
@@ -236,17 +216,15 @@ def Exploring(robotFile,comPort,radiusZone):
                         listDistance = orderBySeparate(mapping.noneVisitedList,robotsPosition)
                     
                 # Escolher o ponto futuro apenas se o mesmo não for objetivo de alguém
+                ##Adaptar para ficar todo mundo na mesma lista
+
                 with lock:
                     while True:
                         if order == 'fifo':
-                            #if mapping.checkVisitedCoord(mapping.noneVisitedList[nextGoalIndex]) == True:
-                                #mapping.visitedNode(mapping.noneVisitedList[nextGoalIndex])
-                                #print("Nó adicionado pelo planejamento")
-                            #else:
                             if nextGoalIndex >= len(mapping.noneVisitedList):
                                 node_goal = None
                                 break
-                            elif mapping.checkGoalAnother(mapping.noneVisitedList[nextGoalIndex],"both",robotInfo["id"]) == True:
+                            elif mapping.checkGoalAnother(mapping.noneVisitedList[nextGoalIndex],"both",robotObject["ID"]) == True:
                                 nextGoalIndex +=1
                             else:
                                 node_goal = Node(mapping.noneVisitedList[nextGoalIndex])
@@ -256,7 +234,7 @@ def Exploring(robotFile,comPort,radiusZone):
                             if nextGoalIndex >= len(mapping.noneVisitedList):
                                 node_goal = None
                                 break
-                            elif mapping.checkGoalAnother(listDistance[nextGoalIndex],"both",robotInfo["id"]) == True:
+                            elif mapping.checkGoalAnother(listDistance[nextGoalIndex],"both",robotObject["ID"]) == True:
                                 nextGoalIndex +=1
                             else:
                                 node_goal = Node(listDistance[nextGoalIndex])
@@ -266,21 +244,21 @@ def Exploring(robotFile,comPort,radiusZone):
                     
                     
                 if node_goal != None:
-                    if mapping.checkNoneVisitedList2(mapping.noneVisitedList[nextGoalIndex]) == True:
+                    if mapping.checkNoneVisitedList(mapping.noneVisitedList[nextGoalIndex]) == True:
                         #mapping.visitedNode(mapping.noneVisitedList[nextGoalIndex])
                         print("Nó adicionado pelo planejamento")
                         string = "A coordenada " + str(finalGoal) + " supostamente já foi adicionada e ainda é coordenada final"
                         saveDebug(string)
                     with lock:
-                        mapping.updateGoals(currentPose,currentPose, finalGoal, robotInfo["id"])
-                        mapping.updateStatus(robotInfo["id"], "moving")
+                        mapping.updateGoals(currentPose,currentPose, finalGoal, robotObject["ID"])
+                        mapping.updateStatus(robotObject["ID"], "moving")
                         
                     #print("planejar o caminho")
                     #saveMap(mapping.structMap, "mappingPath")
                     path = PathPlanning(mapping,node_start,node_goal)
                     route = path.AStarAlgorithm()
-                    #print("Posição atual:" + str(currentPose) + " do robô " + str(robotInfo["id"]))
-                    #print("Posição objetivo final:" + str(node_goal.coord) + " do robô " + str(robotInfo["id"]))
+                    #print("Posição atual:" + str(currentPose) + " do robô " + str(robotObject["ID"]))
+                    #print("Posição objetivo final:" + str(node_goal.coord) + " do robô " + str(robotObject["ID"]))
                     #print("Rota")
                     #print(route)
                     
@@ -289,24 +267,20 @@ def Exploring(robotFile,comPort,radiusZone):
 
                     #Ir até o lugar planejado
                     for index in reversed(range(1,len(route))):
-                        if mapping.checkGoalAnother(route[index-1],"next",robotInfo["id"]) == False:
+                        if mapping.checkGoalAnother(route[index-1],"next",robotObject["ID"]) == False:
                             try:
                                 currentPose = robot.getAbsolutePosition(False)
                                 distance,angle = AuxiliarFunctions.CalcAngleDistance(currentPose,route[index-1])
                                 #print("Distância:" + str(distance) + "// Angulo:" + str(angle))
                                 with lock:
-                                    mapping.updateGoals(currentPose,route[index-1], finalGoal, robotInfo["id"])
-                                    mapping.updateStatus(robotInfo["id"], "moving")
+                                    mapping.updateGoals(currentPose,route[index-1], finalGoal, robotObject["ID"])
+                                    mapping.updateStatus(robotObject["ID"], "moving")
                                 robot.rotateTo(angle, velocity*0.7)
-                                
-                                #print("Movimentação 2 do robô: " + str(robotInfo["id"]))
+                            
                                 robot.moveFoward(distance, angle, velocity*3)
                                 with lock:
-                                    mapping.updateGoals(route[index-1],route[index-1], finalGoal, robotInfo["id"])
-                                    mapping.addStepMap(robotInfo["id"], robot.getAbsolutePosition(False))
-                                #print("Posição atual e objetivo:")
-                                #print(robot.getAbsolutePosition(False))
-                               # print(route[index-1])
+                                    mapping.updateGoals(route[index-1],route[index-1], finalGoal, robotObject["ID"])
+                                    mapping.addStepMap(robotObject["ID"], robot.getAbsolutePosition(False))
                             except:
                                 print("Deu errado e caiu no except")
                                 print([index-1])
@@ -324,18 +298,18 @@ def Exploring(robotFile,comPort,radiusZone):
                             só puder ir para onde o atual robô está, ver como resolver.
                         '''
                         with lock:
-                            mapping.updateStatus(robotInfo["id"], "conflit")
+                            mapping.updateStatus(robotObject["ID"], "conflit")
                         currentPose = robot.getAbsolutePosition(False)
                         '''
                             Se o outro robô estiver se mexendo ou explorando, o robô atual deverá esperar. Caso ele esteja em conflito, deverá ser realizada
                             alguma ação com o objetivo de dar passagem
                         '''
-                        #print("deu conflito")
-                        string = "Deu conflito na execução do robô " + str(robotInfo["id"])
+
+                        string = "Deu conflito na execução do robô " + str(robotObject["ID"])
                         saveDebug(string)
                         
                         if mapping.getStatusRobot(conflitCoord) != "conflit":
-                            string = "Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - " + str(robotInfo["id"])
+                            string = "Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - " + str(robotObject["ID"])
                             saveDebug(string)
                             time.sleep(3)
                         else:
@@ -348,29 +322,29 @@ def Exploring(robotFile,comPort,radiusZone):
                             '''
                             currentPose = robot.getAbsolutePosition(False)
                             if mapping.checkAdjNumber(currentPose) >= mapping.checkAdjNumber(conflitCoord):
-                                string = "O robô " + str(robotInfo["id"]) + " vai dar passagem"
+                                string = "O robô " + str(robotObject["ID"]) + " vai dar passagem"
                                 saveDebug(string)
-                                print("O robô " + str(robotInfo["id"]) + " tem mais casas para andar")
+                                print("O robô " + str(robotObject["ID"]) + " tem mais casas para andar")
                                 print("Escolher um lugar para se mexer que não colida com ninguém")
-                                neighbor = mapping.getFreeNeighbor(currentPose,robotInfo["id"])
+                                neighbor = mapping.getFreeNeighbor(currentPose,robotObject["ID"])
                                 print("Saindo do meio")
                                 distance,angle = AuxiliarFunctions.CalcAngleDistance(currentPose,neighbor)
                                 print("Distância:" + str(distance) + "// Angulo:" + str(angle))
                                 with lock:
-                                    mapping.updateGoals(currentPose,neighbor, neighbor, robotInfo["id"])
-                                    mapping.updateStatus(robotInfo["id"], "moving")
+                                    mapping.updateGoals(currentPose,neighbor, neighbor, robotObject["ID"])
+                                    mapping.updateStatus(robotObject["ID"], "moving")
                                 robot.rotateTo(angle, velocity*0.7)
-                                #print("Movimentação 3 do robô: " + str(robotInfo["id"]))
+                                #print("Movimentação 3 do robô: " + str(robotObject["ID"]))
                                 robot.moveFoward(distance, angle, velocity*3)
                                 
                                 currentPose = robot.getAbsolutePosition(False)
                                 with lock:
-                                    mapping.updateGoals(neighbor,neighbor, neighbor, robotInfo["id"])
-                                    mapping.addStepMap(robotInfo["id"], currentPose)
+                                    mapping.updateGoals(neighbor,neighbor, neighbor, robotObject["ID"])
+                                    mapping.addStepMap(robotObject["ID"], currentPose)
                             
                             else:
                                 time.sleep(3)
-                                string = "O robô " + str(robotInfo["id"]) + " vai esperar o espaço"
+                                string = "O robô " + str(robotObject["ID"]) + " vai esperar o espaço"
                                 saveDebug(string)
                                 
                         
@@ -380,8 +354,7 @@ def Exploring(robotFile,comPort,radiusZone):
                         #print("Terminou com posição atual e objetivo:")
                         #print(currentPose)
                         #print(route[0])
-                        
-                        #currentPose = robot.getAbsolutePosition(False)
+
                         with lock:
                             mapping.visitedNode(currentPose)
                             string = "Coordenada adicionada pela condição 3:"+str(currentPose)
@@ -393,32 +366,29 @@ def Exploring(robotFile,comPort,radiusZone):
                         with lock:
                             mapping.addNoneVisitedNode(neighborhood)
                             
-                            mapping.addMapPoint(currentPose,neighborhood,angles,robotInfo["id"])
+                            mapping.addMapPoint(currentPose,neighborhood,angles,robotObject["ID"])
                         
-                elif mapping.checkGoalAnother(robot.getAbsolutePosition(False),"next",robotInfo["id"]) == True:
+                elif mapping.checkGoalAnother(robot.getAbsolutePosition(False),"next",robotObject["ID"]) == True:
                     currentPose = robot.getAbsolutePosition(False)
-                    string = "O robô " + str(robotInfo["id"]) + " vai dar passagem na condição de única alternativa"
+                    string = "O robô " + str(robotObject["ID"]) + " vai dar passagem na condição de única alternativa"
                     saveDebug(string)
                     print("Escolher um lugar para se mexer que não colida com ninguém")
                     with lock:
-                        neighbor = mapping.getFreeNeighbor(currentPose,robotInfo["id"])
-                        mapping.updateGoals(currentPose,neighbor, neighbor, robotInfo["id"])
+                        neighbor = mapping.getFreeNeighbor(currentPose,robotObject["ID"])
+                        mapping.updateGoals(currentPose,neighbor, neighbor, robotObject["ID"])
                     print("Saindo do meio")
                     distance,angle = AuxiliarFunctions.CalcAngleDistance(currentPose,neighbor)
                     print("Distância:" + str(distance) + "// Angulo:" + str(angle))
                     
                     robot.rotateTo(angle, velocity*0.7)
-                    #print("Movimentação 4 do robô: " + str(robotInfo["id"]))
                     robot.moveFoward(distance, angle, velocity*3)
                     currentPose = robot.getAbsolutePosition(False)
                     with lock:
-                        mapping.updateGoals(neighbor,neighbor, neighbor, robotInfo["id"])
-                        mapping.addStepMap(robotInfo["id"], currentPose)
+                        mapping.updateGoals(neighbor,neighbor, neighbor, robotObject["ID"])
+                        mapping.addStepMap(robotObject["ID"], currentPose)
                     
             
 
-                
-    #saveCoord(mapping.visitedList)
     saveMap(mapping.structMap, "map")
     tFinal = datetime.datetime.now()
     deltaT = tFinal- tInit
@@ -427,10 +397,10 @@ def Exploring(robotFile,comPort,radiusZone):
     print("Terminou")
     
     # # Before closing the connection to CoppeliaSim, make sure that the last command sent out had time to arrive. You can guarantee this with (for example):
-    sim.simxGetPingTime(clientID)
+    sim.simxGetPingTime(comm.clientId)
     
     # # Now close the connection to CoppeliaSim:
-    sim.simxFinish(clientID)
+    comm.Dispose()
 
 print ('Program started')
 
@@ -443,7 +413,7 @@ contagem = 0
 
 mapping = Map(extRadius)
 
-sim.simxFinish(-1)
+CommunicationAPI.Clear()
 
 lock = threading.Lock()
 
@@ -451,7 +421,6 @@ lock = threading.Lock()
 threading.Thread(target=Exploring,args=(1,19999,radius)).start()
 threading.Thread(target=Exploring,args=(2,19998,radius)).start()
 threading.Thread(target=Exploring,args=(3,19997,radius)).start()
-#Exploring(4,19995)
 
 
 

@@ -4,15 +4,27 @@ Created on Mon Mar  8 17:46:01 2021
 
 @author: raulf
 """
+import rich
+from rich.console import Console
+from rich.table import Table
 
 def logNeighbor(neighborhood,angles,currentNode,robotId):
-    print("//------------------------------------------------------------------------------------------------------------//")
-    print("//----  Nó atual: " + str(currentNode) + " --------// -- Robot Id:  " + str(robotId) + "-------//") 
-    print("// ---------------- Coordenadas ---------------- // -------- Angulação ------- //")
+
+    table = Table(title="Neighborhood Log")
+
+    table.add_column("Robot", justify="center", style="green", no_wrap=True)
+    table.add_column("Coordinates", justify="center", style="cyan", no_wrap=True)
+    table.add_column("Angles", style="magenta")
+
+    table.add_row(str(robotId), str(currentNode), "-")
     for index in range(len(neighborhood)):
-        print("//--- " + str(neighborhood[index])+ " ---//---  " + str(angles[index]) + "  ---//")
-    print("//------------------------------------------------------------------------------------------------------------//")
-    
+        table.add_row("Neighbor", str(neighborhood[index]), str(angles[index]))
+    console = Console()
+    console.print(table)
+
+def logRobotInfo(robotObject):
+    console = Console()
+    console.log(robotObject)
     
 def logLidar(lidarCenter,lidarLeft,lidarRight):
     print("//------------------------------------------------------------------------------------------------------------//")

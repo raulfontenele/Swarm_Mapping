@@ -30,36 +30,14 @@ class PathPlanning:
         return False
     
     def findNeighborhood(self,node_current):
-        #neighbor = []
-     
-        #coord = [node_current.coord[0],node_current.coord[1]]
         neighborhood = []
         for node in self.map.structMap:
-            #print(node["nodeCoord"])
             diff2 = (node["nodeCoord"][0] - node_current.coord[0])**2 + (node["nodeCoord"][1] - node_current.coord[1])**2
             if math.sqrt( diff2) < self.map.radius:
                 ##Colocar todos os visinhos na variável neighborhood
                 for index in range(len(node["neighborhood"])):
                     neighborhood.append(Node(node["neighborhood"][index]))
                 break
-
-        '''
-        coorX = node_current.coord[0]
-        coorY = node_current.coord[1]
-        
-        if self.map[coorX + 1][coorY] != 1:
-            neighbor.append( Node([coorX + 1,coorY]) )
-        if self.map[coorX - 1][coorY] != 1 and coorX - 1 > 0:
-            neighbor.append( Node([coorX - 1,coorY]) )
-        if self.map[coorX ][coorY + 1] != 1:
-            neighbor.append( Node([coorX,coorY + 1]) )    
-        if self.map[coorX ][coorY - 1] != 1 and coorY - 1 > 0:
-            neighbor.append( Node([coorX,coorY - 1]) ) 
-        '''
-        '''
-        if len(neighborhood) == 0:
-            neighborhood.append(node_current.parent)
-        '''
             
         return neighborhood
     

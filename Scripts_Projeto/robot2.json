@@ -1,7 +1,0 @@
-{
-    "robotName":"K3_robot#0",
-    "lidar": "LaserScannerLaser_2D#0",
-    "motorsName":["K3_leftWheelMotor#0","K3_rightWheelMotor#0"],
-    "robotBody":"K3_bodyPart1#0",
-    "id":2
-}

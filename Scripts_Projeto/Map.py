@@ -114,8 +114,7 @@ class Map:
         }
         self.structMap.append(struct)
         saveMap(self.structMap, "map")
-        #print("Estrutura do mapa que foi adicionada:")
-        #print(struct)
+
     def checkGoalAnother(self,coord,typeDist,robotId):
         '''
             A regra de avaliação consiste em um robô definir seu objetivo, onde o mesmo não deverá
@@ -142,9 +141,6 @@ class Map:
             if self.checkGoalAnother(neighbor,"next",robotId) == False and self.checkOccupiedNode(neighbor,robotId) == False:
                 return neighbor
                 
-                
-            
-            
     def checkAvailability(self,neighborhood,angles,robotId):
 
         #Checar se existem visinhos disponíveis para serem visitados
@@ -238,51 +234,7 @@ class Map:
                 return True
         file.close()
         return False
-    #======================================================================================#
-    def addNoneVisitedNode2(self,listCoord):
-        
-        for coord in listCoord:
-            flag,node = self.checkVisitedCoord(coord)
-            if self.checkNoneVisitedList2(coord) == False and flag == False:
-                file = open("noneVisitedList.txt",'a')
-                file.writelines(str(coord))
-                file.close()
-                #self.noneVisitedList.append(coord)
-        self.addNoneVisitedNode(listCoord)
-        
-    def visitedNode2(self,coord):
-        with open("noneVisitedList.txt", "r+") as f:
-            noneVisitedList = f.readlines()
-            f.seek(0)
-            for node in noneVisitedList:
-                node = node.replace('[',"")
-                node = node.replace(']',"")
-                node = node.split(',')
-                diff2 = (coord[0] - float(node[0]))**2 + (coord[1] - float(node[1]))**2
-                if math.sqrt(diff2) < self.radius:
-                    f.write(str(node))
-            f.truncate()
-        self.visitedNode(coord)
-            
-        
-    '''
-    def checkVisited2(self,projectedCoord):
-        for node in self.visitedList:
-            diff2 = (projectedCoord[0] - node[0])**2 + (projectedCoord[1] - node[1])**2
-            if math.sqrt(diff2) <= self.radius:
-                return True,node
-        return False,None
-    '''
-    
-    def checkNoneVisitedList2(self,coord):
-        
-        with open('coord.csv', 'r') as file:
-            reader = csv.reader(file)
-            for row in reader:
-                diff2 = (coord[0] - float(row[0]))**2 + (coord[1] - float(row[1]))**2
-                if math.sqrt(diff2) <= self.radius:
-                    return True
-            return False
+
 
             
 

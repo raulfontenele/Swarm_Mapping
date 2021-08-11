@@ -61,64 +61,12 @@ class Lidar:
             print(floatValues)
         
         return reshapedMatrix
-            
-        #print(floatValues)
-        #print(len(floatValues))
-        #print("reshaped")
-        #print(reshapedMatrix)
+
     def getDetectedState(self,flag):
-        #name = "LaserScannerLaser_2D"
-        #obj = self.getObjectHandle(name)
-        #print(obj)
-        #print(self.ObjectHandle)
         if flag == True:
             returnCode,detectionState,detectedPoint,detectedObjectHandle,detectedSurfaceNormalVector=sim.simxReadProximitySensor(self.clientID,self.ObjectHandle,sim.simx_opmode_streaming)
-            #print("estado de detecção:" + str(detectionState))
             return detectionState
         else:
             returnCode,detectionState,detectedPoint,detectedObjectHandle,detectedSurfaceNormalVector=sim.simxReadProximitySensor(self.clientID,self.ObjectHandle,sim.simx_opmode_buffer)
             print(detectionState)
             return detectionState
-    '''   
-    def teste(self):
-        returnCode,outInts,outFloats,outStrings,outBuffer=sim.simxCallScriptFunction(self.clientID,"LaserScannerLaser_2D",sim.sim_scripttype_childscript,"sysCall_sensing",[],[],[],0,sim.simx_opmode_blocking)
-        print(returnCode)
-        print(outInts)
-        print(outFloats)
-        print(outStrings)
-        print(outBuffer)
-        print("//=====================================//")
-    def teste2(self):
-        scan = "LaserScannerJoint_2D"
-        sensor = "LaserScannerLaser_2D"
-        ldObject = self.getObjectHandle(scan)
-        objSen = self.getObjectHandle(sensor)
-        #print(self.getPointRead())
-        for i in np.arange(-math.pi/2,math.pi/2,math.pi/360).tolist():
-            print(self.getPointRead())
-            #print("valor setado:" + str(i))
-
-            returnCode = sim.simxSetJointPosition(self.clientID,ldObject,i,sim.simx_opmode_streaming)
-            returnCode,position=sim.simxGetJointPosition(self.clientID,ldObject,sim.simx_opmode_streaming)
-
-            #print("posição real" + str(position))
-            #print(returnCode)
-            returnCode,detectionState,detectedPoint,detectedObjectHandle,detectedSurfaceNormalVector=sim.simxReadProximitySensor(self.clientID,objSen,sim.simx_opmode_buffer)
-            v1 = np.array(detectedPoint)
-            v2 = np.array(detectedSurfaceNormalVector)
-            #print(v1)
-            #print(v2)
-            time.sleep(0.15)
-            #print(v1*v2)
-    def teste3(self):
-
-        objname = "sensor1"
-        objSen = self.getObjectHandle(objname)
-        print("numero do troço:" + str(objSen))
-        returnCode,detectionState,detectedPoint,detectedObjectHandle,detectedSurfaceNormalVector=sim.simxReadProximitySensor(self.clientID,objSen,sim.simx_opmode_streaming)
-        v1 = np.array(detectedPoint)
-        v2 = np.array(detectedSurfaceNormalVector)
-        print(v1)
-        print(v2)
-        print(detectionState)
-    '''

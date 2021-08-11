@@ -26,7 +26,8 @@ class CommunicationAPI:
     def SucessConnect(self):
         return True if self.clientId != -1 else False
     
-    def Clear(self):
+    @staticmethod
+    def Clear():
         sim.simxFinish(-1)
 
     def Pause(self, condition):
