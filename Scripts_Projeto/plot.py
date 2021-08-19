@@ -80,7 +80,7 @@ def fun2():
             plt.scatter(struct["nodeCoord"][0],struct["nodeCoord"][1], s = 1000, marker='h', c= "#0000cc")
     plt.grid()
     file.close()
-    file = open('coord.csv','r')
+    file = open('Logs/coord.csv','r')
     lines = file.readlines()
     plt.figure(1)
     for line in lines:

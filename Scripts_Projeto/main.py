@@ -16,6 +16,8 @@ import threading
 from rich.console import Console
 from rich.table import Table
 
+from Enums import *
+
 from CommunicationAPI import CommunicationAPI
 
 def checkRobotExploring(mapping):
@@ -205,41 +207,31 @@ def Exploring(robotFile,comPort,radiusZone):
                 
                 nextGoalIndex = 0
                 
-                if order == 'minimum':
+                if order == Order.Minimum:
                     with lock:
                         listDistance = orderByDistance(mapping.noneVisitedList,currentPose)
-                elif order == 'maximum':
+                elif order == Order.Maximum:
                     with lock:
                         robotsPosition = []
                         for nodes in mapping.goalsMap:
                             robotsPosition.append(nodes["currentPosition"])
                         listDistance = orderBySeparate(mapping.noneVisitedList,robotsPosition)
+                else:
+                    listDistance = mapping.noneVisitedList
                     
                 # Escolher o ponto futuro apenas se o mesmo não for objetivo de alguém
-                ##Adaptar para ficar todo mundo na mesma lista
 
                 with lock:
                     while True:
-                        if order == 'fifo':
-                            if nextGoalIndex >= len(mapping.noneVisitedList):
-                                node_goal = None
-                                break
-                            elif mapping.checkGoalAnother(mapping.noneVisitedList[nextGoalIndex],"both",robotObject["ID"]) == True:
-                                nextGoalIndex +=1
-                            else:
-                                node_goal = Node(mapping.noneVisitedList[nextGoalIndex])
-                                finalGoal = mapping.noneVisitedList[nextGoalIndex]
-                                break
+                        if nextGoalIndex >= len(mapping.noneVisitedList):
+                            node_goal = None
+                            break
+                        elif mapping.checkGoalAnother(listDistance[nextGoalIndex],"both",robotObject["ID"]) == True:
+                            nextGoalIndex +=1
                         else:
-                            if nextGoalIndex >= len(mapping.noneVisitedList):
-                                node_goal = None
-                                break
-                            elif mapping.checkGoalAnother(listDistance[nextGoalIndex],"both",robotObject["ID"]) == True:
-                                nextGoalIndex +=1
-                            else:
-                                node_goal = Node(listDistance[nextGoalIndex])
-                                finalGoal = listDistance[nextGoalIndex]
-                                break
+                            node_goal = Node(listDistance[nextGoalIndex])
+                            finalGoal = listDistance[nextGoalIndex]
+                            break
 
                     
                     
@@ -253,8 +245,7 @@ def Exploring(robotFile,comPort,radiusZone):
                         mapping.updateGoals(currentPose,currentPose, finalGoal, robotObject["ID"])
                         mapping.updateStatus(robotObject["ID"], "moving")
                         
-                    #print("planejar o caminho")
-                    #saveMap(mapping.structMap, "mappingPath")
+
                     path = PathPlanning(mapping,node_start,node_goal)
                     route = path.AStarAlgorithm()
                     #print("Posição atual:" + str(currentPose) + " do robô " + str(robotObject["ID"]))
@@ -271,7 +262,7 @@ def Exploring(robotFile,comPort,radiusZone):
                             try:
                                 currentPose = robot.getAbsolutePosition(False)
                                 distance,angle = AuxiliarFunctions.CalcAngleDistance(currentPose,route[index-1])
-                                #print("Distância:" + str(distance) + "// Angulo:" + str(angle))
+
                                 with lock:
                                     mapping.updateGoals(currentPose,route[index-1], finalGoal, robotObject["ID"])
                                     mapping.updateStatus(robotObject["ID"], "moving")

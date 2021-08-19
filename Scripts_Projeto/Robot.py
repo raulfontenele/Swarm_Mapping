@@ -12,12 +12,15 @@ from debug import logNeighbor,logLidar
 from Save import saveDebug
 from datetime import datetime
 
-class Robot:
+from Enums import *
+from IRobot import IRobot
+
+class Robot(IRobot):
     def __init__(self,communicationApi,robotInfos,lidar,radiusZone):
+        
         self.comm = communicationApi
         self.robotInfos = robotInfos
-        #self.motorsId = motorsId
-        #self.robot = robotObject
+
         self.lidar = lidar
         self.ownRadius = 0.15
         self.radius = radiusZone
@@ -42,12 +45,7 @@ class Robot:
                 sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["leftMotor"],-velocity,sim.simx_opmode_oneshot)
                 sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["rightMotor"],velocity,sim.simx_opmode_oneshot)
             
-    
-            #print("orientação inicial giroscópio")
-            #gir = self.gyroscope.getGyroscoperReadVrep()
-         
-            #print("Orientação inicial")
-            #print(initOrientation)
+
     
             sign = 1 if angle > 0  else -1
             # Rotação no eixo Z
@@ -70,8 +68,6 @@ class Robot:
         
         else:
             return 0
-        #self.lidar.getBruteDate()
-        #self.lidar.getPointRead()
         
         
     def getAbsoluteOrientation(self,flag):
@@ -104,7 +100,6 @@ class Robot:
         sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["leftMotor"],0,sim.simx_opmode_oneshot)
         sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["rightMotor"],0,sim.simx_opmode_oneshot)
         self.comm.Pause(False)
-        #for i in range(len(self.motorsId)):
             
             
     def moveFoward(self,distance,angle,velocity):
@@ -112,10 +107,10 @@ class Robot:
  
         if distance > 0:
             #Ligar os motores pra frente
-            self.turnOnRobot(velocity,velocity,'front')
+            self.turnOnRobot(velocity,velocity,Moviment.Foward)
         else:
             #Ligar os motores pra trás
-            self.turnOnRobot(velocity,velocity,'back')
+            self.turnOnRobot(velocity,velocity,Moviment.Back)
 
 
         #Abordagem utilizando a posição absoluta
@@ -174,18 +169,12 @@ class Robot:
             
             
             correctError = Kp*error + Ki*accError + Kd*rateError
-            '''
-            if correctError > 0.5:
-                correctError = 5
-            elif correctError < -0.5:
-                correctError = -0.5
-            '''
             
             #print("Correcao de erro")
             #print(correctError)
             rightVelocity = velocity*(1 - correctError)
             leftVelocity = velocity*(1 + correctError)
-            self.turnOnRobot(leftVelocity,rightVelocity,'front')
+            self.turnOnRobot(leftVelocity,rightVelocity,Moviment.Foward)
             #if self.checkDistance(self.ownRadius) ==  False:
                 #print("Parou por ir para frente por estar muito próximo a parede")
                 #break
@@ -211,25 +200,12 @@ class Robot:
         #error = 0
         angList = [0,60,120,180,240,300]
         
-        #initCoord = self.getAbsolutePosition(False)
-        #angList = []
-        '''
-        for angle in ang:
-            coord = AuxiliarFunctions.projectCoord(angle, initCoord, 2*self.radius)
-            flag,node = mapping.checkVisited(coord)
-            if flag == False:
-                angList.append(angle)      
-            else:
-                nodes.append(node)
-                angles.append(angle)
-        #print("Angulos visitados: " + str(angles))
-        '''
         for i in range(len(angList)):
             
             self.rotateTo(angList[i], velocity)
                   
             coord = AuxiliarFunctions.projectCoord(angList[i], initCoord, 2*self.radius)
-            #if self.checkDistance(threshold) ==  True or mapping.checkGoalAnother(coord, 'next') == True:
+            
             if self.lidar.getDetectedState(True) ==  False or mapping.checkGoalAnother(coord, 'next', self.robotInfos["ID"]) == True:
                 nodes.append(coord)
                 angles.append(angList[i])
@@ -248,19 +224,21 @@ class Robot:
         
     def turnOnRobot(self,velocityR,velocityL,rotationSense):
         self.comm.Pause(True)
-        if rotationSense == "hor":
+        if rotationSense == Moviment.Hor:
             sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["leftMotor"],velocityL,sim.simx_opmode_oneshot)
             sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["rightMotor"],-velocityR,sim.simx_opmode_oneshot)
-        elif rotationSense == "antihor":
+        elif rotationSense == Moviment.Antihor:
             sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["leftMotor"],-velocityL,sim.simx_opmode_oneshot)
             sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["rightMotor"],velocityR,sim.simx_opmode_oneshot)
-        elif rotationSense == "front":
+        elif rotationSense == Moviment.Foward:
             sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["leftMotor"],velocityL,sim.simx_opmode_oneshot)
             sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["rightMotor"],velocityR,sim.simx_opmode_oneshot)
         else:
             sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["leftMotor"],-velocityL,sim.simx_opmode_oneshot)
-            sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["rightMotor"],-velocityR,sim.simx_opmode_oneshot)
+            sim.simxSetJointTargetVelocity(self.comm.clientId,self.robotInfos["rightMotor"],-velocityR,sim.simx_opmode_oneshot)  
         self.comm.Pause(False)
+
+        
         
         
     def rotateTo(self,angle,velocity):
@@ -273,10 +251,10 @@ class Robot:
 
         
         if diffHor < diffAntiHor:
-            self.turnOnRobot(velocity,velocity,'hor')
+            self.turnOnRobot(velocity,velocity,Moviment.Hor)
             sign = 1
         else:
-            self.turnOnRobot(velocity,velocity,'antihor')
+            self.turnOnRobot(velocity,velocity,Moviment.Antihor)
             sign = -1
 
         while(True):
@@ -288,13 +266,14 @@ class Robot:
                 break
 
             
-            
+
+    '''       
     def checkDistance(self,thresholdMax,thresholdMin = 0.1):
-        '''
-        No momento de scanear, verificar se a leitura que deu errado num foi por causa do outro robô
         
-        Executar apenas uma vez a verificação, pra ver o que acontece
-        '''
+        #No momento de scanear, verificar se a leitura que deu errado num foi por causa do outro robô
+        
+        #Executar apenas uma vez a verificação, pra ver o que acontece
+        
 
         
         cont = 0
@@ -331,6 +310,7 @@ class Robot:
         else:
             #logLidar(lidarCenter,lidarLeft,lidarRight)
             return False
+    '''
         
 
     

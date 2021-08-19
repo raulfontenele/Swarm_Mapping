@@ -23,11 +23,7 @@ class Lidar:
         self.getDetectedState(True)
 
         
-    def getObjectChildHandle(self,parantHandle,childIndex):
-        returnCode,childtHandle=sim.simxGetObjectChild(self.clientID,parantHandle,childIndex,sim.simx_opmode_blocking)
-        #returnCode,child=sim.simxGetObjectHandle(self.clientID,name,sim.simx_opmode_blocking)
-        print(childtHandle)
-        return childtHandle
+    
     
     def getObjectHandle(self,name):
         returnCode,handle=sim.simxGetObjectHandle(self.clientID,name,sim.simx_opmode_blocking)
@@ -36,11 +32,23 @@ class Lidar:
     
     def getPointRead(self):
         returnCode,detectionState,detectedPoint,detectedObjectHandle,detectedSurfaceNormalVector=sim.simxReadProximitySensor(self.clientID,self.ObjectHandle,sim.simx_opmode_streaming)
-        #print("coordenadas dos pontos")
-        #print(detectedPoint)
-
         return detectedPoint
         
+    def getDetectedState(self,flag):
+        if flag == True:
+            returnCode,detectionState,detectedPoint,detectedObjectHandle,detectedSurfaceNormalVector=sim.simxReadProximitySensor(self.clientID,self.ObjectHandle,sim.simx_opmode_streaming)
+            return detectionState
+        else:
+            returnCode,detectionState,detectedPoint,detectedObjectHandle,detectedSurfaceNormalVector=sim.simxReadProximitySensor(self.clientID,self.ObjectHandle,sim.simx_opmode_buffer)
+            print(detectionState)
+            return detectionState
+
+    def getObjectChildHandle(self,parantHandle,childIndex):
+        returnCode,childtHandle=sim.simxGetObjectChild(self.clientID,parantHandle,childIndex,sim.simx_opmode_blocking)
+        #returnCode,child=sim.simxGetObjectHandle(self.clientID,name,sim.simx_opmode_blocking)
+        print(childtHandle)
+        return childtHandle
+
     def getBruteDate(self):
         if self.flagBruteData == False:
             returnCode,signalValue = sim.simxGetStringSignal(self.clientID,'measuredDataAtThisTime' + str(self.idFunction),sim.simx_opmode_streaming) 
@@ -61,12 +69,3 @@ class Lidar:
             print(floatValues)
         
         return reshapedMatrix
-
-    def getDetectedState(self,flag):
-        if flag == True:
-            returnCode,detectionState,detectedPoint,detectedObjectHandle,detectedSurfaceNormalVector=sim.simxReadProximitySensor(self.clientID,self.ObjectHandle,sim.simx_opmode_streaming)
-            return detectionState
-        else:
-            returnCode,detectionState,detectedPoint,detectedObjectHandle,detectedSurfaceNormalVector=sim.simxReadProximitySensor(self.clientID,self.ObjectHandle,sim.simx_opmode_buffer)
-            print(detectionState)
-            return detectionState

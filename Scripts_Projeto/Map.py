@@ -42,30 +42,28 @@ class Map:
         self.visitedList.append(coord)
         
         
-    def addNoneVisitedNode(self,listCoord):
-        
+    def addNoneVisitedNode(self,listCoord):      
         for coord in listCoord:
-            #flag,node = self.checkVisited(coord)
             if self.checkNoneVisitedList(coord) == False and self.checkVisited(coord) == False:
                 self.noneVisitedList.append(coord)
         
     def visitedNode(self,coord):
-        for node in self.noneVisitedList:
-            diff2 = (coord[0] - node[0])**2 + (coord[1] - node[1])**2
-            if math.sqrt(diff2) < self.radius:
-                self.noneVisitedList.remove(node)
-                break
-        self.addVisitedNode(coord)
-        if self.checkNoneVisitedList(coord) == True:
-            print("Continua na lista de nós não visitados")
-            string = "Continua na lista de nós não visitados"
+        try:
+            for node in self.noneVisitedList:
+                diff2 = (coord[0] - node[0])**2 + (coord[1] - node[1])**2
+                if math.sqrt(diff2) < self.radius:
+                    self.noneVisitedList.remove(node)
+                    break
+            self.addVisitedNode(coord)
+
+            if self.checkNoneVisitedList(coord) == True:
+                raise Exception("Continua na lista de nós não visitados")
+            if self.checkVisited(coord) == False:
+                raise Exception("inda não está na lista de nós visitados")
+                
+        except Exception as inst:
+            string = inst.args[0]
             saveDebug(string)
-        #flag,node = self.checkVisited(coord)
-        if self.checkVisited(coord) == False:
-            print("Ainda não está na lista de nós visitados")
-            string = "Ainda não está na lista de nós visitados"
-            saveDebug(string)
-            
     
     def checkVisited(self,projectedCoord):
         for node in self.visitedList:
@@ -198,10 +196,11 @@ class Map:
         self.stepMap.append(step)
         saveMap(self.stepMap, "stepMap")
     
+    
     def getStatusRobot(self,coord):
-        '''
-            Procurar qual o robô está ocupando aquele espaço e depois procurar qual o status do robô
-        '''
+        
+            #Procurar qual o robô está ocupando aquele espaço e depois procurar qual o status do robô
+        
         robotId = ''
         for robot in self.goalsMap:
             if math.sqrt( (robot["currentPosition"][0]-coord[0])**2 + (robot["currentPosition"][1]-coord[1])**2 ) < self.radius:
@@ -213,6 +212,8 @@ class Map:
                     return status["status"]
         else:
             return "moving"
+    
+    '''
     #---------------------------------------------------------------------#    
     def checkVisitedStruct(self,projectedCoord):
         for struct in self.structMap:
@@ -221,6 +222,8 @@ class Map:
                 return True
         return False
     #---------------------------------------------------------------------#
+    '''
+    '''
     def checkVisitedCoord(self,projectedCoord):
         file = open('map.txt','r')
         lines = file.readlines()
@@ -234,6 +237,7 @@ class Map:
                 return True
         file.close()
         return False
+    '''
 
 
             
