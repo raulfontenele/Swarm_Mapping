@@ -1,7 +1,7 @@
 import sim
 import time
 import math
-from Robot import Robot
+from Robots.Robot import Robot
 from Lidar import Lidar
 from Node import Node
 from Map import Map
@@ -20,25 +20,15 @@ from Enums import *
 
 from CommunicationAPI import CommunicationAPI
 
+from Ordering import Ordering
+
 def checkRobotExploring(mapping):
     for robot in mapping.statusMap:
         if robot["status"] != "stopping":
             return True
     return False
 
-def orderByDistance(listToOrder,point):
-    distanceList = []
-    for node in listToOrder:
-        distance = math.sqrt( (node[0] - point[0])**2 +  (node[1] - point[1])**2)
-        distanceList.append(distance)
-    
-    zipped_lists = zip(distanceList, listToOrder)
-    sorted_zipped_lists = sorted(zipped_lists)
 
-    sorted_list1 = [element for _, element in sorted_zipped_lists]
-    
-    #print(sorted_list1)
-    return sorted_list1
 
 def orderBySeparate(listToOrder,robotsPosition):
     distanceList = []
@@ -65,10 +55,12 @@ def Exploring(robotFile,comPort,radiusZone):
     global mapping
     
     tInit = datetime.datetime.now()
-    order = 'maximum'
+
+    order = Order.Fifo
+    orderN = Order.Maximum
     
     #Pegar informações do json do robô
-    fileJson = open("robot.json")
+    fileJson = open("Schemas/robot.json")
     robotString =  "Robot" + str(robotFile) 
     robotInfo = json.load(fileJson)
     
@@ -95,6 +87,8 @@ def Exploring(robotFile,comPort,radiusZone):
     
     #Criar o objeto do robô
     robot = Robot(comm,robotObject,lidar,radiusZone)
+
+    ordering = Ordering(mapping,robot)
     
     #Tempo para estabelecer conexões com o servidor
     time.sleep(0.2)
@@ -111,7 +105,7 @@ def Exploring(robotFile,comPort,radiusZone):
     
     mapping.addMapPoint(currentPose,neighborhood,angles,robotObject["ID"])
     mapping.addVisitedNode(currentPose)
-    string = "Coordenada adicionada pela condição 1:"+str(currentPose)
+    string = "Coordenada adicionada pela condição 1:" + str(currentPose)
     saveDebugCoord(string,"debugLogCoord")
     mapping.addNoneVisitedNode(neighborhood)
     mapping.updateVisitedNode()
@@ -137,13 +131,16 @@ def Exploring(robotFile,comPort,radiusZone):
         '''
         with lock:
             try:
-                neighborCoord,neighborAngle = mapping.checkAvailability(neighborhood,angles,robotObject["ID"])
+                #neighborhoodCoord,neighborhoodAngle = mapping.checkAvailability(neighborhood,angles,robotObject["ID"])
+                neighborhoodCoord = mapping.checkAvailability(neighborhood,angles,robotObject["ID"])
             except Exception:
-                neighborCoord = None
-        
-        if neighborCoord != None:
-            #Visitar o nó 
+                neighborhoodCoord = []
+       
+        if len(neighborhoodCoord) !=  0 :
+            #Visitar o nó e reordenar de acordo com a regra vigente
             print("Nó não visitado do robô:" + str(robotObject["ID"]))
+            neighborhoodCoord  = getattr(ordering, str(orderN))(neighborhoodCoord)
+            neighborCoord = neighborhoodCoord[0]
             
             # Deslocar para a coordenada previamente incluida na lista, a fim de tentar minimizar o erro
             with lock:
@@ -169,7 +166,7 @@ def Exploring(robotFile,comPort,radiusZone):
                 string += "Coordenada de chegada:" + str(currentPose)
                 saveDebugCoord(string,"debugLogDestiny")
                 mapping.visitedNode(currentPose)
-                string = "Coordenada adicionada pela condição 2:"+str(currentPose)
+                string = "Coordenada adicionada pela condição 2:" + str(currentPose)
                 saveDebugCoord(string,'debugLogCoord')
                 mapping.updateGoals(currentPose,realDestiny,realDestiny,robotObject["ID"])
                 
@@ -206,24 +203,23 @@ def Exploring(robotFile,comPort,radiusZone):
                 node_start.gcost = 0
                 
                 nextGoalIndex = 0
-                
+                '''
                 if order == Order.Minimum:
                     with lock:
                         listDistance = orderByDistance(mapping.noneVisitedList,currentPose)
                 elif order == Order.Maximum:
                     with lock:
-                        robotsPosition = []
-                        for nodes in mapping.goalsMap:
-                            robotsPosition.append(nodes["currentPosition"])
+                        robotsPosition = mapping.getRobotsPosition()
                         listDistance = orderBySeparate(mapping.noneVisitedList,robotsPosition)
                 else:
                     listDistance = mapping.noneVisitedList
-                    
+                '''
+                listDistance  = getattr(ordering,str(order))(mapping.noneVisitedList)
                 # Escolher o ponto futuro apenas se o mesmo não for objetivo de alguém
 
                 with lock:
                     while True:
-                        if nextGoalIndex >= len(mapping.noneVisitedList):
+                        if nextGoalIndex >= len(listDistance):
                             node_goal = None
                             break
                         elif mapping.checkGoalAnother(listDistance[nextGoalIndex],"both",robotObject["ID"]) == True:

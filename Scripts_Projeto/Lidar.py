@@ -23,8 +23,6 @@ class Lidar:
         self.getDetectedState(True)
 
         
-    
-    
     def getObjectHandle(self,name):
         returnCode,handle=sim.simxGetObjectHandle(self.clientID,name,sim.simx_opmode_blocking)
         return handle

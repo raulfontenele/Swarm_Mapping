@@ -7,6 +7,10 @@ class Moviment(Enum):
     Back = 4
 
 class Order(Enum):
-    Fifo = 1
-    Minimum = 2
-    Maximum = 3
+
+    def __str__(self):
+        return '%s' % self.value
+
+    Fifo = 'Fifo'
+    Minimum = 'Minimum'
+    Maximum = 'Maximum'

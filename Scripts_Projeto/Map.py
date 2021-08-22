@@ -140,13 +140,14 @@ class Map:
                 return neighbor
                 
     def checkAvailability(self,neighborhood,angles,robotId):
-
+        freeNeighborhood = []
         #Checar se existem visinhos disponíveis para serem visitados
         for index in range(len(neighborhood)):
             #flag,node = self.checkVisited(neighborhood[index])
             if self.checkVisited(neighborhood[index]) == False and self.checkGoalAnother(neighborhood[index],"both",robotId) == False:
-                
-                return [neighborhood[index],angles[index]]
+                freeNeighborhood.append(neighborhood[index])
+                #return [neighborhood[index],angles[index]]
+        return freeNeighborhood
     
     def updateGoals(self,currentNode,nextGoal,finalGoal,robotId):
         for index in range(len(self.goalsMap)):
@@ -199,7 +200,7 @@ class Map:
     
     def getStatusRobot(self,coord):
         
-            #Procurar qual o robô está ocupando aquele espaço e depois procurar qual o status do robô
+        #Procurar qual o robô está ocupando aquele espaço e depois procurar qual o status do robô
         
         robotId = ''
         for robot in self.goalsMap:
@@ -212,6 +213,12 @@ class Map:
                     return status["status"]
         else:
             return "moving"
+
+    def getRobotsPosition(self):
+        robotsPosition = []
+        for nodes in self.goalsMap:
+            robotsPosition.append(nodes["currentPosition"])
+        return robotsPosition
     
     '''
     #---------------------------------------------------------------------#    

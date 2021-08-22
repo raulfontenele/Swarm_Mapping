@@ -15,7 +15,7 @@ def getScore(thresholdDistance):
         for index in range(len(struct["neighborhood"])):
             #Calcule real angle and distance between two points
             distance,angle = AuxiliarFunctions.CalcAngleDistance(struct["nodeCoord"],struct["neighborhood"][index])
-            errorAngle = AuxiliarFunctions.diffAngleThreshold(struct["angles"][index])
+            errorAngle = AuxiliarFunctions.diffAngleThreshold(struct["angles"][index],angle)
             print(errorAngle)
             errorAngleNormalize = errorAngle/180
             errorDistanceNormalize = abs(distance-thresholdDistance)/thresholdDistance

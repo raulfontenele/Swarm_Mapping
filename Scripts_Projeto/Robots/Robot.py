@@ -13,7 +13,8 @@ from Save import saveDebug
 from datetime import datetime
 
 from Enums import *
-from IRobot import IRobot
+#import Robot.
+from Robots.IRobot import IRobot
 
 class Robot(IRobot):
     def __init__(self,communicationApi,robotInfos,lidar,radiusZone):
