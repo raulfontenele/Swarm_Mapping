@@ -68,7 +68,7 @@ def analysis():
 
 
 def fun2():
-    file = open('map.txt','r')
+    file = open('./Maps/map.txt','r')
     lines = file.readlines()
 
     plt.figure(0)

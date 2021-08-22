@@ -1,2 +1,0 @@
-Erro absoluto para comparar o mesmo mapa.
-Erro médio pra mapas diferentes.

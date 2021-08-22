@@ -16,7 +16,7 @@ def saveEdge(edgeList,fileName):
     np.savetxt(str(fileName)+'.csv', new_array, delimiter=",")
 
 def saveMap(mapping,fileName):
-    file = open(str(fileName) + ".txt",'w')
+    file = open("./Maps/" + str(fileName) + ".txt",'w')
     for node in mapping:
         file.write(str(node) +"\n")
         
