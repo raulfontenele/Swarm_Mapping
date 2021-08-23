@@ -1,3 +1,8 @@
 /Excesso
 /Scripts_Projeto/Files not used
 /Scripts_Projeto/Logs
+/App/Source/Logs
+/App/Files not used
+/App/__pycache__
+/App/tests/__pycache__
+/App/Source/__pycache__
