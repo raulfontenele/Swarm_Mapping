@@ -1,0 +1,50 @@
+Teste para a função de diferença de angulos:
+    Dentro do mesmo quadrante:
+        1º Quadrante:
+            Angulo1: 0 / Angulo2: 54 -> Resultado: 54
+            Angulo1: 50 / Angulo2: 0 -> Resultado: 50
+            Angulo1: 0 / Angulo2: 90 -> Resultado: 90
+            Angulo1: 90 / Angulo2: 0 -> Resultado: 90
+
+        2º Quadrante:
+            Angulo1: 110 / Angulo2: 158 -> Resultado: 48
+            Angulo1: 150 / Angulo2: 110 -> Resultado: 40
+            Angulo1: 93 / Angulo2: 186 -> Resultado: 93
+            Angulo1: 180 / Angulo2: 93 -> Resultado: 87
+        
+        3º Quadrante:
+            Angulo1: 190 / Angulo2: 225 -> Resultado: 35
+            Angulo1: 225 / Angulo2: 194  -> Resultado: 31
+            Angulo1: 203 / Angulo2: 270 -> Resultado: 67
+            Angulo1: 265 / Angulo2: 193 -> Resultado: 72
+
+        4º Quadrante:
+            Angulo1: 270 / Angulo2: 350 -> Resultado: 80
+            Angulo1: 360 / Angulo2: 321  -> Resultado: 39
+            Angulo1: 285 / Angulo2: 314 -> Resultado: 29
+            Angulo1: 354 / Angulo2: 360-> Resultado: 6
+                         
+    Transição entre quadrante:
+        1º - > 2º -> 1º:
+            Angulo1: 20 / Angulo2: 100 -> Resultado: 80
+            Angulo1: 100 / Angulo2: 20 -> Resultado: 80
+            Angulo1: 0 / Angulo2: 180 -> Resultado: 180
+            Angulo1: 180 / Angulo2: 0 -> Resultado: 180
+            
+        1º - > 3º -> 1º:
+            Angulo1: 0 / Angulo2: 270 -> Resultado: 90
+            Angulo1: 270 / Angulo2: 0 -> Resultado: 90
+            Angulo1: 15 / Angulo2: 220 -> Resultado: 155
+            Angulo1: 220 / Angulo2: 0 -> Resultado: 140
+
+        1º - > 4º -> 1º:
+            Angulo1: 0 / Angulo2: 350 -> Resultado: 10
+            Angulo1: 330 / Angulo2: 20 -> Resultado: 50
+            Angulo1: 280 / Angulo2: 5 -> Resultado: 85
+            Angulo1: 24 / Angulo2: 251 -> Resultado: 33
+
+    Mesmo valor:
+        Angulo1: 0 / Angulo2: 360 -> Resultado: 0
+        Angulo1: 360 / Angulo2: 0 -> Resultado: 0
+
+
