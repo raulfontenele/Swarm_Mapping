@@ -57,8 +57,8 @@ def Exploring(robotFile,comPort,radiusZone):
     
     tInit = datetime.datetime.now()
 
-    order = Order.Minimum
-    orderN = Order.Maximum
+    order = Order.Fifo
+    orderN = Order.Minimum
     
     #Pegar informações do json do robô
     fileJson = open("Schemas/robot.json")
@@ -139,6 +139,7 @@ def Exploring(robotFile,comPort,radiusZone):
                 neighborhoodCoord = []
        
         if len(neighborhoodCoord) !=  0 :
+        
             #Visitar o nó e reordenar de acordo com a regra vigente
             print("Nó não visitado do robô:" + str(robotObject["ID"]))
             neighborhoodCoord  = getattr(ordering, str(orderN))(neighborhoodCoord)
@@ -147,11 +148,12 @@ def Exploring(robotFile,comPort,radiusZone):
             # Deslocar para a coordenada previamente incluida na lista, a fim de tentar minimizar o erro
             with lock:
                 realDestiny = mapping.getCoordNoneVisitedList(neighborCoord)
+                currentPose = robot.getAbsolutePosition(False)
             #print("Valor da coordenada real:" + str(realDestiny))
-            diff = ((neighborCoord[0] - realDestiny[0])**2 + (neighborCoord[1] - realDestiny[1])**2 )**(1/2)
+            #diff = ((neighborCoord[0] - realDestiny[0])**2 + (neighborCoord[1] - realDestiny[1])**2 )**(1/2)
  
-            string = 'Coordenada atual:' + str(currentPose) + '\n'
-            string += "Coordenada neighbor index:"+ str(neighborCoord) + " // Coordenada real:"+ str(realDestiny) + '\n'
+            #string = 'Coordenada atual:' + str(currentPose) + '\n'
+            #string += "Coordenada neighbor index:"+ str(neighborCoord) + " // Coordenada real:"+ str(realDestiny) + '\n'
             
             distance,angle = AuxiliarFunctions.CalcAngleDistance(currentPose,realDestiny)
             

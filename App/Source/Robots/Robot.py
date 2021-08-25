@@ -140,10 +140,10 @@ class Robot(IRobot):
         
         accError = 0
         lastError = AuxiliarFunctions.diffAngleThreshold(angle,self.getAbsoluteOrientation(False)[2])
-        time.sleep(0.0001)
+        time.sleep(0.001)
         #cicle = 0
         #flag = False
-        while(distanceAbs <= abs(distance)-0.01):
+        while(distanceAbs <= abs(distance)-0.005):
                      
             position = self.getAbsolutePosition(False)
             distanceAbs = math.sqrt((initPosition[0]-position[0])**2 + (initPosition[1]-position[1])**2)
@@ -206,12 +206,12 @@ class Robot(IRobot):
             self.rotateTo(angList[i], velocity)
                   
             coord = AuxiliarFunctions.projectCoord(angList[i], initCoord, 2*self.radius)
-            
-            if self.lidar.getDetectedState(True) ==  False or mapping.checkGoalAnother(coord, 'next', self.robotInfos["ID"]) == True:
+            # Se for coordenada de outro, adicionar a coordenada 
+            if self.lidar.getDetectedState(True) == False or mapping.checkGoalAnother(coord, 'next', self.robotInfos["ID"]) == True:
                 nodes.append(coord)
                 angles.append(angList[i])
 
-            time.sleep(0.15)
+            time.sleep(0.1)
             
         self.rotateTo(0, velocity)
         

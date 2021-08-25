@@ -62,6 +62,11 @@ class AuxiliarFunctions:
                 angleDeg = 270
             else:
                 angleDeg = 90
+        elif deltaX == 0:
+            if deltaY < 0:
+                angleDeg = 180
+            else:
+                angleDeg = 0
         else:
             angle = math.atan(deltaX/deltaY)
             #print("Angle real in the function:" + str(angle))
@@ -75,7 +80,7 @@ class AuxiliarFunctions:
         if (deltaY < 0 and deltaX > 0) or (deltaY < 0 and deltaX < 0):
             angleSist = AuxiliarFunctions.oppositeAngle(angleSist)
 
-        return dist,angleSist
+        return round(dist,3),round(angleSist,3)
         
     
     
