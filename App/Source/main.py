@@ -1,6 +1,7 @@
 import sim
 import time
 import math
+from random import random
 from Robots.Robot import Robot
 from Lidar import Lidar
 from Node import Node
@@ -28,23 +29,20 @@ def checkRobotExploring(mapping):
             return True
     return False
 
+def RandomRuleLinear(ordering,neighborhoodCoord,moment):
+    prob = random()
+    if prob < 0.33:
+        orderN = Order.Fifo
+    elif prob < 0.66 and prob >= 0.33:
+        orderN = Order.Minimum
+    else:
+        orderN = Order.Maximum
+    string = "Momento da escolhda: " + str(moment) + " Regra escolhida: " + str(orderN)
+    saveDebugCoord(string,"RandomRule")
+    return getattr(ordering, str(orderN))(neighborhoodCoord)
 
-'''
-def orderBySeparate(listToOrder,robotsPosition):
-    distanceList = []
-    for node in listToOrder:
-        distance = 0
-        for robotCoord in robotsPosition:
-            distance += math.sqrt( (node[0] - robotCoord[0])**2 +  (node[1] - robotCoord[1])**2)
-        distanceList.append(distance)
-    
-    zipped_lists = zip(distanceList, listToOrder)
-    sorted_zipped_lists = sorted(zipped_lists, reverse=True)
 
-    sorted_list = [element for _, element in sorted_zipped_lists]
 
-    return sorted_list
-'''
         
 
 
@@ -57,8 +55,9 @@ def Exploring(robotFile,comPort,radiusZone):
     
     tInit = datetime.datetime.now()
 
-    order = Order.Fifo
-    orderN = Order.Minimum
+    orderN = Order.Fifo
+    order = Order.Maximum
+    
     
     #Pegar informações do json do robô
     fileJson = open("Schemas/robot.json")
@@ -142,7 +141,8 @@ def Exploring(robotFile,comPort,radiusZone):
         
             #Visitar o nó e reordenar de acordo com a regra vigente
             print("Nó não visitado do robô:" + str(robotObject["ID"]))
-            neighborhoodCoord  = getattr(ordering, str(orderN))(neighborhoodCoord)
+            #neighborhoodCoord  = getattr(ordering, str(orderN))(neighborhoodCoord)
+            neighborhoodCoord = RandomRuleLinear(ordering,neighborhoodCoord,"Regra 1")
             neighborCoord = neighborhoodCoord[0]
             
             # Deslocar para a coordenada previamente incluida na lista, a fim de tentar minimizar o erro
@@ -218,7 +218,8 @@ def Exploring(robotFile,comPort,radiusZone):
                 else:
                     listDistance = mapping.noneVisitedList
                 '''
-                listDistance  = getattr(ordering,str(order))(mapping.noneVisitedList)
+                listDistance = RandomRuleLinear(ordering,mapping.noneVisitedList,"Regra 2")
+                #listDistance  = getattr(ordering,str(order))(mapping.noneVisitedList)
                 # Escolher o ponto futuro apenas se o mesmo não for objetivo de alguém
 
                 with lock:

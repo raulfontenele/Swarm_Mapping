@@ -59,7 +59,7 @@ class Map:
             if self.checkNoneVisitedList(coord) == True:
                 raise Exception("Continua na lista de nós não visitados")
             if self.checkVisited(coord) == False:
-                raise Exception("inda não está na lista de nós visitados")
+                raise Exception("Ainda não está na lista de nós visitados")
                 
         except Exception as inst:
             string = inst.args[0]

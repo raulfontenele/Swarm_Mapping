@@ -32,7 +32,7 @@ def graph(numRobots):
     #plt.subplot(3,1,1)
     for i in range(numRobots):
         plt.figure()
-        plt.scatter(coordinates[i][:,0],coordinates[i][:,1], s = 1000, marker='h', c= color[i])
+        plt.scatter(coordinates[i][:,0],coordinates[i][:,1], s = 1000, marker='H', c= color[i])
         plt.grid()
         plt.title("Robô" + str(i+1))
         plt.tight_layout()
@@ -47,7 +47,7 @@ def graph(numRobots):
     coord = np.array(coordinate)
     qtdArray = np.array(qtd)
     #plt.scatter(coord[:,0],coord[:,1], s = 1000, c = qtdArray ,marker='h', cmap="plasma")
-    plt.scatter(-coord[:,1],coord[:,0], s = 1000, c = qtdArray ,marker='h', cmap="plasma")
+    plt.scatter(-coord[:,1],coord[:,0], s = 1000, c = qtdArray ,marker='H', cmap="plasma")
     plt.colorbar()
 
     file = open('map.txt','r')
@@ -192,7 +192,7 @@ def fun3():
     plt.show()
 
 #fun2()
-#graph(3)
+graph(3)
 #analysis()
 #fun3()
-graphHex(0.25)
+#graphHex(0.25)
