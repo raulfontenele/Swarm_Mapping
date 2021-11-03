@@ -200,7 +200,24 @@ class Robot(IRobot):
         #distances = []
         #error = 0
         angList = [0,60,120,180,240,300]
-        
+        #print("Lista de angulos:{}".format(angList))
+        '''
+            Se meu nó atual já for o vizinho de alguém, adicionar o nó pai como me vizinho
+        '''
+        neighborhood = mapping.CheckNeighborSome(initCoord)
+        #print("vizinhos nessa porrinha{}".format(neighborhood))
+
+        for neighbor in neighborhood:
+            #Descobrir qual dos angulos que eu deveria ir e adicionar o nó conhecido como vizinho
+            opositeAngle = AuxiliarFunctions.oppositeAngle(neighbor["angle"])
+            #print("Angulo oposto:{}".format(opositeAngle))
+            j = [abs(i-opositeAngle) for i in angList]
+            realAngle = angList[j.index(min(j))]
+            #print("Angulo real:{}".format(realAngle))
+            angList.remove(realAngle)
+            nodes.append(neighbor["nodeCoord"])
+            angles.append(realAngle)
+ 
         for i in range(len(angList)):
             
             self.rotateTo(angList[i], velocity)
@@ -219,8 +236,17 @@ class Robot(IRobot):
         if len(nodes) == 0:
             saveDebug("Deu problema porque o nó " + str(initCoord) + " não tem visinho")
             print("Nó sem visinhos")
+        #print("Nodes : {}".format(nodes))
+        #print("Angles : {}".format(angles))
+        #nodesS = [x for _, x in sorted(zip(angles, nodes))]
+        #anglesS = sorted(angles)   
+        #listSorted = sorted(coordUnique, key=lambda x: x["number"])
+        #return nodes,angles
 
-        return nodes,angles
+        #print("Nodes  sorted: {}".format(nodesS))
+        #print("Angles sorted : {}".format(anglesS))
+
+        return nodes, angles
 
         
     def turnOnRobot(self,velocityR,velocityL,rotationSense):

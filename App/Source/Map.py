@@ -82,7 +82,6 @@ class Map:
     def addMapPoint(self,currentCoord,neighborhood,angles,robotId):
         #Verificar se o ponto já existe e, em caso positivo, colocar o ponto que já existe no lugar do projetado
 
-        #print("A quantidade de visinhos a entrar no  addPoint é " + str(len(neighborhood)))
         n_neighborhood = []
         for neighbor in neighborhood:
             flag = False
@@ -102,8 +101,7 @@ class Map:
                     break
             if flag == False:
                 n_neighborhood.append(neighbor)
-        
-        #print("A quantidade real de visinhos a entrar no  addPoint é " + str(len(n_neighborhood)))   
+
         struct = {
             "nodeCoord":    currentCoord,
             "neighborhood": n_neighborhood,
@@ -198,10 +196,8 @@ class Map:
         saveMap(self.stepMap, "stepMap")
     
     
-    def getStatusRobot(self,coord):
-        
-        #Procurar qual o robô está ocupando aquele espaço e depois procurar qual o status do robô
-        
+    def getStatusRobot(self,coord):        
+        #Procurar qual o robô está ocupando aquele espaço e depois procurar qual o status do robô    
         robotId = ''
         for robot in self.goalsMap:
             if math.sqrt( (robot["currentPosition"][0]-coord[0])**2 + (robot["currentPosition"][1]-coord[1])**2 ) < self.radius:
@@ -220,31 +216,24 @@ class Map:
             robotsPosition.append(nodes["currentPosition"])
         return robotsPosition
     
-    '''
-    #---------------------------------------------------------------------#    
-    def checkVisitedStruct(self,projectedCoord):
-        for struct in self.structMap:
-            diff2 = (projectedCoord[0] - struct["nodeCoord"][0])**2 + (projectedCoord[1] - struct["nodeCoord"][1])**2
-            if math.sqrt(diff2) <= self.radius:
-                return True
-        return False
-    #---------------------------------------------------------------------#
-    '''
-    '''
-    def checkVisitedCoord(self,projectedCoord):
-        file = open('map.txt','r')
-        lines = file.readlines()
+    def CheckNeighborSome(self, currCoord):
+        neighborhood = []
+        for node in self.structMap:
+            for neighbor in node["neighborhood"]:
+                diff2 = (neighbor[0] - currCoord[0])**2 + (neighbor[1] - currCoord[1])**2
+                if math.sqrt(diff2) < self.radius:
+                    neighborhood.append(
+                        {
+                            "nodeCoord": node["nodeCoord"],
+                            "angle":     node["angles"][node["neighborhood"].index(neighbor)] ,
+                        }
+                    )
+                    continue
+        return neighborhood
+
+
     
-        for line in lines:
-            line = line.replace("'",'"')
-            struct =json.loads(line)
-            diff2 = (projectedCoord[0] - struct["nodeCoord"][0])**2 + (projectedCoord[1] - struct["nodeCoord"][0])**2
-            if math.sqrt(diff2) <= self.radius:
-                file.close()
-                return True
-        file.close()
-        return False
-    '''
+    
 
 
             

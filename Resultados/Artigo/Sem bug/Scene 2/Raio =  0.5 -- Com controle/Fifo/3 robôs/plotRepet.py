@@ -26,6 +26,7 @@ def graph(numRobots):
     
     coordinates = [np.array(coord1),np.array(coord2),np.array(coord3)]
 
+    plt.figure()
     nw_coord1 = np.array(coord1)
     #plt.subplot(3,1,1)
     for i in range(numRobots):
@@ -40,8 +41,10 @@ def graph(numRobots):
     plt.figure()
     coord = np.array(coordinate)
     qtdArray = np.array(qtd)
-    
+    print(qtd)
+
     plt.scatter(-coord[:,1],coord[:,0], s = 1000, c = qtdArray ,marker='h', cmap="plasma")
+    plt.clim(0,8)
     plt.colorbar()
 
     file = open('map.txt','r')
@@ -135,7 +138,63 @@ def fun3():
     plt.grid()
     plt.show()
 
+def graph3(numRobots):
+    file = open('stepMap.txt','r')
+    lines = file.readlines()
+    ids  = [1,2,3]
+    coord1 = []
+    coord2 = []
+    coord3 = []
+
+    for line in lines:
+        line = line.replace("'",'"')
+        struct =json.loads(line)
+        if struct["id"] == 1:
+            coord1.append(struct["coord"])
+        elif struct["id"] == 2:
+            coord2.append(struct["coord"])
+        elif struct["id"] == 3:
+            coord3.append(struct["coord"])
+    color = ["#ff0000","#00ff00","#0000ff"]
+    
+    coordinates = [np.array(coord1),np.array(coord2),np.array(coord3)]
+
+    nw_coord1 = np.array(coord1)
+    #plt.subplot(3,1,1)
+    for i in range(numRobots):
+        #plt.figure()
+        plt.plot(-coordinates[i][:,1],coordinates[i][:,0])
+        #plt.scatter(coordinates[i][:,0],coordinates[i][:,1], s = 1000, marker='h', c= color[i])
+    
+    
+
+
+    
+    struct,coordinate,qtd = analysis()
+    color = ['#ccccff','#4d4dff','#0000cc','#c61aff','#8600b3','#ff3333','#e60000','#990000']
+
+    #plt.figure()
+    coord = np.array(coordinate)
+    qtdArray = np.array(qtd)
+    
+    plt.scatter(-coord[:,1],coord[:,0], s = 1000, c = qtdArray ,marker='h', cmap="plasma")
+    plt.colorbar()
+    
+    file = open('map.txt','r')
+    lines = file.readlines()
+    
+    for line in lines:
+        line = line.replace("'",'"')
+        struct =json.loads(line)
+        #for neighbor in struct["neighborhood"]:
+            #plt.plot( [-struct["nodeCoord"][1],-neighbor[1]],[struct["nodeCoord"][0],neighbor[0]],c="#1e962c")
+       
+    plt.title("Cenário 2 - Três robôs - FIFO")
+    plt.grid()
+    plt.show()
+
 #fun2()
 graph(3)
+#graph3(3)
 #analysis()
 #fun3()

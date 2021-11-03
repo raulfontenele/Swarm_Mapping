@@ -103,7 +103,7 @@ def fun3():
     plt.grid()
     plt.show()
 
-fun2()
+#fun2()
 #graph()
 #analysis()
 #fun3()

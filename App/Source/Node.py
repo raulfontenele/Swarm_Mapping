@@ -5,9 +5,9 @@ class Node:
         self.coord = coordenates
         self.angle = angle
         self.parent = None
-        self.fcost = None
-        self.gcost = None
-        self.hcost = None
+        self.fcost = 0
+        self.gcost = 0
+        self.hcost = 0
 
     def calculateFCost(self):
         self.fcost = self.gcost + self.hcost

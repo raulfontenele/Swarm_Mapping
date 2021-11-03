@@ -1,6 +1,6 @@
 from Node import Node
 import math
-from Save import saveDebug
+from Save import saveDebug,saveMap
 
 class PathPlanning:
 
@@ -10,6 +10,7 @@ class PathPlanning:
         self.node_goal = node_goal
         self.openList = []
         self.closeList = []
+        #saveMap(self.map.structMap, "mapPath")
 
     def calculateHCost(self,node_current):
         h = abs(node_current.coord[0] - self.node_goal.coord[0]) + abs(node_current.coord[1] - self.node_goal.coord[1])
@@ -29,17 +30,29 @@ class PathPlanning:
 
         return False
     
-    def findNeighborhood(self,node_current):
+    def findNeighborhood(self,node_current, goal_node_coord):
         neighborhood = []
         for node in self.map.structMap:
             diff2 = (node["nodeCoord"][0] - node_current.coord[0])**2 + (node["nodeCoord"][1] - node_current.coord[1])**2
             if math.sqrt( diff2) < self.map.radius:
                 ##Colocar todos os visinhos na variável neighborhood
                 for index in range(len(node["neighborhood"])):
-                    neighborhood.append(Node(node["neighborhood"][index]))
-                break
+                    if self.checkValidNeighbor(node["neighborhood"][index]) == True or node["neighborhood"][index] == goal_node_coord:
+                        neighborhood.append(Node(node["neighborhood"][index]))
+                    else:
+                        saveDebug("Coordenada excluida:: " + str(node["neighborhood"][index]))
+                        
             
         return neighborhood
+
+    def checkValidNeighbor(self,node_current):
+        #print(node_current)
+        for node in self.map.structMap:
+            diff2 = (node["nodeCoord"][0] - node_current[0])**2 + (node["nodeCoord"][1] - node_current[1])**2
+            if math.sqrt(diff2) < self.map.radius:
+                return True
+        return False
+
     
     def validateNeighborhood(self,neighborhood):
         validList = []
@@ -59,10 +72,10 @@ class PathPlanning:
             self.closeList.append(self.openList[0])
             self.openList.pop(0)
 
-            if node_current.coord == self.node_goal.coord:
+            if [round(i,2) for i in node_current.coord] == [round(i,2) for i in self.node_goal.coord]:
                 break
         
-            neighborhood = self.findNeighborhood(node_current)
+            neighborhood = self.findNeighborhood(node_current,self.node_goal.coord)
 
             for neighbor in neighborhood:
                 if self.checkCloseList(neighbor):
@@ -82,7 +95,8 @@ class PathPlanning:
 
             if len(self.openList) == 0:
                 print("deu merda")
-                saveDebug("Deu problema no planejamento de caminho com origem em" + str(self.node_start.coord) + " e objetivo " + str(self.node_goal.coord))
+                saveDebug("Deu problema no planejamento de caminho com origem em: " + str(self.node_start.coord) + " e objetivo: " + str(self.node_goal.coord))
+                return [],False
                 break
 
         route = []
@@ -92,7 +106,7 @@ class PathPlanning:
             route.append(node_current.coord)
             node_current = node_current.parent
 
-        return route
+        return route,True
 
     def DepthFirstSearch(self):
 

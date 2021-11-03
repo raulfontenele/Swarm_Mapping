@@ -38,6 +38,9 @@ def graph(numRobots):
         plt.tight_layout()
         plt.savefig("Robô" + str(i+1) )
 
+        for j in range(len(coordinates[i][:,0])):
+            plt.text(coordinates[i][j,0],coordinates[i][j,1],str(j),fontdict=dict(color='yellow',size=10))
+
 
     
     struct,coordinate,qtd = analysis()

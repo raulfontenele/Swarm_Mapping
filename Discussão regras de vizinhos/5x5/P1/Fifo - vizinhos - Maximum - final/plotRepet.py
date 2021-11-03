@@ -112,6 +112,7 @@ def fun2():
             plt.scatter(struct["nodeCoord"][0],struct["nodeCoord"][1], s = 1000, marker='h', c= "#0000cc")
     plt.grid()
     file.close()
+    '''
     file = open('coord.csv','r')
     lines = file.readlines()
     plt.figure(1)
@@ -119,6 +120,7 @@ def fun2():
         values = line.split(',')
         plt.scatter(float(values[0]),float(values[1]), s = 1000, marker='h', c= "#0000cc")
     file.close()
+    '''
     plt.grid()
     plt.show()
 

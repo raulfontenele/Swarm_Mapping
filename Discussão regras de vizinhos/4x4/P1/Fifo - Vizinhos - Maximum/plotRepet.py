@@ -27,16 +27,19 @@ def graph():
     #plt.subplot(3,1,1)
     plt.figure()
     plt.scatter(nw_coord1[:,0],nw_coord1[:,1], s = 1000, marker='h', c= "#ff0000")
+    plt.grid()
 
     nw_coord2 = np.array(coord2)
     #plt.subplot(3,1,2)
     plt.figure()
     plt.scatter(nw_coord2[:,0],nw_coord2[:,1], s = 1000, marker='h', c= "#00ff00")
+    plt.grid()
 
     nw_coord3 = np.array(coord3)
     #plt.subplot(3,1,3)
     plt.figure()
     plt.scatter(nw_coord3[:,0],nw_coord3[:,1], s = 1000, marker='h', c= "#0000ff")
+    plt.grid()
 
     
     struct = analysis()
