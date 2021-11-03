@@ -163,16 +163,10 @@ class Robot(IRobot):
             #print("Acumulado")
             #print(accError)
             rateError = (error - lastError)/dt
-            #print("Rate")
-            #print(rateError)
-            #print("Error")
-            #print(error)
-            
-            
+
             correctError = Kp*error + Ki*accError + Kd*rateError
             
-            #print("Correcao de erro")
-            #print(correctError)
+
             rightVelocity = velocity*(1 - correctError)
             leftVelocity = velocity*(1 + correctError)
             self.turnOnRobot(leftVelocity,rightVelocity,Moviment.Foward)

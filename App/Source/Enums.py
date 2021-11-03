@@ -14,3 +14,6 @@ class Order(Enum):
     Fifo = 'Fifo'
     Minimum = 'Minimum'
     Maximum = 'Maximum'
+
+class Models(Enum):
+    Khepera = 1

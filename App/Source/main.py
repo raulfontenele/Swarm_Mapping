@@ -1,6 +1,10 @@
 import sim
 import time
 import math
+import json
+import datetime
+import threading
+
 from random import random
 from Robots.Robot import Robot
 from Lidar import Lidar
@@ -9,10 +13,8 @@ from Map import Map
 from AuxiliarFunctions import AuxiliarFunctions
 from Save import saveCoord,saveEdge,saveMap,saveDebug,saveDebugCoord
 from debug import logNodeInfo, logRobotInfo
-import json
 from PathPlanning import PathPlanning
-import datetime
-import threading
+
 
 from rich.console import Console
 from rich.table import Table
@@ -42,7 +44,29 @@ def RandomRuleLinear(ordering,neighborhoodCoord,moment):
     return getattr(ordering, str(orderN))(neighborhoodCoord)
 
 
+def GiveAway(robot, mapping, velocity):
+    with lock:
+        currPosition = robot.getAbsolutePosition(False)
+        neighbor = mapping.GetFreeNeighbor(currPosition, robot.robotInfos["ID"])
+        
+        if neighbor != None:
+            
+            distance, angle = AuxiliarFunctions.CalcAngleDistance(currPosition, neighbor)
+    
+            robot.rotateTo(angle, velocity*0.7)
 
+            mapping.updateGoals(currPosition, neighbor, neighbor, robot.robotInfos["ID"])
+
+            robot.moveFoward(distance, angle, velocity*3)
+
+            currPosition = robot.getAbsolutePosition(False)
+
+            mapping.updateGoals(currPosition, neighbor, neighbor, robot.robotInfos["ID"])
+
+            return True
+            
+        else:
+            return False
         
 
 
@@ -121,11 +145,15 @@ def Exploring(robotFile,comPort,radiusZone):
             o atual robô deverá esperar com o status de parado
         '''
         if len(mapping.noneVisitedList) == 0:
-            #Varificar se o nó atual não está na passagem de ninguém
+            #Verificar se o nó atual está na passagem de outro agente
+            if mapping.checkGoalAnother(robot.getAbsolutePosition(False), "next", robotObject["ID"]) == True:
+                GiveAway(robot, mapping, velocity)
+
             mapping.updateStatus(robotObject["ID"], "stopping")
-            time.sleep(1)
-            string = "O robô " + str(robotObject["ID"]) + " parou porque está esperando aparecer nó não visitado"
-            saveDebug(string)
+            #time.sleep(1)
+            #string = "O robô " + str(robotObject["ID"]) + " parou porque está esperando aparecer nó não visitado"
+            #saveDebug(string)
+            continue
             
         '''
             Verificar se existe algum visinho disponível para ser visitado, ou seja, não estar na lista de nós visitados.
@@ -168,7 +196,7 @@ def Exploring(robotFile,comPort,radiusZone):
             robot.rotateTo(angle, velocity*0.7)
 
             with lock:
-                mapping.updateGoals(currentPose,realDestiny, realDestiny, robotObject["ID"])
+                mapping.updateGoals(currentPose, realDestiny, realDestiny, robotObject["ID"])
                 mapping.updateStatus(robotObject["ID"], "moving")
 
             robot.moveFoward(distance, angle, velocity*3)
@@ -277,6 +305,7 @@ def Exploring(robotFile,comPort,radiusZone):
                             break
                         
                     if flagConflit == True:
+
                         '''
                             Trabalhar para verificar o tipo de conflito. Se o robô do conflito
                             só puder ir para onde o atual robô está, ver como resolver.
@@ -310,7 +339,7 @@ def Exploring(robotFile,comPort,radiusZone):
                                 saveDebug(string)
                                 print("O robô " + str(robotObject["ID"]) + " tem mais casas para andar")
                                 print("Escolher um lugar para se mexer que não colida com ninguém")
-                                neighbor = mapping.getFreeNeighbor(currentPose,robotObject["ID"])
+                                neighbor = mapping.GetFreeNeighbor(currentPose,robotObject["ID"])
                                 print("Saindo do meio")
                                 distance,angle = AuxiliarFunctions.CalcAngleDistance(currentPose,neighbor)
                                 print("Distância:" + str(distance) + "// Angulo:" + str(angle))
@@ -346,13 +375,17 @@ def Exploring(robotFile,comPort,radiusZone):
                             mapping.addNoneVisitedNode(neighborhood)
                             mapping.addMapPoint(currentPose,neighborhood,angles,robotObject["ID"])
                         
-                elif mapping.checkGoalAnother(robot.getAbsolutePosition(False),"next",robotObject["ID"]) == True:
+                elif mapping.checkGoalAnother(robot.getAbsolutePosition(False), "next", robotObject["ID"]) == True:
                     currentPose = robot.getAbsolutePosition(False)
                     string = "O robô " + str(robotObject["ID"]) + " vai dar passagem na condição de única alternativa"
                     saveDebug(string)
                     print("Escolher um lugar para se mexer que não colida com ninguém")
+
+                    GiveAway(robot, mapping, velocity)
+
+                    '''
                     with lock:
-                        neighbor = mapping.getFreeNeighbor(currentPose,robotObject["ID"])
+                        neighbor = mapping.GetFreeNeighbor(currentPose,robotObject["ID"])
                         mapping.updateGoals(currentPose,neighbor, neighbor, robotObject["ID"])
                     print("Saindo do meio")
                     distance,angle = AuxiliarFunctions.CalcAngleDistance(currentPose,neighbor)
@@ -360,9 +393,12 @@ def Exploring(robotFile,comPort,radiusZone):
                     
                     robot.rotateTo(angle, velocity*0.7)
                     robot.moveFoward(distance, angle, velocity*3)
+                    '''
+
                     currentPose = robot.getAbsolutePosition(False)
+
                     with lock:
-                        mapping.updateGoals(neighbor,neighbor, neighbor, robotObject["ID"])
+                        mapping.updateGoals(neighbor, neighbor, neighbor, robotObject["ID"])
                         mapping.addStepMap(robotObject["ID"], currentPose)
                     
             

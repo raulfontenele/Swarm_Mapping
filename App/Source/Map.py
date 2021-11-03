@@ -127,7 +127,7 @@ class Map:
                     return True
         return False
                     
-    def getFreeNeighbor(self,currentNode,robotId):
+    def GetFreeNeighbor(self,currentNode,robotId):
         for mapRow in self.structMap:
             diff2 = (currentNode[0] - mapRow["nodeCoord"][0])**2 + (currentNode[1] - mapRow["nodeCoord"][1])**2
             if math.sqrt(diff2) < self.radius:
@@ -136,6 +136,7 @@ class Map:
         for neighbor in neighborhood:
             if self.checkGoalAnother(neighbor,"next",robotId) == False and self.checkOccupiedNode(neighbor,robotId) == False:
                 return neighbor
+        return None
                 
     def checkAvailability(self,neighborhood,angles,robotId):
         freeNeighborhood = []
