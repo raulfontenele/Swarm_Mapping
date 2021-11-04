@@ -27,7 +27,7 @@ from Ordering import Ordering
 
 def checkRobotExploring(mapping):
     for robot in mapping.statusMap:
-        if robot["status"] != "stopping":
+        if robot["status"] != ExplorationMode.Standby:
             return True
     return False
 
@@ -63,10 +63,24 @@ def GiveAway(robot, mapping, velocity):
 
             mapping.updateGoals(currPosition, neighbor, neighbor, robot.robotInfos["ID"])
 
+            mapping.addStepMap(robot.robotInfos["ID"], currPosition)
+            #Fazer o update do passado dado no mapa de passos
             return True
             
         else:
             return False
+
+def WaitConflitResolution(robot, mapping, coordConflit):
+    while True:
+        if mapping.checkGoalAnother(coordConflit, "both", robot.robotInfos["ID"]) == False:
+            return
+
+def WaitFreeNeighborhood(robot, mapping):
+    currPosition = robot.getAbsolutePosition(False)
+    while True:
+        if mapping.checkAdjNumber(currPosition) > 0:
+            return
+
         
 
 
@@ -118,13 +132,13 @@ def Exploring(robotFile,comPort,radiusZone):
     time.sleep(0.2)
     
     with lock:
-        mapping.initStatusMap(robotObject["ID"], "stopping")
+        mapping.initStatusMap(robotObject["ID"], ExplorationMode.Standby)
         
         currentPose = robot.getAbsolutePosition(False)
     
         mapping.addStepMap(robotObject["ID"], currentPose)
         mapping.initGoalsNode(robotObject["ID"], currentPose)
-        mapping.initStatusMap(robotObject["ID"], "exploring")
+        mapping.initStatusMap(robotObject["ID"], ExplorationMode.Exploring)
 
     neighborhood,angles = robot.scanAround(0.7*velocity,mapping,currentPose)
 
@@ -149,7 +163,7 @@ def Exploring(robotFile,comPort,radiusZone):
             if mapping.checkGoalAnother(robot.getAbsolutePosition(False), "next", robotObject["ID"]) == True:
                 GiveAway(robot, mapping, velocity)
 
-            mapping.updateStatus(robotObject["ID"], "stopping")
+            mapping.updateStatus(robotObject["ID"], ExplorationMode.Standby)
             #time.sleep(1)
             #string = "O robô " + str(robotObject["ID"]) + " parou porque está esperando aparecer nó não visitado"
             #saveDebug(string)
@@ -197,7 +211,7 @@ def Exploring(robotFile,comPort,radiusZone):
 
             with lock:
                 mapping.updateGoals(currentPose, realDestiny, realDestiny, robotObject["ID"])
-                mapping.updateStatus(robotObject["ID"], "moving")
+                mapping.updateStatus(robotObject["ID"], ExplorationMode.Exploring)
 
             robot.moveFoward(distance, angle, velocity*3)
             
@@ -223,9 +237,9 @@ def Exploring(robotFile,comPort,radiusZone):
                 saveCoord(mapping.visitedList,"coord.csv")
                 saveCoord(mapping.noneVisitedList,"noneVisited.csv")
                 
-                mapping.updateStatus(robotObject["ID"], "exploring")
+                mapping.updateStatus(robotObject["ID"], ExplorationMode.Exploring)
                 
-            neighborhood,angles = robot.scanAround(velocity*0.7,mapping,currentPose)
+            neighborhood,angles = robot.scanAround(velocity*0.7, mapping,currentPose)
 
             with lock:
                 mapping.addNoneVisitedNode(neighborhood)
@@ -272,7 +286,7 @@ def Exploring(robotFile,comPort,radiusZone):
                             saveDebug(string)
                     
                             mapping.updateGoals(currentPose,currentPose, finalGoal, robotObject["ID"])
-                            mapping.updateStatus(robotObject["ID"], "moving")
+                            mapping.updateStatus(robotObject["ID"], ExplorationMode.Exploring)
                         
 
                     flagConflit = False
@@ -288,7 +302,7 @@ def Exploring(robotFile,comPort,radiusZone):
 
                                 with lock:
                                     mapping.updateGoals(currentPose,route[index-1], finalGoal, robotObject["ID"])
-                                    mapping.updateStatus(robotObject["ID"], "moving")
+                                    mapping.updateStatus(robotObject["ID"], ExplorationMode.Exploring)
                             
                                 robot.moveFoward(distance, angle, velocity*3)
 
@@ -302,65 +316,11 @@ def Exploring(robotFile,comPort,radiusZone):
                         else:
                             conflitCoord = route[index-1]
                             flagConflit = True
+                            mapping.updateStatus(robotObject["ID"], ExplorationMode.Conflit)
                             break
                         
-                    if flagConflit == True:
-
-                        '''
-                            Trabalhar para verificar o tipo de conflito. Se o robô do conflito
-                            só puder ir para onde o atual robô está, ver como resolver.
-                        '''
-                        with lock:
-                            mapping.updateStatus(robotObject["ID"], "conflit")
-                        currentPose = robot.getAbsolutePosition(False)
-                        '''
-                            Se o outro robô estiver se mexendo ou explorando, o robô atual deverá esperar. Caso ele esteja em conflito, deverá ser realizada
-                            alguma ação com o objetivo de dar passagem
-                        '''
-
-                        string = "Deu conflito na execução do robô " + str(robotObject["ID"])
-                        saveDebug(string)
-                        
-                        if mapping.getStatusRobot(conflitCoord) != "conflit":
-                            string = "Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - " + str(robotObject["ID"])
-                            saveDebug(string)
-                            time.sleep(3)
-                        else:
-                            string = "Deu conflito que será resolvido com a movimentação de um dos robôs envolvidos"
-                            saveDebug(string)
-                            '''
-                                Caso o robô atual tenha mais casas para andar que o outro, ele deve dar passagem. 
-                                Caso não, esperar o outro dar passagem.
-                                Dar passagem implica em procurar um nó visinho disponível e ir para ele
-                            '''
-                            currentPose = robot.getAbsolutePosition(False)
-                            if mapping.checkAdjNumber(currentPose) >= mapping.checkAdjNumber(conflitCoord):
-                                string = "O robô " + str(robotObject["ID"]) + " vai dar passagem"
-                                saveDebug(string)
-                                print("O robô " + str(robotObject["ID"]) + " tem mais casas para andar")
-                                print("Escolher um lugar para se mexer que não colida com ninguém")
-                                neighbor = mapping.GetFreeNeighbor(currentPose,robotObject["ID"])
-                                print("Saindo do meio")
-                                distance,angle = AuxiliarFunctions.CalcAngleDistance(currentPose,neighbor)
-                                print("Distância:" + str(distance) + "// Angulo:" + str(angle))
-                                with lock:
-                                    mapping.updateGoals(currentPose,neighbor, neighbor, robotObject["ID"])
-                                    mapping.updateStatus(robotObject["ID"], "moving")
-                                robot.rotateTo(angle, velocity*0.7)
-                                #print("Movimentação 3 do robô: " + str(robotObject["ID"]))
-                                robot.moveFoward(distance, angle, velocity*3)
-                                
-                                currentPose = robot.getAbsolutePosition(False)
-                                with lock:
-                                    mapping.updateGoals(neighbor,neighbor, neighbor, robotObject["ID"])
-                                    mapping.addStepMap(robotObject["ID"], currentPose)
-                            
-                            else:
-                                time.sleep(3)
-                                string = "O robô " + str(robotObject["ID"]) + " vai esperar o espaço"
-                                saveDebug(string)
-                                
-                    else:
+ 
+                    if flagConflit == False:
                         currentPose = robot.getAbsolutePosition(False)
 
                         with lock:
@@ -374,32 +334,103 @@ def Exploring(robotFile,comPort,radiusZone):
                         with lock:
                             mapping.addNoneVisitedNode(neighborhood)
                             mapping.addMapPoint(currentPose,neighborhood,angles,robotObject["ID"])
+                else:
+                    currentPose = robot.getAbsolutePosition(False)
+                    with lock:
+                        mapping.updateGoals(currentPose,currentPose, currentPose, robotObject["ID"])
+                        mapping.updateStatus(robotObject["ID"], ExplorationMode.Standby)
+
+            if flagConflit == True:
+                '''
+                    Uma vez que foi detectado conflito, é necessário verificar o tipo de conflito.
+                    Conflitos possíveis:
+                        1. Um agente na passagem e ele está apenas de passagem:
+                            Resolução: Esperar
+                        2. Agentes simultaneamente estão bloqueado o caminho
+                            Resolução: O agente de maior quantidade de vizinhos disponíveis deverá dar passagem
+                        3. O agente não possíveis vizinhos disponíveis.
+                            Resolução: Esperar
+                        4. O outro agente está em standby
+                            Resolução: Esperar
+                '''
+                currentPose = robot.getAbsolutePosition(False)
+                if mapping.checkAdjNumber(currentPose) == 0:
+                    continue
+                elif mapping.getStatusRobot(conflitCoord) == ExplorationMode.Standby:
+                    continue
+                elif mapping.getStatusRobot(conflitCoord) == ExplorationMode.Exploring:
+                    continue
+                elif mapping.getStatusRobot(conflitCoord) == ExplorationMode.Blocked:
+                    executionFlag = GiveAway(robot, mapping, velocity)
+
+                    if executionFlag == False:
+                        mapping.updateStatus(robotObject["ID"], ExplorationMode.Blocked)
+                    continue
+                #elif mapping.getStatusRobot(conflitCoord) != ExplorationMode.Conflit and mapping.getStatusRobot(conflitCoord) != ExplorationMode.Conflit:
+                    #string = "Deu conflito que será resolvido apenas esperando o outro robô terminar de caminhar ou explorar - " + str(robotObject["ID"])
+                    #saveDebug(string)
+                    #time.sleep(3)
+                    #continue
+                else:
+                    currentPose = robot.getAbsolutePosition(False)
+                    if mapping.checkAdjNumber(currentPose) >= mapping.checkAdjNumber(conflitCoord):
                         
-                elif mapping.checkGoalAnother(robot.getAbsolutePosition(False), "next", robotObject["ID"]) == True:
-                    currentPose = robot.getAbsolutePosition(False)
-                    string = "O robô " + str(robotObject["ID"]) + " vai dar passagem na condição de única alternativa"
-                    saveDebug(string)
-                    print("Escolher um lugar para se mexer que não colida com ninguém")
+                        GiveAway(robot, mapping, velocity)
+                        
+                        
+                        string = "O robô " + str(robotObject["ID"]) + " vai dar passagem"
+                        saveDebug(string)
+                        print(string)
 
-                    GiveAway(robot, mapping, velocity)
-
-                    '''
-                    with lock:
-                        neighbor = mapping.GetFreeNeighbor(currentPose,robotObject["ID"])
-                        mapping.updateGoals(currentPose,neighbor, neighbor, robotObject["ID"])
-                    print("Saindo do meio")
-                    distance,angle = AuxiliarFunctions.CalcAngleDistance(currentPose,neighbor)
-                    print("Distância:" + str(distance) + "// Angulo:" + str(angle))
+                        '''
+                        with lock:
+                            mapping.updateGoals(neighbor,neighbor, neighbor, robotObject["ID"])
+                            mapping.addStepMap(robotObject["ID"], currentPose)
+                        '''
                     
-                    robot.rotateTo(angle, velocity*0.7)
-                    robot.moveFoward(distance, angle, velocity*3)
-                    '''
+                    else:
+                        time.sleep(3)
+                        string = "O robô " + str(robotObject["ID"]) + " vai esperar o espaço"
+                        saveDebug(string)
 
-                    currentPose = robot.getAbsolutePosition(False)
+            '''
+                Resolução de conflito passivo, que acorre quando um agente está parado e outro tenta acessar sua célula. 
+                Nesse caso, a prioridade será dada ao agente que está se movendo, a menos que não seja possível se mover
+            '''
 
-                    with lock:
-                        mapping.updateGoals(neighbor, neighbor, neighbor, robotObject["ID"])
-                        mapping.addStepMap(robotObject["ID"], currentPose)
+            if mapping.checkGoalAnother(robot.getAbsolutePosition(False), "next", robotObject["ID"]) == True:
+                currentPose = robot.getAbsolutePosition(False)
+                string = "O robô " + str(robotObject["ID"]) + " vai dar passagem na condição de única alternativa"
+                saveDebug(string)
+                print("Escolher um lugar para se mexer que não colida com ninguém")
+
+                executionFlag = GiveAway(robot, mapping, velocity)
+
+                if executionFlag == False:
+                    mapping.updateStatus(robotObject["ID"], ExplorationMode.Blocked)
+
+
+                '''
+                with lock:
+                    neighbor = mapping.GetFreeNeighbor(currentPose,robotObject["ID"])
+                    mapping.updateGoals(currentPose,neighbor, neighbor, robotObject["ID"])
+                print("Saindo do meio")
+                distance,angle = AuxiliarFunctions.CalcAngleDistance(currentPose,neighbor)
+                print("Distância:" + str(distance) + "// Angulo:" + str(angle))
+                
+                robot.rotateTo(angle, velocity*0.7)
+                robot.moveFoward(distance, angle, velocity*3)
+                '''
+                '''
+                currentPose = robot.getAbsolutePosition(False)
+
+                with lock:
+                    mapping.updateGoals(neighbor, neighbor, neighbor, robotObject["ID"])
+                    mapping.addStepMap(robotObject["ID"], currentPose)
+                '''
+
+            
+
                     
             
 
@@ -435,9 +466,3 @@ lock = threading.Lock()
 threading.Thread(target=Exploring,args=(1,19999,radius)).start()
 threading.Thread(target=Exploring,args=(2,19998,radius)).start()
 threading.Thread(target=Exploring,args=(3,19997,radius)).start()
-
-
-
-
-
-

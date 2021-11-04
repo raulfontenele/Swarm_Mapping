@@ -162,11 +162,18 @@ class Map:
                 self.statusMap[index]["status"] = status
     
     def checkAdjNumber(self,currentNode):
+        neighborhood = None
+
         for mapRow in self.structMap:
             diff2 = (currentNode[0] - mapRow["nodeCoord"][0])**2 + (currentNode[1] - mapRow["nodeCoord"][1])**2
             if math.sqrt(diff2) < self.radius:
-                return len(mapRow["neighborhood"])
-        return 0
+                neighborhood = mapRow["neighborhood"]
+
+        if neighborhood != None:
+            #for neighbor in neighborhood:
+            return len(neighborhood)
+        else:
+            return 0
     
     def updateVisitedNode(self):
         for noneVisitedNode in self.noneVisitedList:

@@ -17,3 +17,12 @@ class Order(Enum):
 
 class Models(Enum):
     Khepera = 1
+
+class ExplorationMode(Enum):
+    def __str__(self):
+        return '%s' % self.value
+
+    Standby = "Standby"
+    Conflit = "Conflit"
+    Exploring = "Exploring"
+    Blocked = "Blocked"
