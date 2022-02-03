@@ -1,0 +1,57 @@
+{
+   imagem:{
+       	"id" : 02,
+	"Regra" : "Fifo_Minimum",
+	"Dimensões" : "4x4",
+	"Posicionamento" : "P4",
+	"Condições" : "Robôs espaçados",
+	"Comentário" : "A regra escolhida manteve os robôs agrupados e no mesmo sentido, mudando apenas pela presença de obstáculos"
+   },
+   imagem:{
+       	"id" : 03,
+	"Regra" : "Maximum_Minimum",
+	"Dimensões" : "4x4",
+	"Posicionamento" : "P4",
+	"Condições" : "Robôs espaçados",
+	"Comentário" : "A regra do máximo fez com que os robôs se espalhassem e explorassem sub regiões"
+   },
+   imagem:{
+       	"id" : 04,
+	"Regra" : "Fifo_Maximum",
+	"Dimensões" : "6x6",
+	"Posicionamento" : "P1",
+	"Condições" : "Robôs agrupados e próximos a uma extremidade",
+	"Comentário" : "A regra máximo faz o papel do 'FIFO' para um dos robôs, fazendo com o robô volte pelo menos caminho que foi"
+   },
+   imagem:{
+       	"id" : 05,
+	"Regra" : "Fifo_Maximum",
+	"Dimensões" : "6x6",
+	"Posicionamento" : "P2",
+	"Condições" : "Robôs agrupados e próximos a uma extremidade",
+	"Comentário" : "A regra máximo faz o papel do 'FIFO' para um dos robôs, fazendo com o robô volte pelo menos caminho que foi"
+   }
+   imagem:{
+       	"id" : 10,
+	"Regra" : "Maximum_Minimum",
+	"Dimensões" : "8x8",
+	"Posicionamento" : "P1",
+	"Condições" : "Robôs agrupados e próximos a uma extremidade",
+	"Comentário" : "A regra do máximo fez com que os robôs se espalhassem e explorassem sub regiões"
+   },
+   imagem:{
+       	"id" : 11,
+	"Regra" : "Fifo_Minimum",
+	"Dimensões" : "8x8",
+	"Posicionamento" : "P1",
+	"Condições" : "Robôs agrupados e próximos a uma extremidade",
+	"Comentário" : "A regra escolhida manteve os robôs agrupados e no mesmo sentido, mudando apenas pela presença de obstáculos"
+   },
+   
+}
+
+
+
+"No campo sem obstáculos a regra 2 é executada menos vezes em relação ao ambiente com obstáculos, uma vez que a presença de obstáculos
+aciona a segunda regra"
+"A regra Fifo mantem os robôs agrupados e na mesma direção até que um evento aconteça, como o encontro com obstáculos"
