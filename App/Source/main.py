@@ -52,16 +52,16 @@ def GiveAway(robot, mapping, velocity):
         if neighbor != None:
             
             distance, angle = AuxiliarFunctions.CalcAngleDistance(currPosition, neighbor)
+
+            mapping.updateGoals(currPosition, neighbor, neighbor, robot.robotInfos["ID"])
     
             robot.rotateTo(angle, velocity*0.7)
 
-            mapping.updateGoals(currPosition, neighbor, neighbor, robot.robotInfos["ID"])
-
             robot.moveFoward(distance, angle, velocity*3)
 
-            currPosition = robot.getAbsolutePosition(False)
+            #currPosition = robot.getAbsolutePosition(False)
 
-            mapping.updateGoals(currPosition, neighbor, neighbor, robot.robotInfos["ID"])
+            mapping.updateGoals(neighbor, neighbor, neighbor, robot.robotInfos["ID"])
 
             mapping.addStepMap(robot.robotInfos["ID"], currPosition)
             #Fazer o update do passado dado no mapa de passos
@@ -93,9 +93,8 @@ def Exploring(robotFile,comPort,radiusZone):
     
     tInit = datetime.datetime.now()
 
-    orderN = Order.Fifo
-    order = Order.Minimum
-    
+    orderN = Order.Maximum
+    order = Order.Fifo    
     
     #Pegar informações do json do robô
     fileJson = open("Schemas/robot.json")
@@ -206,12 +205,11 @@ def Exploring(robotFile,comPort,radiusZone):
                 evitando que haja uma colisão no momento da rotação
             '''
             #
-
-            robot.rotateTo(angle, velocity*0.7)
-
             with lock:
                 mapping.updateGoals(currentPose, realDestiny, realDestiny, robotObject["ID"])
                 mapping.updateStatus(robotObject["ID"], ExplorationMode.Exploring)
+
+            robot.rotateTo(angle, velocity*0.7)
 
             robot.moveFoward(distance, angle, velocity*3)
             
@@ -298,17 +296,18 @@ def Exploring(robotFile,comPort,radiusZone):
                                 currentPose = robot.getAbsolutePosition(False)
                                 distance,angle = AuxiliarFunctions.CalcAngleDistance(currentPose,route[index-1])
 
-                                robot.rotateTo(angle, velocity*0.7)
-
                                 with lock:
                                     mapping.updateGoals(currentPose,route[index-1], finalGoal, robotObject["ID"])
                                     mapping.updateStatus(robotObject["ID"], ExplorationMode.Exploring)
-                            
+
+                                robot.rotateTo(angle, velocity*0.7)
+
                                 robot.moveFoward(distance, angle, velocity*3)
 
                                 with lock:
                                     mapping.updateGoals(route[index-1],route[index-1], finalGoal, robotObject["ID"])
                                     mapping.addStepMap(robotObject["ID"], robot.getAbsolutePosition(False))
+
                             except Exception as inst:
                                 errorMessage = inst.args[0]
                                 print(errorMessage)
@@ -335,7 +334,7 @@ def Exploring(robotFile,comPort,radiusZone):
                             mapping.addNoneVisitedNode(neighborhood)
                             mapping.addMapPoint(currentPose,neighborhood,angles,robotObject["ID"])
                 else:
-                    currentPose = robot.getAbsolutePosition(False)
+                    #currentPose = robot.getAbsolutePosition(False)
                     with lock:
                         mapping.updateGoals(currentPose,currentPose, currentPose, robotObject["ID"])
                         mapping.updateStatus(robotObject["ID"], ExplorationMode.Standby)
@@ -372,7 +371,7 @@ def Exploring(robotFile,comPort,radiusZone):
                     #time.sleep(3)
                     #continue
                 else:
-                    currentPose = robot.getAbsolutePosition(False)
+                    #currentPose = robot.getAbsolutePosition(False)
                     if mapping.checkAdjNumber(currentPose) >= mapping.checkAdjNumber(conflitCoord):
                         
                         GiveAway(robot, mapping, velocity)

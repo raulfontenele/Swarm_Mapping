@@ -218,7 +218,8 @@ class Robot(IRobot):
                   
             coord = AuxiliarFunctions.projectCoord(angList[i], initCoord, 2*self.radius)
             # Se for coordenada de outro, adicionar a coordenada 
-            if self.lidar.getDetectedState(True) == False or mapping.checkGoalAnother(coord, 'next', self.robotInfos["ID"]) == True:
+            #or mapping.checkGoalAnother(coord, 'next', self.robotInfos["ID"]) == True
+            if self.lidar.getDetectedState(True) == False :
                 nodes.append(coord)
                 angles.append(angList[i])
 

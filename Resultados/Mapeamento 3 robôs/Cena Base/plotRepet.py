@@ -77,7 +77,7 @@ def graphHex(radius):
     #plt.colorbar()
 
     dist = radius/math.cos(math.pi/6)
-    img = plt.imread("cena.png")
+    img = plt.imread("mazeIsolado.png")
     fig, ax = plt.subplots()
     
     #fig, ax = plt.subplots(1)
@@ -191,8 +191,8 @@ def fun3():
     plt.grid()
     plt.show()
 
-fun2()
-graph(3)
+#fun2()
+#graph(3)
 #analysis()
 #fun3()
-#graphHex(0.25)
+graphHex(0.25)

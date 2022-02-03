@@ -2,6 +2,8 @@ import json
 import matplotlib.pyplot as plt
 import time
 import numpy as np
+import math
+from matplotlib.patches import RegularPolygon
 
 #from analysis import analysis
 
@@ -30,7 +32,11 @@ def graph(numRobots):
     #plt.subplot(3,1,1)
     for i in range(numRobots):
         plt.figure()
-        plt.scatter(coordinates[i][:,0],coordinates[i][:,1], s = 1000, marker='h', c= color[i])
+        plt.scatter(coordinates[i][:,0],coordinates[i][:,1], s = 1000, marker='H', c= color[i])
+        plt.grid()
+        plt.title("Robô" + str(i+1))
+        plt.tight_layout()
+        plt.savefig("Robô" + str(i+1) )
 
 
     
@@ -41,7 +47,7 @@ def graph(numRobots):
     coord = np.array(coordinate)
     qtdArray = np.array(qtd)
     #plt.scatter(coord[:,0],coord[:,1], s = 1000, c = qtdArray ,marker='h', cmap="plasma")
-    plt.scatter(-coord[:,1],coord[:,0], s = 1000, c = qtdArray , marker='h', cmap="plasma")
+    plt.scatter(-coord[:,1],coord[:,0], s = 1000, c = qtdArray ,marker='H', cmap="plasma")
     plt.colorbar()
 
     file = open('map.txt','r')
@@ -55,15 +61,63 @@ def graph(numRobots):
             plt.plot( [-struct["nodeCoord"][1],-neighbor[1]],[struct["nodeCoord"][0],neighbor[0]],c="#1e962c")
             #plt.plot( [struct["nodeCoord"][1],neighbor[]],[struct["nodeCoord"][1],neighbor[1]],c="#1e962c")
             
-    plt.title("Cenário 1 -  Três robôs - Minimum")
+    #plt.title("Cenário com 4 obstáculos")
     plt.grid()
+    plt.show()
+
+def graphHex(radius):
+    struct,coordinate,qtd = analysis()
+    color = ['#ccccff','#4d4dff','#0000cc','#c61aff','#8600b3','#ff3333','#e60000','#990000']
+
+    #plt.figure()
+    coord = np.array(coordinate)
+    qtdArray = np.array(qtd)
+    #plt.scatter(coord[:,0],coord[:,1], s = 1000, c = qtdArray ,marker='h', cmap="plasma")
+    #plt.scatter(-coord[:,1],coord[:,0], s = 1000, c = qtdArray ,marker='h', cmap="plasma")
+    #plt.colorbar()
+
+    dist = radius/math.cos(math.pi/6)
+    img = plt.imread("Art_Base.png")
+    fig, ax = plt.subplots()
+    
+    #fig, ax = plt.subplots(1)
+    ax.set_aspect('equal')
+    
+    # Add some coloured hexagons
+    for cd in coord:
+        #color = c[0].lower()  # matplotlib understands lower case words for colours
+        hex = RegularPolygon((-cd[1],cd[0]), numVertices=6, radius=dist, 
+                            orientation=np.radians(30), 
+                            alpha=0.2, edgecolor='k')
+        ax.add_patch(hex)
+    ax.tick_params(labelsize=20)
+    #ax.tick_params(axis='y', labelsize=20)
+    plt.scatter(-coord[:,1],coord[:,0], s = 300, c = qtdArray ,marker='h', cmap="plasma")
+    cbar = plt.colorbar()
+    cbar.ax.tick_params(labelsize=20)
+
+    ax.imshow(img,extent=[-5, 5, -5, 5])
+    file = open('map.txt','r')
+    lines = file.readlines()
+
+    for line in lines:
+        line = line.replace("'",'"')
+        struct =json.loads(line)
+        for neighbor in struct["neighborhood"]:
+            #plt.plot( [struct["nodeCoord"][0],neighbor[0]],[struct["nodeCoord"][1],neighbor[1]],c="#1e962c")
+            plt.plot( [-struct["nodeCoord"][1],-neighbor[1]],[struct["nodeCoord"][0],neighbor[0]],c="#1e962c")
+            #plt.plot( [struct["nodeCoord"][1],neighbor[]],[struct["nodeCoord"][1],neighbor[1]],c="#1e962c")
+            
+    #plt.title("Cenário com 4 obstáculos")
+    plt.grid()
+
     plt.show()
 
 def analysis():
     file = open('stepMap.txt','r')
     lines = file.readlines()
 
-    radius = 0.5
+    radius = 0.25
 
     #ids  = [1,2,3]
     coordinates = []
@@ -138,6 +192,7 @@ def fun3():
     plt.show()
 
 #fun2()
-graph(3)
+#graph(3)
 #analysis()
 #fun3()
+graphHex(0.5)
