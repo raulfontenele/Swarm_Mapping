@@ -39,4 +39,15 @@ def saveLists(nameFile,listCoord,nameList,coord):
             file.write(str(coord) + "\n")
         file.write("----------------------------------------------------------------------" + "\n")
         
+def saveCoordinate(orientation, time, coord):
+    with open("./Logs/orientation.txt", 'a') as file:
+        file.write(str(orientation) + "  ::  " + str(time) + "  ::  " + str(coord))
+        file.write("\n")
+
+def saveOrientation(orientation, time, coord):
+    with open("./Logs/rotation.txt", 'a') as file:
+        file.write(str(orientation) + "  ::  " + str(time) + "  ::  " + str(coord))
+        file.write("\n")
+    
+        
         

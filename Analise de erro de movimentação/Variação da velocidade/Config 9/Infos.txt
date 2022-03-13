@@ -1,0 +1,3 @@
+Coordenadas iniciais: [-4.525, 0 ]
+Velocidade:10
+Distância: 8

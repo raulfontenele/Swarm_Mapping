@@ -9,7 +9,7 @@ import time
 import math
 from AuxiliarFunctions import AuxiliarFunctions
 from debug import logNeighbor,logLidar
-from Save import saveDebug
+from Save import saveDebug, saveCoordinate, saveOrientation
 from datetime import datetime
 
 from Enums import *
@@ -126,16 +126,16 @@ class Robot(IRobot):
         #Ki = 2*Kp/Tu
         #Kd = Kp*Tu/8
         
-        Kp = 0.28
-        Ki = 0.008
-        Kd = 0.0009
+        #Kp = 0.28
+        #Ki = 0.008
+        #Kd = 0.0009
         
-        # Kp = 0
-        # Ki = 0
-        # Kd = 0
+        Kp = 0
+        Ki = 0
+        Kd = 0
         
         
-        #initTime = datetime.now()
+        initTime = datetime.now()
         lastTime = datetime.now()
         
         accError = 0
@@ -148,6 +148,7 @@ class Robot(IRobot):
             position = self.getAbsolutePosition(False)
             distanceAbs = math.sqrt((initPosition[0]-position[0])**2 + (initPosition[1]-position[1])**2)
             
+            
             #Aplicar um controlador P
             error = AuxiliarFunctions.diffAngleThreshold(angle,self.getAbsoluteOrientation(False)[2])
             #if abs(error) < 0.01 and flag == False and cicle > 0:
@@ -156,6 +157,9 @@ class Robot(IRobot):
                 #print("//==========================================================================//")
                 #flag = True
             dt = float((datetime.now() - lastTime).microseconds/1000000 - 0.0001)
+            
+            t = float((datetime.now() - initTime).total_seconds())
+            saveCoordinate(self.getAbsoluteOrientation(False)[2], t, position)
             #print("Tempo")
             #print(dt)
             #print(datetime.now().microsecond)
@@ -282,7 +286,6 @@ class Robot(IRobot):
         while(True):
             currentOrientation = self.getAbsoluteOrientation(False)
             diff = AuxiliarFunctions.diffAngles(angle,currentOrientation[index] , sign)
-            
             if diff <= 0.4:
                 self.stopRotation()
                 break

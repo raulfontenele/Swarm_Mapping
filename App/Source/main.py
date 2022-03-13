@@ -130,6 +130,14 @@ def Exploring(robotFile,comPort,radiusZone):
     #Tempo para estabelecer conexões com o servidor
     time.sleep(0.2)
     
+
+    robot.rotateTo(30,5)
+    #Teste de movimentação
+    #robot.moveFoward(8,0, 10)
+    
+    time.sleep(20)
+    
+    
     with lock:
         mapping.initStatusMap(robotObject["ID"], ExplorationMode.Standby)
         
@@ -461,7 +469,8 @@ CommunicationAPI.Clear()
 
 lock = threading.Lock()
 
+Exploring(1,19999,radius)
 
-threading.Thread(target=Exploring,args=(1,19999,radius)).start()
-threading.Thread(target=Exploring,args=(2,19998,radius)).start()
-threading.Thread(target=Exploring,args=(3,19997,radius)).start()
+#threading.Thread(target=Exploring,args=(1,19999,radius)).start()
+#threading.Thread(target=Exploring,args=(2,19998,radius)).start()
+#threading.Thread(target=Exploring,args=(3,19997,radius)).start()
